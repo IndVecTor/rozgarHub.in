@@ -25,21 +25,21 @@
         </div>
     </header>
 
-    <!-- LIVE VIEW 1: HOME PAGE CONTAINER -->
+    <!-- LIVE VIEW 1: HOME PAGE -->
     <div id="homeView" class="flex flex-col flex-grow">
         <!-- Ticker -->
         <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
             <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                🔥 योग्यता के अनुसार जॉब्स फिल्टर करें | 📅 ऑनलाइन आयु कैलकुलेटर का उपयोग करें | 📝 एडमिट कार्ड, आंसर की और सिलेबस यहाँ देखें!
+                🔥 हिंदी और अंग्रेजी दोनों माध्यमों में सिलेबस पीडीएफ डाउनलोड करें | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
             </marquee>
         </div>
 
         <!-- Hero -->
         <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-10 px-4 text-center shadow-md">
             <div class="container mx-auto max-w-2xl space-y-3">
-                <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और वैकेंसी पोर्टल</h1>
-                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • योग्यता फिल्टर • आयु कैलकुलेटर और आंसर की एक ही मंच पर।</p>
+                <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और सिलेबस पोर्टल</h1>
+                <p class="text-xs md:text-sm text-blue-200">सरकारी नौकरियां • बाइलिंगुअल सिलेबस पीडीएफ डाउनलोड • आयु कैलकुलेटर एक ही मंच पर।</p>
             </div>
         </section>
 
@@ -72,11 +72,11 @@
                     </div>
                 </div>
 
-                <!-- COLUMN 2: Answer Key & Syllabus -->
+                <!-- COLUMN 2: Answer Key & Syllabus (Bilingual Download) -->
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                     <div class="box-header-extra p-4 text-center">
-                        <h2 class="text-base font-black uppercase">📝 Answer Key & Syllabus</h2>
-                        <p class="text-[10px] text-amber-100">उत्तर कुंजी और परीक्षा पाठ्यक्रम</p>
+                        <h2 class="text-base font-black uppercase">📝 Syllabus & Answer Key</h2>
+                        <p class="text-[10px] text-amber-100">हिंदी और अंग्रेजी पीडीएफ डाउनलोड</p>
                     </div>
                     <div class="p-4">
                         <ul id="answerKeyList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
@@ -96,13 +96,13 @@
 
             </div>
 
-            <!-- Online Age Calculator Widget Section -->
+            <!-- Age Calculator Widget -->
             <div class="bg-gradient-to-br from-indigo-900 to-blue-800 text-white p-6 rounded-2xl shadow-xl space-y-4">
                 <div class="flex items-center space-x-2">
                     <span class="text-2xl">⏳</span>
                     <div>
                         <h3 class="font-black text-sm md:text-base">ऑनलाइन आयु कैलकुलेटर (Age Calculator)</h3>
-                        <p class="text-xs text-blue-200">अपनी जन्मतिथि दर्ज करें और तुरंत अपनी सही आयु (वर्ष, महीने, दिन) जांचें।</p>
+                        <p class="text-xs text-blue-200">अपनी जन्मतिथि दर्ज करें और तुरंत अपनी सही आयु जांचें।</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
@@ -118,70 +118,73 @@
                         <button onclick="calculateAge()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-gray-900 py-2.5 rounded-lg font-black transition shadow">आयु गणना करें 🚀</button>
                     </div>
                 </div>
-                <div id="calcResult" class="hidden bg-white/10 p-3 rounded-xl border border-white/20 text-xs font-bold text-yellow-300 text-center">
-                    <!-- Result will appear here -->
-                </div>
+                <div id="calcResult" class="hidden bg-white/10 p-3 rounded-xl border border-white/20 text-xs font-bold text-yellow-300 text-center"></div>
             </div>
         </main>
     </div>
 
-    <!-- LIVE VIEW 2: FULL DETAIL PAGE CONTAINER -->
+    <!-- LIVE VIEW 2: FULL DETAIL & BILINGUAL SYLLABUS DOWNLOAD PAGE -->
     <div id="detailView" class="container mx-auto px-4 py-8 max-w-3xl flex-grow hidden w-full">
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl border space-y-6">
             <div class="flex justify-between items-center border-b pb-3">
-                <a href="index.html" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition">&larr; सभी जॉब्स पर वापस जाएं</a>
+                <a href="index.html" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition">&larr; सभी पोस्ट्स पर वापस जाएं</a>
                 <span id="dCategory" class="text-[10px] font-bold bg-red-100 text-red-700 px-3 py-1 rounded-full uppercase">Category</span>
             </div>
 
             <div class="space-y-2">
-                <h1 id="dTitle" class="text-2xl md:text-3xl font-black text-gray-900">Job Title</h1>
+                <h1 id="dTitle" class="text-2xl md:text-3xl font-black text-gray-900">Title</h1>
                 <p id="dOrg" class="text-sm font-bold text-blue-600">Organization</p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-blue-50/60 p-4 rounded-xl border border-blue-200 text-xs">
                 <div>
-                    <p class="text-gray-500 font-semibold">📍 लोकेशन / राज्य</p>
+                    <p class="text-gray-500 font-semibold">📍 लोकेशन / परीक्षा स्तर</p>
                     <p id="dCity" class="font-bold text-gray-900 mt-0.5">-</p>
                 </div>
                 <div>
-                    <p class="text-gray-500 font-semibold">💰 वेतन (Salary)</p>
+                    <p class="text-gray-500 font-semibold">💰 वेतन / पैटर्न</p>
                     <p id="dSalary" class="font-bold text-gray-900 mt-0.5">-</p>
                 </div>
                 <div>
-                    <p class="text-gray-500 font-semibold">📅 अंतिम तिथि (Last Date)</p>
+                    <p class="text-gray-500 font-semibold">📅 स्थिति (Status)</p>
                     <p id="dDate" class="font-bold text-red-600 mt-0.5">-</p>
                 </div>
             </div>
 
+            <!-- Standard Description / Syllabus Breakdown -->
             <div class="space-y-2">
-                <h3 class="font-bold text-xs uppercase text-gray-800 border-b pb-1">📋 विस्तृत विवरण और योग्यता (Full Description)</h3>
+                <h3 class="font-bold text-xs uppercase text-gray-800 border-b pb-1">📋 विस्तृत विवरण (Full Overview)</h3>
                 <p id="dDesc" class="text-xs md:text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border">विवरण...</p>
             </div>
 
-            <!-- Auto Form Filling Guide -->
-            <div class="space-y-3 bg-yellow-50/60 p-5 rounded-2xl border border-yellow-200">
-                <h3 class="font-black text-xs md:text-sm uppercase text-amber-900">💡 फॉर्म ऑनलाइन कैसे भरें? (Step-by-Step Guide)</h3>
-                <ul class="space-y-2 text-xs text-gray-700 font-medium list-disc list-inside">
-                    <li><strong>स्टेप 1:</strong> सबसे पहले नीचे दिए गए <em>'आधिकारिक वेबसाइट पर जाएं'</em> बटन पर क्लिक करें।</li>
-                    <li><strong>स्टेप 2:</strong> पोर्टल पर जाकर अपना रजिस्ट्रेशन (Registration / Sign Up) पूरा करें।</li>
-                    <li><strong>स्टेप 3:</strong> अपने जरूरी दस्तावेज सही साइज में अपलोड करें।</li>
-                    <li><strong>स्टेप 4:</strong> निर्धारित आवेदन शुल्क (Application Fee) का ऑनलाइन भुगतान करें।</li>
-                    <li><strong>स्टेप 5:</strong> फॉर्म सबमिट करने के बाद उसका प्रिंटआउट सुरक्षित रख लें।</li>
-                </ul>
+            <!-- DEDICATED BILINGUAL PDF DOWNLOAD SECTION (Visible if item is Syllabus) -->
+            <div id="syllabusDownloadSection" class="hidden space-y-4 bg-amber-50 p-5 rounded-2xl border border-amber-300">
+                <h3 class="font-black text-sm uppercase text-amber-900 flex items-center gap-2">
+                    <span>📥 बाइलिंगुअल सिलेबस पीडीएफ डाउनलोड (Bilingual PDF Download)</span>
+                </h3>
+                <p class="text-xs text-gray-700">अपनी पसंद की भाषा में परीक्षा पाठ्यक्रम (Syllabus) का पीडीएफ डाउनलोड करें:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <!-- Hindi Download Button -->
+                    <a id="downloadHindiBtn" href="#" target="_blank" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                        <span>📥 हिंदी में सिलेबस डाउनलोड करें (.PDF)</span>
+                    </a>
+                    <!-- English Download Button -->
+                    <a id="downloadEnglishBtn" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                        <span>📥 Download English Syllabus (.PDF)</span>
+                    </a>
+                </div>
             </div>
 
-            <!-- Documents Checklist Guide -->
-            <div class="space-y-3 bg-blue-50 p-5 rounded-2xl border border-blue-200">
-                <h3 class="font-black text-xs md:text-sm uppercase text-blue-900">📁 आवश्यक दस्तावेज गाइड (Documents Checklist)</h3>
-                <p class="text-xs text-gray-700">फॉर्म भरते समय आपके पास निम्नलिखित कागजात होने अनिवार्य हैं:</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-800 font-semibold">
-                    <p>✅ 1. आधार कार्ड (Aadhar Card)</p>
-                    <p>✅ 2. 10वीं / 12वीं की मार्कशीट</p>
-                    <p>✅ 3. पासपोर्ट साइज फोटो (नवीनतम)</p>
-                    <p>✅ 4. हस्ताक्षर (Signature Scanned)</p>
-                    <p>✅ 5. जाति / आय प्रमाण पत्र (यदि लागू हो)</p>
-                    <p>✅ 6. मोबाइल नंबर और ईमेल आईडी</p>
-                </div>
+            <!-- Auto Form Filling Guide (If job) -->
+            <div id="jobGuideSection" class="space-y-3 bg-yellow-50/60 p-5 rounded-2xl border border-yellow-200">
+                <h3 class="font-black text-xs md:text-sm uppercase text-amber-900">💡 फॉर्म ऑनलाइन कैसे भरें? (Step-by-Step Guide)</h3>
+                <ul class="space-y-2 text-xs text-gray-700 font-medium list-disc list-inside">
+                    <li><strong>स्टेप 1:</strong> नीचे दिए गए आधिकारिक बटन पर क्लिक करें।</li>
+                    <li><strong>स्टेप 2:</strong> पोर्टल पर अपना रजिस्ट्रेशन पूरा करें।</li>
+                    <li><strong>स्टेप 3:</strong> अपने जरूरी दस्तावेज सही साइज में अपलोड करें।</li>
+                    <li><strong>स्टेप 4:</strong> आवेदन शुल्क का ऑनलाइन भुगतान करें और प्रिंट सुरक्षित रखें।</li>
+                </ul>
             </div>
 
             <!-- WhatsApp Box -->
@@ -189,7 +192,7 @@
                 <div class="flex items-center space-x-3">
                     <span class="text-2xl">💬</span>
                     <div>
-                        <p class="font-bold">हर सरकारी जॉब का अलर्ट सबसे पहले पाएं!</p>
+                        <p class="font-bold">हर नई अपडेट सबसे पहले पाएं!</p>
                         <p class="text-[11px] text-green-100">RozgarHub ऑफिशियल व्हाट्सएप चैनल ज्वाइन करें।</p>
                     </div>
                 </div>
@@ -199,10 +202,10 @@
             <!-- Action Buttons -->
             <div class="pt-4 border-t flex flex-wrap items-center justify-between gap-3">
                 <button onclick="shareJob()" class="px-4 py-2.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl font-bold text-xs flex items-center gap-1.5 transition">
-                    🔗 इस जॉब को शेयर करें
+                    🔗 इसे शेयर करें
                 </button>
                 <a id="dApplyBtn" href="#" target="_blank" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-xs shadow-lg transition">
-                    🚀 आधिकारिक वेबसाइट पर जाएं (Apply Now)
+                    🚀 आधिकारिक वेबसाइट पर जाएं
                 </a>
             </div>
         </div>
@@ -211,20 +214,34 @@
     <!-- Footer -->
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
         <p>&copy; 2026 RozgarHub.in • All Rights Reserved</p>
-        <p class="text-gray-400">भारत का विश्वसनीय जॉब और सरकारी वैकेंसी पोर्टल।</p>
+        <p class="text-gray-400">भारत का विश्वसनीय जॉब और सिलेबस पोर्टल।</p>
         <p class="pt-2">
             <a href="admin-panel.html" class="text-gray-400 hover:text-white transition underline font-semibold">🛠️ Admin Panel Login</a>
         </p>
     </footer>
 
-    <!-- Smart Logic Script -->
+    <!-- Script Logic -->
     <script>
         const sarkariData = [
             { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Eligibility: Graduate. Apply online directly on official UPSC portal without any login.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://upsc.gov.in" },
             { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts. Qualification: Graduate.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ssc.nic.in" },
             { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP. Qualification: 12th Pass.", type: "Sarkari", category: "Sarkari", qualification: "12th", link: "https://upsssc.gov.in" },
             { id: 4, title: "Railway RRB ALP & Technician Exam Answer Key 2026", org: "RRB Railways", city: "All India", salary: "Official Notice", date: "Active", desc: "RRB has released the official answer key for Assistant Loco Pilot and Technician recruitment exam. Download response sheet.", type: "AnswerKey", category: "AnswerKey", qualification: "ITI", link: "https://rrbcdg.gov.in" },
-            { id: 5, title: "SSC CHSL 10+2 Tier-1 Exam Syllabus & Pattern 2026", org: "SSC", city: "All India", salary: "Syllabus Guide", date: "Active", desc: "Detailed syllabus and exam pattern for SSC CHSL 10+2 examination covering English, Quant, Reasoning, and GK.", type: "Syllabus", category: "AnswerKey", qualification: "12th", link: "https://ssc.nic.in" }
+            { 
+                id: 5, 
+                title: "SSC CHSL 10+2 Tier-1 Exam Syllabus & Pattern 2026", 
+                org: "Staff Selection Commission (SSC)", 
+                city: "All India", 
+                salary: "Tier-1 Exam", 
+                date: "Active", 
+                desc: "Detailed syllabus and exam pattern for SSC CHSL 10+2 examination covering English, Quantitative Aptitude, General Intelligence, and General Awareness. Download bilingual PDF below.", 
+                type: "Syllabus", 
+                category: "Syllabus", 
+                qualification: "12th", 
+                hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", 
+                englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                link: "https://ssc.nic.in" 
+            }
         ];
 
         const privateData = [
@@ -255,44 +272,54 @@
                     document.getElementById('dCity').innerText = foundJob.city || foundJob.state || 'All India';
                     document.getElementById('dSalary').innerText = foundJob.salary || 'Best in Industry';
                     document.getElementById('dDate').innerText = foundJob.date || 'Openings Active';
-                    document.getElementById('dDesc').innerText = foundJob.desc || foundJob.summary || 'डिटेल उपलब्ध है। आधिकारिक वेबसाइट पर जाकर आवेदन करें।';
+                    document.getElementById('dDesc').innerText = foundJob.desc || foundJob.summary || 'डिटेल उपलब्ध है।';
 
                     const applyBtn = document.getElementById('dApplyBtn');
-                    if (foundJob.type === 'Private' || foundJob.category === 'Private') {
-                        applyBtn.innerText = "👤 कैंडिडेट पोर्टल से अप्लाई करें";
-                        applyBtn.href = foundJob.link || "candidate-login.html";
+                    const syllabusSec = document.getElementById('syllabusDownloadSection');
+                    const jobGuideSec = document.getElementById('jobGuideSection');
+
+                    if (foundJob.type === 'Syllabus') {
+                        syllabusSec.classList.remove('hidden');
+                        jobGuideSec.classList.add('hidden');
+                        applyBtn.innerText = "🌐 आधिकारिक वेबसाइट देखें";
+                        applyBtn.href = foundJob.link || "https://ssc.nic.in";
+
+                        // Set separate PDF links if provided
+                        if(foundJob.hindiPdf) document.getElementById('downloadHindiBtn').href = foundJob.hindiPdf;
+                        if(foundJob.englishPdf) document.getElementById('downloadEnglishBtn').href = foundJob.englishPdf;
                     } else {
-                        applyBtn.innerText = "🚀 आधिकारिक वेबसाइट पर जाएं (Apply)";
-                        applyBtn.href = foundJob.link || "https://www.google.com";
+                        syllabusSec.classList.add('hidden');
+                        jobGuideSec.classList.remove('hidden');
+                        if (foundJob.type === 'Private' || foundJob.category === 'Private') {
+                            applyBtn.innerText = "👤 कैंडिडेट पोर्टल से अप्लाई करें";
+                            applyBtn.href = foundJob.link || "candidate-login.html";
+                        } else {
+                            applyBtn.innerText = "🚀 आधिकारिक वेबसाइट पर जाएं (Apply)";
+                            applyBtn.href = foundJob.link || "https://www.google.com";
+                        }
                     }
                 } else {
                     document.getElementById('detailView').innerHTML = `
                         <div class="bg-white p-10 rounded-2xl shadow text-center space-y-4">
-                            <h2 class="text-xl font-bold text-red-600">❌ यह जॉब नहीं मिली या हटा दी गई है।</h2>
+                            <h2 class="text-xl font-bold text-red-600">❌ यह पोस्ट नहीं मिली या हटा दी गई है।</h2>
                             <a href="index.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-bold">होम पर जाएं</a>
                         </div>
                     `;
                 }
             } else {
-                // Show Home View
                 renderHomeLists('All');
             }
         };
 
         function filterByQual(qual) {
             currentActiveQual = qual;
-            // Update button styles
             ['All', '10th', '12th', 'Grad', 'ITI'].forEach(id => {
                 let btn = document.getElementById('btn' + id);
-                if(btn) {
-                    btn.className = "px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition";
-                }
+                if(btn) btn.className = "px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition";
             });
             let activeId = qual === 'All' ? 'All' : (qual === 'Graduate' ? 'Grad' : qual);
             let activeBtn = document.getElementById('btn' + activeId);
-            if(activeBtn) {
-                activeBtn.className = "px-3 py-1.5 rounded-lg bg-blue-700 text-white transition shadow";
-            }
+            if(activeBtn) activeBtn.className = "px-3 py-1.5 rounded-lg bg-blue-700 text-white transition shadow";
             renderHomeLists(qual);
         }
 
@@ -304,15 +331,13 @@
             let allAnswerKey = sarkariData.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus');
             let allPrivate = [...adminPosts.filter(p => p.type === 'Private' || p.category === 'Private'), ...employerJobs, ...privateData];
 
-            // Filter by qualification if selected
             if(qualFilter !== 'All') {
                 allSarkari = allSarkari.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
                 allPrivate = allPrivate.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
             }
 
-            // Render Sarkari List
             let sarkariHtml = "";
-            if(allSarkari.length === 0) sarkariHtml = `<p class="text-xs text-gray-400 italic py-2">इस योग्यता के लिए कोई वैकेंसी नहीं है।</p>`;
+            if(allSarkari.length === 0) sarkariHtml = `<p class="text-xs text-gray-400 italic py-2">कोई डेटा उपलब्ध नहीं है।</p>`;
             allSarkari.forEach(item => {
                 sarkariHtml += `
                     <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick="window.location.href='index.html?id=${item.id}'">
@@ -323,7 +348,6 @@
             });
             document.getElementById('sarkariList').innerHTML = sarkariHtml;
 
-            // Render Answer Key & Syllabus List
             let ansHtml = "";
             allAnswerKey.forEach(item => {
                 ansHtml += `
@@ -335,9 +359,8 @@
             });
             document.getElementById('answerKeyList').innerHTML = ansHtml;
 
-            // Render Private List
             let privateHtml = "";
-            if(allPrivate.length === 0) privateHtml = `<p class="text-xs text-gray-400 italic py-2">इस योग्यता के लिए कोई प्राइवेट जॉब नहीं है।</p>`;
+            if(allPrivate.length === 0) privateHtml = `<p class="text-xs text-gray-400 italic py-2">कोई डेटा उपलब्ध नहीं है।</p>`;
             allPrivate.forEach(item => {
                 privateHtml += `
                     <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick="window.location.href='index.html?id=${item.id}'">
@@ -368,7 +391,6 @@
 
             if (days < 0) {
                 months--;
-                // get days in previous month
                 let prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
                 days += prevMonth.getDate();
             }
@@ -378,7 +400,7 @@
             }
 
             resultBox.classList.remove('hidden');
-            resultBox.innerHTML = `✨ आपकी आयु: <strong>${years} वर्ष, ${months} महीने, और ${days} दिन</strong> है। (इस तिथि तक)`;
+            resultBox.innerHTML = `✨ आपकी आयु: <strong>${years} वर्ष, ${months} महीने, और ${days} दिन</strong> है।`;
         }
 
         function shareJob() {
@@ -386,7 +408,7 @@
                 navigator.share({ title: document.getElementById('dTitle').innerText, url: window.location.href }).catch(() => {});
             } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert("जॉब का यूनीक लिंक कॉपी हो गया है!");
+                alert("लिंक कॉपी हो गया है!");
             }
         }
     </script>
