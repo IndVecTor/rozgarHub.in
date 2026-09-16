@@ -30,19 +30,19 @@
         </div>
     </header>
 
-    <!-- Live Urgent Notification Ticker -->
+    <!-- Live Ticker -->
     <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
         <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
         <marquee behavior="scroll" direction="left" scrollamount="5">
-            🔥 UPSC & SSC 2026 Online Forms Live | 📢 सरकारी नौकरियों के लिए किसी लॉगिन की आवश्यकता नहीं, डायरेक्ट क्लिक करके विवरण देखें! | ✨ RozgarHub AI Resume Maker Live!
+            🔥 UPSC & SSC 2026 Online Forms Live | 📢 किसी लॉगिन की आवश्यकता नहीं, जॉब पर क्लिक करें और पूरी डिटेल व फॉर्म भरने का तरीका देखें!
         </marquee>
     </div>
 
-    <!-- Hero Header Banner -->
+    <!-- Hero Header -->
     <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-10 px-4 text-center shadow-md">
         <div class="container mx-auto max-w-2xl space-y-3">
             <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और सरकारी वैकेंसी पोर्टल</h1>
-            <p class="text-xs md:text-sm text-blue-200">सरकारी नौकरियों के लिए सीधे आवेदन करें • प्राइवेट जॉब्स के लिए कैंडिडेट और एप्लॉयर पोर्टल उपलब्ध।</p>
+            <p class="text-xs md:text-sm text-blue-200">सरकारी नौकरियों के लिए सीधे क्लिक करें • प्राइवेट जॉब्स के लिए कैंडिडेट पोर्टल उपलब्ध।</p>
         </div>
     </section>
 
@@ -51,28 +51,28 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- COLUMN 1: LATEST SARKARI VACANCY (No Login Required) -->
+            <!-- COLUMN 1: LATEST SARKARI VACANCY -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                 <div class="box-header-sarkari p-4 text-center">
                     <h2 class="text-lg md:text-xl font-black tracking-wide uppercase">🏛️ Latest Sarkari Vacancy</h2>
-                    <p class="text-[11px] text-red-100">बिना किसी लॉगिन के सीधे विवरण देखें और अप्लाई करें</p>
+                    <p class="text-[11px] text-red-100">क्लिक करें और फुल डिटेल व फॉर्म भरने की विधि देखें</p>
                 </div>
                 <div class="p-4">
                     <ul id="sarkariList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
-                        <!-- Dynamically loaded -->
+                        <!-- Loaded via JS -->
                     </ul>
                 </div>
             </div>
 
-            <!-- COLUMN 2: PRIVATE & DIRECT JOBS (Login & Portal Active) -->
+            <!-- COLUMN 2: PRIVATE JOBS -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                 <div class="box-header-private p-4 text-center">
                     <h2 class="text-lg md:text-xl font-black tracking-wide uppercase">🏢 Private & Corporate Jobs</h2>
-                    <p class="text-[11px] text-blue-100">कंपनियों के लिए एप्लॉयर और उम्मीदवारों के लिए पोर्टल</p>
+                    <p class="text-[11px] text-blue-100">कंपनियों के अवसर और कैंडिडेट पोर्टल</p>
                 </div>
                 <div class="p-4">
                     <ul id="privateList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
-                        <!-- Dynamically loaded -->
+                        <!-- Loaded via JS -->
                     </ul>
                 </div>
             </div>
@@ -84,7 +84,7 @@
             <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-5 rounded-2xl shadow-md flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-sm">💬 RozgarHub व्हाट्सएप चैनल</h3>
-                    <p class="text-[11px] text-green-100 mt-0.5">हर नई वैकेंसी का अलर्ट सबसे पहले अपने फोन पर पाएं।</p>
+                    <p class="text-[11px] text-green-100 mt-0.5">हर नई वैकेंसी का अलर्ट सबसे पहले पाएं।</p>
                 </div>
                 <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-white text-green-800 px-4 py-2 rounded-xl text-xs font-extrabold shadow hover:bg-green-50 transition">जॉइन करें</a>
             </div>
@@ -100,55 +100,6 @@
 
     </main>
 
-    <!-- FULL DETAIL POP-UP MODAL (WITH WHATSAPP & SHARE BUTTONS) -->
-    <div id="jobModal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg w-full space-y-4 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeJobModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold text-2xl">&times;</button>
-            
-            <div>
-                <span id="mBadge" class="text-[10px] font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-full uppercase">Category</span>
-                <h3 id="mTitle" class="text-xl font-black text-gray-900 mt-2">Job Title</h3>
-                <p id="mOrg" class="text-xs font-bold text-blue-600 mt-0.5">Organization</p>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2 text-xs bg-gray-50 p-3 rounded-xl border">
-                <p>📍 <strong>Location:</strong> <span id="mCity">-</span></p>
-                <p>💰 <strong>Salary:</strong> <span id="mSalary">-</span></p>
-                <p class="col-span-2">📅 <strong>Last Date:</strong> <span id="mDate" class="text-red-600 font-bold">-</span></p>
-            </div>
-
-            <div>
-                <h4 class="font-bold text-xs uppercase text-gray-700 mb-1">📝 विस्तृत विवरण और योग्यता (Full Details):</h4>
-                <p id="mDesc" class="text-xs text-gray-700 bg-blue-50/50 p-3 rounded-xl border leading-relaxed">विवरण...</p>
-            </div>
-
-            <!-- WhatsApp Channel Alert Box inside Modal -->
-            <div class="bg-green-50 border border-green-300 p-3 rounded-xl flex items-center justify-between text-xs">
-                <div class="flex items-center space-x-2">
-                    <span class="text-xl">💬</span>
-                    <div>
-                        <p class="font-bold text-green-900">व्हाट्सएप पर अपडेट पाएं!</p>
-                        <p class="text-[10px] text-green-700">RozgarHub ऑफिशियल चैनल ज्वाइन करें।</p>
-                    </div>
-                </div>
-                <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-green-700 transition">जॉइन करें</a>
-            </div>
-
-            <!-- Action Buttons (Share, Close, Apply) -->
-            <div class="pt-3 border-t flex flex-wrap items-center justify-between gap-3">
-                <button onclick="shareCurrentJob()" class="px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl font-bold text-xs flex items-center gap-1 transition">
-                    🔗 शेयर करें
-                </button>
-                <div class="flex space-x-2">
-                    <button onclick="closeJobModal()" class="px-4 py-2 bg-gray-200 rounded-xl font-bold text-xs text-gray-700 hover:bg-gray-300">बंद करें</button>
-                    <a id="mApplyBtn" href="#" target="_blank" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow transition">
-                        🚀 आधिकारिक वेबसाइट पर जाएं (Apply)
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
         <p>&copy; 2026 RozgarHub.in • All Rights Reserved</p>
@@ -158,7 +109,7 @@
         </p>
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- JS to Redirect to Detail Page -->
     <script>
         const sarkariData = [
             { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal without any login.", type: "Sarkari" },
@@ -188,9 +139,8 @@
             // Render Sarkari List
             let sarkariHtml = "";
             allSarkari.forEach(item => {
-                let safeStr = JSON.stringify(item).replace(/'/g, "&#39;");
                 sarkariHtml += `
-                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openJobModal(${safeStr})'>
+                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick="window.location.href='job-detail.html?id=${item.id}'">
                         <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title}</span>
                         <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold shrink-0">${item.category || 'New'}</span>
                     </li>
@@ -201,56 +151,14 @@
             // Render Private List
             let privateHtml = "";
             allPrivate.forEach(item => {
-                let safeStr = JSON.stringify(item).replace(/'/g, "&#39;");
                 privateHtml += `
-                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openJobModal(${safeStr})'>
+                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick="window.location.href='job-detail.html?id=${item.id}'">
                         <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || 'India'})</span></span>
                         <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold shrink-0">Private</span>
                     </li>
                 `;
             });
             document.getElementById('privateList').innerHTML = privateHtml;
-        }
-
-        let currentJobTitle = "";
-        let currentJobCity = "";
-
-        function openJobModal(post) {
-            currentJobTitle = post.title;
-            currentJobCity = post.city || post.state || 'India';
-
-            document.getElementById('mBadge').innerText = post.category || post.type || 'Job Notice';
-            document.getElementById('mTitle').innerText = post.title;
-            document.getElementById('mOrg').innerText = post.org || post.company || 'RozgarHub Verified Board';
-            document.getElementById('mCity').innerText = currentJobCity;
-            document.getElementById('mSalary').innerText = post.salary || 'Best in Industry';
-            document.getElementById('mDate').innerText = post.date || 'Openings Active';
-            document.getElementById('mDesc').innerText = post.desc || post.summary || 'डिटेल उपलब्ध है। आधिकारिक वेबसाइट पर जाकर आवेदन करें।';
-            
-            const applyBtn = document.getElementById('mApplyBtn');
-            if(post.type === 'Private' || post.category === 'Private') {
-                applyBtn.innerText = "👤 कैंडिडेट पोर्टल से अप्लाई करें";
-                applyBtn.href = "candidate-login.html";
-            } else {
-                applyBtn.innerText = "🚀 आधिकारिक वेबसाइट पर जाएं";
-                applyBtn.href = post.link || "https://www.google.com";
-            }
-
-            document.getElementById('jobModal').classList.remove('hidden');
-        }
-
-        function closeJobModal() {
-            document.getElementById('jobModal').classList.add('hidden');
-        }
-
-        function shareCurrentJob() {
-            const shareText = `🔥 नई जॉब अपडेट: *${currentJobTitle}* (${currentJobCity})\nपूरी जानकारी और आवेदन के लिए RozgarHub.in पर विजिट करें!`;
-            if (navigator.share) {
-                navigator.share({ title: currentJobTitle, text: shareText, url: window.location.href }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(shareText);
-                alert("जॉब की जानकारी और लिंक कॉपी हो गया है! इसे व्हाट्सएप पर शेयर करें।");
-            }
         }
     </script>
 </body>
