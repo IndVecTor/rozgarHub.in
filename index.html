@@ -6,16 +6,37 @@
     <title>RozgarHub.in - India's #1 Sarkari & Private Jobs Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Tailwind config for dark mode support
-        tailwind.config = {
-            darkMode: 'class',
-        }
+        tailwind.config = { darkMode: 'class', }
+    </script>
+    <!-- Firebase SDKs for Frontend -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
+            authDomain: "rozgarhub-aa22b.firebaseapp.com",
+            projectId: "rozgarhub-aa22b",
+            storageBucket: "rozgarhub-aa22b.firebasestorage.app",
+            messagingSenderId: "979487527584",
+            appId: "1:979487527584:web:43b1f8eeb07c6631f42fc5",
+            measurementId: "G-2KW71K5NK1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.collection = collection;
+        window.getDocs = getDocs;
+
+        // Trigger load after Firebase is ready
+        window.dispatchEvent(new Event('firebase-loaded'));
     </script>
     <style>
         .box-header-sarkari { background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); color: white; }
         .box-header-private { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); color: white; }
         .box-header-extra { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -31,7 +52,6 @@
             <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
             
             <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
-                <!-- Dark Mode Toggle Button -->
                 <button onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-blue-800 dark:bg-gray-700 hover:bg-blue-900 dark:hover:bg-gray-600 px-3 py-2 rounded-lg transition flex items-center gap-1 shadow">
                     <span id="themeIcon">🌙</span> <span class="hidden md:inline" id="themeText">डार्क मोड</span>
                 </button>
@@ -46,9 +66,9 @@
     <div id="homeView" class="flex flex-col flex-grow">
         <!-- Ticker -->
         <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
-            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
+            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Cloud Live</span>
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                🔥 नई डार्क मोड थीम लाइव हो चुकी है | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
+                🔥 Firebase क्लाउड डेटाबेस से सभी जॉब्स लाइव सिंक हो रही हैं | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
             </marquee>
         </div>
 
@@ -56,7 +76,7 @@
         <section class="bg-gradient-to-r from-blue-900 to-indigo-900 dark:from-gray-800 dark:to-gray-900 text-white py-10 px-4 text-center shadow-md space-y-4 transition-colors duration-300">
             <div class="container mx-auto max-w-2xl space-y-2">
                 <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और वैकेंसी पोर्टल</h1>
-                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • अनलिमिटेड जॉब्स लिस्टिंग • डार्क मोड सपोर्ट।</p>
+                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • रियल-टाइम क्लाउड सिंक • डार्क मोड सपोर्ट।</p>
             </div>
             <!-- Live Search Input -->
             <div class="container mx-auto max-w-lg px-4">
@@ -252,9 +272,8 @@
         <p class="text-gray-400">भारत का विश्वसनीय जॉब और सिलेबस पोर्टल।</p>
     </footer>
 
-    <!-- Script with Dark Mode & Core Logic -->
+    <!-- Script Logic with Firebase Sync -->
     <script>
-        // Dark Mode Initialization & Toggle
         function initTheme() {
             const savedTheme = localStorage.getItem('rozgarHubTheme');
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -283,36 +302,50 @@
             }
         }
 
-        // Run theme init immediately
         initTheme();
 
-        const autoDatabase = [
-            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal without any login.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://upsc.gov.in" },
-            { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts. Minimum qualification: Graduation.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ssc.nic.in" },
-            { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP. Check eligibility, fee, and syllabus.", type: "Sarkari", category: "Sarkari", qualification: "12th", link: "https://upsssc.gov.in" },
-            { id: 4, title: "Railway RRB ALP & Technician Exam Answer Key 2026", org: "RRB Railways", city: "All India", salary: "Official Notice", date: "Active", desc: "RRB has released the official answer key for Assistant Loco Pilot and Technician recruitment exam. Download response sheet.", type: "AnswerKey", category: "AnswerKey", qualification: "ITI", link: "https://rrbcdg.gov.in" },
-            { id: 5, title: "SSC CHSL 10+2 Tier-1 Exam Syllabus & Pattern 2026", org: "Staff Selection Commission (SSC)", city: "All India", salary: "Tier-1 Exam", date: "Active", desc: "Detailed syllabus and exam pattern for SSC CHSL 10+2 examination covering English, Quantitative Aptitude, General Intelligence, and General Awareness. Download bilingual PDF below.", type: "Syllabus", category: "Syllabus", qualification: "12th", hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", link: "https://ssc.nic.in" },
-            { id: 6, title: "UPSC Prelims General Studies Comprehensive Syllabus 2026", org: "UPSC", city: "All India", salary: "Civil Services", date: "Active", desc: "Complete detailed syllabus for UPSC Civil Services Preliminary examination paper-1 and paper-2 (CSAT) in bilingual format.", type: "Syllabus", category: "Syllabus", qualification: "Graduate", hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", link: "https://upsc.gov.in" },
-            { id: 7, title: "IBPS PO Probationary Officer Recruitment 2026", org: "IBPS", city: "All India", salary: "₹52,000 / mo", date: "30 Oct 2026", desc: "Institute of Banking Personnel Selection invites applications for Probationary Officer posts in participating banks.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ibps.in" },
-            { id: 8, title: "SBI Clerk Junior Associate Online Form 2026", org: "State Bank of India", city: "All India", salary: "₹40,000 / mo", date: "05 Nov 2026", desc: "SBI recruitment for Junior Associates (Customer Support & Sales) in clerical cadre across India.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://sbi.co.in" }
+        const defaultStaticData = [
+            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://upsc.gov.in" },
+            { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ssc.nic.in" },
+            { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP.", type: "Sarkari", category: "Sarkari", qualification: "12th", link: "https://upsssc.gov.in" },
+            { id: 4, title: "Railway RRB ALP & Technician Exam Answer Key 2026", org: "RRB Railways", city: "All India", salary: "Official Notice", date: "Active", desc: "RRB has released the official answer key for Assistant Loco Pilot and Technician recruitment exam.", type: "AnswerKey", category: "AnswerKey", qualification: "ITI", link: "https://rrbcdg.gov.in" },
+            { id: 5, title: "SSC CHSL 10+2 Tier-1 Exam Syllabus & Pattern 2026", org: "Staff Selection Commission (SSC)", city: "All India", salary: "Tier-1 Exam", date: "Active", desc: "Detailed syllabus and exam pattern for SSC CHSL 10+2 examination. Download bilingual PDF below.", type: "Syllabus", category: "Syllabus", qualification: "12th", hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", link: "https://ssc.nic.in" }
         ];
 
         const privateData = [
-            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills for office administration.", type: "Private", category: "Private", qualification: "12th", link: "candidate-login.html" },
-            { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels with good communication skills.", type: "Private", category: "Private", qualification: "10th", link: "candidate-login.html" },
-            { id: 103, title: "Backend Web Developer (Node.js / Firebase)", org: "Digital Tech Corp", city: "Lucknow / Remote", salary: "₹35,000 / mo", date: "Active", desc: "Looking for skilled backend developer familiar with Git, Firebase, and REST APIs.", type: "Private", category: "Private", qualification: "Graduate", link: "candidate-login.html" }
+            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills.", type: "Private", category: "Private", qualification: "12th", link: "candidate-login.html" },
+            { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels.", type: "Private", category: "Private", qualification: "10th", link: "candidate-login.html" }
         ];
 
         let currentActiveQual = 'All';
+        let cloudJobs = [];
 
-        window.onload = function() {
-            initTheme();
+        window.addEventListener('firebase-loaded', async () => {
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
+                cloudJobs = [];
+                querySnapshot.forEach((docSnap) => {
+                    let d = docSnap.data();
+                    cloudJobs.push({ id: docSnap.id, ...d });
+                });
+            } catch (err) {
+                console.log("Offline or Config Error, using default data");
+            }
+            initializeAppRouter();
+        });
+
+        // Fallback if firebase takes too long
+        setTimeout(() => {
+            if(cloudJobs.length === 0 && document.getElementById('sarkariList').innerHTML === "") {
+                initializeAppRouter();
+            }
+        }, 1500);
+
+        function initializeAppRouter() {
             const urlParams = new URLSearchParams(window.location.search);
             const jobId = urlParams.get('id');
 
-            let adminPosts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
-            let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
-            let allJobs = [...adminPosts, ...employerJobs, ...autoDatabase, ...privateData];
+            let allJobs = [...cloudJobs, ...defaultStaticData, ...privateData];
 
             if (jobId) {
                 document.getElementById('homeView').classList.add('hidden');
@@ -362,7 +395,7 @@
             } else {
                 renderHomeLists('All', '');
             }
-        };
+        }
 
         function filterByQual(qual) {
             currentActiveQual = qual;
@@ -384,12 +417,9 @@
         }
 
         function renderHomeLists(qualFilter, searchQuery) {
-            let adminPosts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
-            let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
-
-            let allSarkari = [...adminPosts.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari'), ...autoDatabase.filter(s => s.type === 'Sarkari')];
-            let allAnswerKey = [...adminPosts.filter(p => p.type === 'Syllabus' || p.type === 'AnswerKey' || p.category === 'Syllabus'), ...autoDatabase.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus')];
-            let allPrivate = [...adminPosts.filter(p => p.type === 'Private' || p.category === 'Private'), ...employerJobs, ...privateData];
+            let allSarkari = [...cloudJobs.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari'), ...defaultStaticData.filter(s => s.type === 'Sarkari')];
+            let allAnswerKey = [...cloudJobs.filter(p => p.type === 'Syllabus' || p.type === 'AnswerKey' || p.category === 'Syllabus'), ...defaultStaticData.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus')];
+            let allPrivate = [...cloudJobs.filter(p => p.type === 'Private' || p.category === 'Private'), ...privateData];
 
             if(qualFilter !== 'All') {
                 allSarkari = allSarkari.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
