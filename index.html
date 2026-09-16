@@ -29,7 +29,7 @@
     <div id="homeView" class="flex flex-col flex-grow">
         <!-- Ticker -->
         <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
-            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Auto-Update Live</span>
+            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
             <marquee behavior="scroll" direction="left" scrollamount="5">
                 🔥 सभी सरकारी नौकरियां, एडमिट कार्ड, रिजल्ट और हिंदी-अंग्रेजी सिलेबस ऑटोमैटिक अपडेट हो रहे हैं | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें!
             </marquee>
@@ -65,7 +65,7 @@
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                     <div class="box-header-sarkari p-4 text-center">
                         <h2 class="text-base font-black uppercase">🏛️ Latest Sarkari Jobs</h2>
-                        <p class="text-[10px] text-red-100">ऑटोमैटिक अपडेटेड सरकारी वैकेंसियाँ</p>
+                        <p class="text-[10px] text-red-100">बिना लॉगिन के सीधे फुल डिटेल</p>
                     </div>
                     <div class="p-4">
                         <ul id="sarkariList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
@@ -87,7 +87,7 @@
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border md:col-span-2 lg:col-span-1">
                     <div class="box-header-private p-4 text-center">
                         <h2 class="text-base font-black uppercase">🏢 Private & Corporate</h2>
-                        <p class="text-[10px] text-blue-100">कंपनियों के डायरेक्ट अवसर</p>
+                        <p class="text-[10px] text-blue-100">कैंडिडेट और एप्लॉयर पोर्टल</p>
                     </div>
                     <div class="p-4">
                         <ul id="privateList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
@@ -222,16 +222,13 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer (Secured without public admin link) -->
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
         <p>&copy; 2026 RozgarHub.in • All Rights Reserved</p>
         <p class="text-gray-400">भारत का विश्वसनीय जॉब और सिलेबस पोर्टल।</p>
-        <p class="pt-2">
-            <a href="admin-panel.html" class="text-gray-400 hover:text-white transition underline font-semibold">🛠️ Admin Panel Login</a>
-        </p>
     </footer>
 
-    <!-- Smart Auto-Populated Database -->
+    <!-- Smart Auto-Populated Database & Routing Logic -->
     <script>
         const autoDatabase = [
             { 
