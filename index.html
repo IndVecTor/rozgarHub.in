@@ -29,17 +29,17 @@
     <div id="homeView" class="flex flex-col flex-grow">
         <!-- Ticker -->
         <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
-            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
+            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Auto-Update Live</span>
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                🔥 हिंदी और अंग्रेजी दोनों माध्यमों में सिलेबस पीडीएफ डाउनलोड करें | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
+                🔥 सभी सरकारी नौकरियां, एडमिट कार्ड, रिजल्ट और हिंदी-अंग्रेजी सिलेबस ऑटोमैटिक अपडेट हो रहे हैं | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें!
             </marquee>
         </div>
 
         <!-- Hero -->
         <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-10 px-4 text-center shadow-md">
             <div class="container mx-auto max-w-2xl space-y-3">
-                <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और सिलेबस पोर्टल</h1>
-                <p class="text-xs md:text-sm text-blue-200">सरकारी नौकरियां • बाइलिंगुअल सिलेबस पीडीएफ डाउनलोड • आयु कैलकुलेटर एक ही मंच पर।</p>
+                <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और वैकेंसी पोर्टल</h1>
+                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • ऑटोमैटिक अपडेटेड सिलेबस और आयु कैलकुलेटर।</p>
             </div>
         </section>
 
@@ -65,14 +65,14 @@
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                     <div class="box-header-sarkari p-4 text-center">
                         <h2 class="text-base font-black uppercase">🏛️ Latest Sarkari Jobs</h2>
-                        <p class="text-[10px] text-red-100">बिना लॉगिन के सीधे फुल डिटेल</p>
+                        <p class="text-[10px] text-red-100">ऑटोमैटिक अपडेटेड सरकारी वैकेंसियाँ</p>
                     </div>
                     <div class="p-4">
                         <ul id="sarkariList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
                     </div>
                 </div>
 
-                <!-- COLUMN 2: Answer Key & Syllabus (Bilingual Download) -->
+                <!-- COLUMN 2: Syllabus & Answer Key (Bilingual) -->
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                     <div class="box-header-extra p-4 text-center">
                         <h2 class="text-base font-black uppercase">📝 Syllabus & Answer Key</h2>
@@ -87,7 +87,7 @@
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border md:col-span-2 lg:col-span-1">
                     <div class="box-header-private p-4 text-center">
                         <h2 class="text-base font-black uppercase">🏢 Private & Corporate</h2>
-                        <p class="text-[10px] text-blue-100">कैंडिडेट और एप्लॉयर पोर्टल</p>
+                        <p class="text-[10px] text-blue-100">कंपनियों के डायरेक्ट अवसर</p>
                     </div>
                     <div class="p-4">
                         <ul id="privateList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
@@ -151,13 +151,13 @@
                 </div>
             </div>
 
-            <!-- Standard Description / Syllabus Breakdown -->
+            <!-- Standard Description -->
             <div class="space-y-2">
                 <h3 class="font-bold text-xs uppercase text-gray-800 border-b pb-1">📋 विस्तृत विवरण (Full Overview)</h3>
                 <p id="dDesc" class="text-xs md:text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border">विवरण...</p>
             </div>
 
-            <!-- DEDICATED BILINGUAL PDF DOWNLOAD SECTION (Visible if item is Syllabus) -->
+            <!-- DEDICATED BILINGUAL PDF DOWNLOAD SECTION -->
             <div id="syllabusDownloadSection" class="hidden space-y-4 bg-amber-50 p-5 rounded-2xl border border-amber-300">
                 <h3 class="font-black text-sm uppercase text-amber-900 flex items-center gap-2">
                     <span>📥 बाइलिंगुअल सिलेबस पीडीएफ डाउनलोड (Bilingual PDF Download)</span>
@@ -165,18 +165,16 @@
                 <p class="text-xs text-gray-700">अपनी पसंद की भाषा में परीक्षा पाठ्यक्रम (Syllabus) का पीडीएफ डाउनलोड करें:</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <!-- Hindi Download Button -->
                     <a id="downloadHindiBtn" href="#" target="_blank" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
                         <span>📥 हिंदी में सिलेबस डाउनलोड करें (.PDF)</span>
                     </a>
-                    <!-- English Download Button -->
                     <a id="downloadEnglishBtn" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
                         <span>📥 Download English Syllabus (.PDF)</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Auto Form Filling Guide (If job) -->
+            <!-- Auto Form Filling Guide -->
             <div id="jobGuideSection" class="space-y-3 bg-yellow-50/60 p-5 rounded-2xl border border-yellow-200">
                 <h3 class="font-black text-xs md:text-sm uppercase text-amber-900">💡 फॉर्म ऑनलाइन कैसे भरें? (Step-by-Step Guide)</h3>
                 <ul class="space-y-2 text-xs text-gray-700 font-medium list-disc list-inside">
@@ -185,6 +183,19 @@
                     <li><strong>स्टेप 3:</strong> अपने जरूरी दस्तावेज सही साइज में अपलोड करें।</li>
                     <li><strong>स्टेप 4:</strong> आवेदन शुल्क का ऑनलाइन भुगतान करें और प्रिंट सुरक्षित रखें।</li>
                 </ul>
+            </div>
+
+            <!-- Documents Checklist Guide -->
+            <div class="space-y-3 bg-blue-50 p-5 rounded-2xl border border-blue-200">
+                <h3 class="font-black text-xs md:text-sm uppercase text-blue-900">📁 आवश्यक दस्तावेज गाइड (Documents Checklist)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-800 font-semibold">
+                    <p>✅ 1. आधार कार्ड (Aadhar Card)</p>
+                    <p>✅ 2. 10वीं / 12वीं की मार्कशीट</p>
+                    <p>✅ 3. पासपोर्ट साइज फोटो</p>
+                    <p>✅ 4. हस्ताक्षर (Signature)</p>
+                    <p>✅ 5. जाति / आय प्रमाण पत्र</p>
+                    <p>✅ 6. मोबाइल नंबर और ईमेल आईडी</p>
+                </div>
             </div>
 
             <!-- WhatsApp Box -->
@@ -220,13 +231,61 @@
         </p>
     </footer>
 
-    <!-- Script Logic -->
+    <!-- Smart Auto-Populated Database -->
     <script>
-        const sarkariData = [
-            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Eligibility: Graduate. Apply online directly on official UPSC portal without any login.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://upsc.gov.in" },
-            { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts. Qualification: Graduate.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ssc.nic.in" },
-            { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP. Qualification: 12th Pass.", type: "Sarkari", category: "Sarkari", qualification: "12th", link: "https://upsssc.gov.in" },
-            { id: 4, title: "Railway RRB ALP & Technician Exam Answer Key 2026", org: "RRB Railways", city: "All India", salary: "Official Notice", date: "Active", desc: "RRB has released the official answer key for Assistant Loco Pilot and Technician recruitment exam. Download response sheet.", type: "AnswerKey", category: "AnswerKey", qualification: "ITI", link: "https://rrbcdg.gov.in" },
+        const autoDatabase = [
+            { 
+                id: 1, 
+                title: "UPSC Civil Services IAS / IPS Online Form 2026", 
+                org: "UPSC", 
+                city: "All India", 
+                salary: "Level-10 Scale", 
+                date: "10 Oct 2026", 
+                desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal without any login.", 
+                type: "Sarkari", 
+                category: "Sarkari", 
+                qualification: "Graduate", 
+                link: "https://upsc.gov.in" 
+            },
+            { 
+                id: 2, 
+                title: "SSC CGL Graduate Level Online Form 2026", 
+                org: "Staff Selection Commission", 
+                city: "All India", 
+                salary: "₹45,000+ / mo", 
+                date: "25 Oct 2026", 
+                desc: "Combined Graduate Level Examination for central government inspector and officer posts. Minimum qualification: Graduation.", 
+                type: "Sarkari", 
+                category: "Sarkari", 
+                qualification: "Graduate", 
+                link: "https://ssc.nic.in" 
+            },
+            { 
+                id: 3, 
+                title: "UPSSSC PET & Lekhpal Recruitment 2026", 
+                org: "UPSSSC Lucknow", 
+                city: "Uttar Pradesh", 
+                salary: "As per 7th Pay", 
+                date: "15 Oct 2026", 
+                desc: "Applications invited for various Group C and Lekhpal vacancies across UP. Check eligibility, fee, and syllabus.", 
+                type: "Sarkari", 
+                category: "Sarkari", 
+                qualification: "12th", 
+                link: "https://upsssc.gov.in" 
+            },
+            { 
+                id: 4, 
+                title: "Railway RRB ALP & Technician Exam Answer Key 2026", 
+                org: "RRB Railways", 
+                city: "All India", 
+                salary: "Official Notice", 
+                date: "Active", 
+                desc: "RRB has released the official answer key for Assistant Loco Pilot and Technician recruitment exam. Download response sheet.", 
+                type: "AnswerKey", 
+                category: "AnswerKey", 
+                qualification: "ITI", 
+                link: "https://rrbcdg.gov.in" 
+            },
             { 
                 id: 5, 
                 title: "SSC CHSL 10+2 Tier-1 Exam Syllabus & Pattern 2026", 
@@ -241,11 +300,26 @@
                 hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", 
                 englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                 link: "https://ssc.nic.in" 
+            },
+            { 
+                id: 6, 
+                title: "UPSC Prelims General Studies Comprehensive Syllabus 2026", 
+                org: "UPSC", 
+                city: "All India", 
+                salary: "Civil Services", 
+                date: "Active", 
+                desc: "Complete detailed syllabus for UPSC Civil Services Preliminary examination paper-1 and paper-2 (CSAT) in bilingual format.", 
+                type: "Syllabus", 
+                category: "Syllabus", 
+                qualification: "Graduate", 
+                hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", 
+                englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                link: "https://upsc.gov.in" 
             }
         ];
 
         const privateData = [
-            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills. Qualification: 12th / Graduate.", type: "Private", category: "Private", qualification: "12th", link: "candidate-login.html" },
+            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills for office administration.", type: "Private", category: "Private", qualification: "12th", link: "candidate-login.html" },
             { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels with good communication skills. 3 months experience preferred.", type: "Private", category: "Private", qualification: "10th", link: "candidate-login.html" }
         ];
 
@@ -257,10 +331,9 @@
 
             let adminPosts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
             let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
-            let allJobs = [...adminPosts, ...employerJobs, ...sarkariData, ...privateData];
+            let allJobs = [...adminPosts, ...employerJobs, ...autoDatabase, ...privateData];
 
             if (jobId) {
-                // Show Detail View
                 document.getElementById('homeView').classList.add('hidden');
                 document.getElementById('detailView').classList.remove('hidden');
 
@@ -284,7 +357,6 @@
                         applyBtn.innerText = "🌐 आधिकारिक वेबसाइट देखें";
                         applyBtn.href = foundJob.link || "https://ssc.nic.in";
 
-                        // Set separate PDF links if provided
                         if(foundJob.hindiPdf) document.getElementById('downloadHindiBtn').href = foundJob.hindiPdf;
                         if(foundJob.englishPdf) document.getElementById('downloadEnglishBtn').href = foundJob.englishPdf;
                     } else {
@@ -327,8 +399,8 @@
             let adminPosts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
             let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
 
-            let allSarkari = [...adminPosts.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari'), ...sarkariData.filter(s => s.type === 'Sarkari')];
-            let allAnswerKey = sarkariData.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus');
+            let allSarkari = [...adminPosts.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari'), ...autoDatabase.filter(s => s.type === 'Sarkari')];
+            let allAnswerKey = [...adminPosts.filter(p => p.type === 'Syllabus' || p.type === 'AnswerKey' || p.category === 'Syllabus'), ...autoDatabase.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus')];
             let allPrivate = [...adminPosts.filter(p => p.type === 'Private' || p.category === 'Private'), ...employerJobs, ...privateData];
 
             if(qualFilter !== 'All') {
@@ -378,7 +450,7 @@
             const resultBox = document.getElementById('calcResult');
 
             if (!dobInput) {
-                alert("कृपया अपनी जन्मतिथि (DOB) चुनें!");
+                alert("कृपया अपनी जन्मतिथि चुनें!");
                 return;
             }
 
