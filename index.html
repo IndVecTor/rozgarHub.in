@@ -1,31 +1,43 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RozgarHub.in - India's #1 Sarkari & Private Jobs Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind config for dark mode support
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
         .box-header-sarkari { background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); color: white; }
         .box-header-private { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); color: white; }
         .box-header-extra { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; }
-        /* Custom Scrollbar for Job Lists */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans flex flex-col min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
     <!-- Top Navbar -->
-    <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
+    <header class="bg-blue-700 dark:bg-gray-800 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
         <div class="container mx-auto flex justify-between items-center p-4">
             <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
+            
             <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
-                <a href="candidate-login.html" class="bg-blue-800 hover:bg-blue-900 px-3 py-2 rounded-lg transition">👤 कैंडिडेट पोर्टल</a>
+                <!-- Dark Mode Toggle Button -->
+                <button onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-blue-800 dark:bg-gray-700 hover:bg-blue-900 dark:hover:bg-gray-600 px-3 py-2 rounded-lg transition flex items-center gap-1 shadow">
+                    <span id="themeIcon">🌙</span> <span class="hidden md:inline" id="themeText">डार्क मोड</span>
+                </button>
+                <a href="candidate-login.html" class="bg-blue-800 hover:bg-blue-900 px-3 py-2 rounded-lg transition">👤 कैंडिडेट</a>
                 <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 एप्लॉयर</a>
-                <a href="resume-builder.html" class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg transition">📄 AI रिज्यूमे मेकर</a>
+                <a href="resume-builder.html" class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg transition hidden md:inline">📄 रिज्यूमे</a>
             </div>
         </div>
     </header>
@@ -36,15 +48,15 @@
         <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
             <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                🔥 ढेरों नौकरियां और सिलेबस आसानी से स्क्रॉल और सर्च करें | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
+                🔥 नई डार्क मोड थीम लाइव हो चुकी है | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
             </marquee>
         </div>
 
         <!-- Hero & Live Search Bar -->
-        <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-10 px-4 text-center shadow-md space-y-4">
+        <section class="bg-gradient-to-r from-blue-900 to-indigo-900 dark:from-gray-800 dark:to-gray-900 text-white py-10 px-4 text-center shadow-md space-y-4 transition-colors duration-300">
             <div class="container mx-auto max-w-2xl space-y-2">
                 <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और वैकेंसी पोर्टल</h1>
-                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • अनलिमिटेड जॉब्स लिस्टिंग • आयु कैलकुलेटर।</p>
+                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • अनलिमिटेड जॉब्स लिस्टिंग • डार्क मोड सपोर्ट।</p>
             </div>
             <!-- Live Search Input -->
             <div class="container mx-auto max-w-lg px-4">
@@ -57,59 +69,59 @@
 
         <!-- Qualification Quick Filters Bar -->
         <section class="container mx-auto px-4 pt-6 max-w-5xl">
-            <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-wrap items-center justify-between gap-3">
-                <span class="text-xs font-black text-gray-700 uppercase tracking-wide">🎓 योग्यता के अनुसार फ़िल्टर करें:</span>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border dark:border-gray-700 flex flex-wrap items-center justify-between gap-3 transition-colors duration-300">
+                <span class="text-xs font-black text-gray-700 dark:text-gray-200 uppercase tracking-wide">🎓 योग्यता के अनुसार फ़िल्टर करें:</span>
                 <div class="flex flex-wrap gap-2 text-xs font-bold">
                     <button onclick="filterByQual('All')" id="btnAll" class="px-3 py-1.5 rounded-lg bg-blue-700 text-white transition shadow">सभी जॉब्स</button>
-                    <button onclick="filterByQual('10th')" id="btn10th" class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition">10वीं पास</button>
-                    <button onclick="filterByQual('12th')" id="btn12th" class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition">12वीं पास</button>
-                    <button onclick="filterByQual('Graduate')" id="btnGrad" class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition">स्नातक (Graduate)</button>
-                    <button onclick="filterByQual('ITI')" id="btnITI" class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition">ITI / डिप्लोमा</button>
+                    <button onclick="filterByQual('10th')" id="btn10th" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">10वीं पास</button>
+                    <button onclick="filterByQual('12th')" id="btn12th" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">12वीं पास</button>
+                    <button onclick="filterByQual('Graduate')" id="btnGrad" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">स्नातक (Graduate)</button>
+                    <button onclick="filterByQual('ITI')" id="btnITI" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">ITI / डिप्लोमा</button>
                 </div>
             </div>
         </section>
 
-        <!-- Main Grid Sections (With Max-Height & Scrollbar for handling 100+ jobs) -->
+        <!-- Main Grid Sections -->
         <main class="container mx-auto px-4 py-6 flex-grow max-w-5xl w-full space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 <!-- COLUMN 1: Sarkari Vacancy -->
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border flex flex-col">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border dark:border-gray-700 flex flex-col transition-colors duration-300">
                     <div class="box-header-sarkari p-4 text-center shrink-0">
                         <h2 class="text-base font-black uppercase">🏛️ Latest Sarkari Jobs</h2>
                         <p class="text-[10px] text-red-100">स्क्रॉल करके सभी वैकेंसियाँ देखें</p>
                     </div>
-                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto">
-                        <ul id="sarkariList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
+                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
+                        <ul id="sarkariList" class="space-y-3 text-xs font-semibold"></ul>
                     </div>
                 </div>
 
                 <!-- COLUMN 2: Syllabus & Answer Key -->
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border flex flex-col">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border dark:border-gray-700 flex flex-col transition-colors duration-300">
                     <div class="box-header-extra p-4 text-center shrink-0">
                         <h2 class="text-base font-black uppercase">📝 Syllabus & Answer Key</h2>
                         <p class="text-[10px] text-amber-100">हिंदी और अंग्रेजी पीडीएफ डाउनलोड</p>
                     </div>
-                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto">
-                        <ul id="answerKeyList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
+                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
+                        <ul id="answerKeyList" class="space-y-3 text-xs font-semibold"></ul>
                     </div>
                 </div>
 
                 <!-- COLUMN 3: Private Jobs -->
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border md:col-span-2 lg:col-span-1 flex flex-col">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border dark:border-gray-700 md:col-span-2 lg:col-span-1 flex flex-col transition-colors duration-300">
                     <div class="box-header-private p-4 text-center shrink-0">
                         <h2 class="text-base font-black uppercase">🏢 Private & Corporate</h2>
                         <p class="text-[10px] text-blue-100">डायरेक्ट कॉर्पोरेट अवसर</p>
                     </div>
-                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto">
-                        <ul id="privateList" class="space-y-3 text-xs font-semibold divide-y divide-gray-100"></ul>
+                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
+                        <ul id="privateList" class="space-y-3 text-xs font-semibold"></ul>
                     </div>
                 </div>
 
             </div>
 
             <!-- Age Calculator Widget -->
-            <div class="bg-gradient-to-br from-indigo-900 to-blue-800 text-white p-6 rounded-2xl shadow-xl space-y-4">
+            <div class="bg-gradient-to-br from-indigo-900 to-blue-800 dark:from-gray-800 dark:to-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 border dark:border-gray-700 transition-colors duration-300">
                 <div class="flex items-center space-x-2">
                     <span class="text-2xl">⏳</span>
                     <div>
@@ -137,44 +149,44 @@
 
     <!-- LIVE VIEW 2: FULL DETAIL & BILINGUAL SYLLABUS DOWNLOAD PAGE -->
     <div id="detailView" class="container mx-auto px-4 py-8 max-w-3xl flex-grow hidden w-full">
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl border space-y-6">
-            <div class="flex justify-between items-center border-b pb-3">
-                <a href="index.html" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition">&larr; सभी पोस्ट्स पर वापस जाएं</a>
+        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl border dark:border-gray-700 space-y-6 transition-colors duration-300">
+            <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
+                <a href="index.html" class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-3 py-1.5 rounded-lg font-bold transition">&larr; सभी पोस्ट्स पर वापस जाएं</a>
                 <span id="dCategory" class="text-[10px] font-bold bg-red-100 text-red-700 px-3 py-1 rounded-full uppercase">Category</span>
             </div>
 
             <div class="space-y-2">
-                <h1 id="dTitle" class="text-2xl md:text-3xl font-black text-gray-900">Title</h1>
-                <p id="dOrg" class="text-sm font-bold text-blue-600">Organization</p>
+                <h1 id="dTitle" class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">Title</h1>
+                <p id="dOrg" class="text-sm font-bold text-blue-600 dark:text-blue-400">Organization</p>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-blue-50/60 p-4 rounded-xl border border-blue-200 text-xs">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-blue-50/60 dark:bg-gray-700/50 p-4 rounded-xl border border-blue-200 dark:border-gray-600 text-xs">
                 <div>
-                    <p class="text-gray-500 font-semibold">📍 लोकेशन / परीक्षा स्तर</p>
-                    <p id="dCity" class="font-bold text-gray-900 mt-0.5">-</p>
+                    <p class="text-gray-500 dark:text-gray-300 font-semibold">📍 लोकेशन / परीक्षा स्तर</p>
+                    <p id="dCity" class="font-bold text-gray-900 dark:text-white mt-0.5">-</p>
                 </div>
                 <div>
-                    <p class="text-gray-500 font-semibold">💰 वेतन / पैटर्न</p>
-                    <p id="dSalary" class="font-bold text-gray-900 mt-0.5">-</p>
+                    <p class="text-gray-500 dark:text-gray-300 font-semibold">💰 वेतन / पैटर्न</p>
+                    <p id="dSalary" class="font-bold text-gray-900 dark:text-white mt-0.5">-</p>
                 </div>
                 <div>
-                    <p class="text-gray-500 font-semibold">📅 स्थिति (Status)</p>
-                    <p id="dDate" class="font-bold text-red-600 mt-0.5">-</p>
+                    <p class="text-gray-500 dark:text-gray-300 font-semibold">📅 स्थिति (Status)</p>
+                    <p id="dDate" class="font-bold text-red-600 dark:text-red-400 mt-0.5">-</p>
                 </div>
             </div>
 
             <!-- Standard Description -->
             <div class="space-y-2">
-                <h3 class="font-bold text-xs uppercase text-gray-800 border-b pb-1">📋 विस्तृत विवरण (Full Overview)</h3>
-                <p id="dDesc" class="text-xs md:text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border">विवरण...</p>
+                <h3 class="font-bold text-xs uppercase text-gray-800 dark:text-gray-200 border-b dark:border-gray-700 pb-1">📋 विस्तृत विवरण (Full Overview)</h3>
+                <p id="dDesc" class="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border dark:border-gray-600">विवरण...</p>
             </div>
 
             <!-- DEDICATED BILINGUAL PDF DOWNLOAD SECTION -->
-            <div id="syllabusDownloadSection" class="hidden space-y-4 bg-amber-50 p-5 rounded-2xl border border-amber-300">
-                <h3 class="font-black text-sm uppercase text-amber-900 flex items-center gap-2">
+            <div id="syllabusDownloadSection" class="hidden space-y-4 bg-amber-50 dark:bg-gray-700 p-5 rounded-2xl border border-amber-300 dark:border-gray-600">
+                <h3 class="font-black text-sm uppercase text-amber-900 dark:text-amber-300 flex items-center gap-2">
                     <span>📥 बाइलिंगुअल सिलेबस पीडीएफ डाउनलोड (Bilingual PDF Download)</span>
                 </h3>
-                <p class="text-xs text-gray-700">अपनी पसंद की भाषा में परीक्षा पाठ्यक्रम (Syllabus) का पीडीएफ डाउनलोड करें:</p>
+                <p class="text-xs text-gray-700 dark:text-gray-300">अपनी पसंद की भाषा में परीक्षा पाठ्यक्रम (Syllabus) का पीडीएफ डाउनलोड करें:</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                     <a id="downloadHindiBtn" href="#" target="_blank" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
@@ -187,9 +199,9 @@
             </div>
 
             <!-- Auto Form Filling Guide -->
-            <div id="jobGuideSection" class="space-y-3 bg-yellow-50/60 p-5 rounded-2xl border border-yellow-200">
-                <h3 class="font-black text-xs md:text-sm uppercase text-amber-900">💡 फॉर्म ऑनलाइन कैसे भरें? (Step-by-Step Guide)</h3>
-                <ul class="space-y-2 text-xs text-gray-700 font-medium list-disc list-inside">
+            <div id="jobGuideSection" class="space-y-3 bg-yellow-50/60 dark:bg-gray-700 p-5 rounded-2xl border border-yellow-200 dark:border-gray-600">
+                <h3 class="font-black text-xs md:text-sm uppercase text-amber-900 dark:text-amber-300">💡 फॉर्म ऑनलाइन कैसे भरें? (Step-by-Step Guide)</h3>
+                <ul class="space-y-2 text-xs text-gray-700 dark:text-gray-300 font-medium list-disc list-inside">
                     <li><strong>स्टेप 1:</strong> नीचे दिए गए आधिकारिक बटन पर क्लिक करें।</li>
                     <li><strong>स्टेप 2:</strong> पोर्टल पर अपना रजिस्ट्रेशन पूरा करें।</li>
                     <li><strong>स्टेप 3:</strong> अपने जरूरी दस्तावेज सही साइज में अपलोड करें।</li>
@@ -198,9 +210,9 @@
             </div>
 
             <!-- Documents Checklist Guide -->
-            <div class="space-y-3 bg-blue-50 p-5 rounded-2xl border border-blue-200">
-                <h3 class="font-black text-xs md:text-sm uppercase text-blue-900">📁 आवश्यक दस्तावेज गाइड (Documents Checklist)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-800 font-semibold">
+            <div class="space-y-3 bg-blue-50 dark:bg-gray-700 p-5 rounded-2xl border border-blue-200 dark:border-gray-600">
+                <h3 class="font-black text-xs md:text-sm uppercase text-blue-900 dark:text-blue-300">📁 आवश्यक दस्तावेज गाइड (Documents Checklist)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-800 dark:text-gray-200 font-semibold">
                     <p>✅ 1. आधार कार्ड (Aadhar Card)</p>
                     <p>✅ 2. 10वीं / 12वीं की मार्कशीट</p>
                     <p>✅ 3. पासपोर्ट साइज फोटो</p>
@@ -223,8 +235,8 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="pt-4 border-t flex flex-wrap items-center justify-between gap-3">
-                <button onclick="shareJob()" class="px-4 py-2.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl font-bold text-xs flex items-center gap-1.5 transition">
+            <div class="pt-4 border-t dark:border-gray-700 flex flex-wrap items-center justify-between gap-3">
+                <button onclick="shareJob()" class="px-4 py-2.5 bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-xl font-bold text-xs flex items-center gap-1.5 transition">
                     🔗 इसे शेयर करें
                 </button>
                 <a id="dApplyBtn" href="#" target="_blank" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-xs shadow-lg transition">
@@ -240,8 +252,40 @@
         <p class="text-gray-400">भारत का विश्वसनीय जॉब और सिलेबस पोर्टल।</p>
     </footer>
 
-    <!-- Script with Search, Scroll & Database Logic -->
+    <!-- Script with Dark Mode & Core Logic -->
     <script>
+        // Dark Mode Initialization & Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('rozgarHubTheme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.getElementById('htmlRoot').classList.add('dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+                document.getElementById('themeText').innerText = 'लाइट मोड';
+            } else {
+                document.getElementById('htmlRoot').classList.remove('dark');
+                document.getElementById('themeIcon').innerText = '🌙';
+                document.getElementById('themeText').innerText = 'डार्क मोड';
+            }
+        }
+
+        function toggleDarkMode() {
+            const root = document.getElementById('htmlRoot');
+            if (root.classList.contains('dark')) {
+                root.classList.remove('dark');
+                localStorage.setItem('rozgarHubTheme', 'light');
+                document.getElementById('themeIcon').innerText = '🌙';
+                document.getElementById('themeText').innerText = 'डार्क मोड';
+            } else {
+                root.classList.add('dark');
+                localStorage.setItem('rozgarHubTheme', 'dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+                document.getElementById('themeText').innerText = 'लाइट मोड';
+            }
+        }
+
+        // Run theme init immediately
+        initTheme();
+
         const autoDatabase = [
             { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal without any login.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://upsc.gov.in" },
             { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts. Minimum qualification: Graduation.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ssc.nic.in" },
@@ -262,6 +306,7 @@
         let currentActiveQual = 'All';
 
         window.onload = function() {
+            initTheme();
             const urlParams = new URLSearchParams(window.location.search);
             const jobId = urlParams.get('id');
 
@@ -308,7 +353,7 @@
                     }
                 } else {
                     document.getElementById('detailView').innerHTML = `
-                        <div class="bg-white p-10 rounded-2xl shadow text-center space-y-4">
+                        <div class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow text-center space-y-4">
                             <h2 class="text-xl font-bold text-red-600">❌ यह पोस्ट नहीं मिली या हटा दी गई है।</h2>
                             <a href="index.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-bold">होम पर जाएं</a>
                         </div>
@@ -323,7 +368,7 @@
             currentActiveQual = qual;
             ['All', '10th', '12th', 'Grad', 'ITI'].forEach(id => {
                 let btn = document.getElementById('btn' + id);
-                if(btn) btn.className = "px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-100 transition";
+                if(btn) btn.className = "px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition";
             });
             let activeId = qual === 'All' ? 'All' : (qual === 'Graduate' ? 'Grad' : qual);
             let activeBtn = document.getElementById('btn' + activeId);
@@ -346,13 +391,11 @@
             let allAnswerKey = [...adminPosts.filter(p => p.type === 'Syllabus' || p.type === 'AnswerKey' || p.category === 'Syllabus'), ...autoDatabase.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus')];
             let allPrivate = [...adminPosts.filter(p => p.type === 'Private' || p.category === 'Private'), ...employerJobs, ...privateData];
 
-            // Qualification filter
             if(qualFilter !== 'All') {
                 allSarkari = allSarkari.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
                 allPrivate = allPrivate.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
             }
 
-            // Search query filter
             if(searchQuery && searchQuery.trim() !== "") {
                 let q = searchQuery.toLowerCase();
                 allSarkari = allSarkari.filter(i => i.title.toLowerCase().includes(q) || i.org.toLowerCase().includes(q));
@@ -360,40 +403,37 @@
                 allPrivate = allPrivate.filter(i => i.title.toLowerCase().includes(q) || i.org.toLowerCase().includes(q));
             }
 
-            // Render Sarkari List
             let sarkariHtml = "";
             if(allSarkari.length === 0) sarkariHtml = `<p class="text-xs text-gray-400 italic py-4 text-center">कोई वैकेंसी नहीं मिली।</p>`;
             allSarkari.forEach(item => {
                 sarkariHtml += `
-                    <li class="py-2.5 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between">
-                        <a href="index.html?id=${item.id}" class="text-blue-700 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title}</a>
-                        <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold shrink-0 ml-2">${item.qualification || 'Govt'}</span>
+                    <li class="py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 rounded transition cursor-pointer flex items-center justify-between">
+                        <a href="index.html?id=${item.id}" class="text-blue-700 dark:text-blue-400 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title}</a>
+                        <span class="text-[10px] bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 px-2 py-0.5 rounded font-bold shrink-0 ml-2">${item.qualification || 'Govt'}</span>
                     </li>
                 `;
             });
             document.getElementById('sarkariList').innerHTML = sarkariHtml;
 
-            // Render Answer Key & Syllabus List
             let ansHtml = "";
             if(allAnswerKey.length === 0) ansHtml = `<p class="text-xs text-gray-400 italic py-4 text-center">कोई सिलेबस नहीं मिला।</p>`;
             allAnswerKey.forEach(item => {
                 ansHtml += `
-                    <li class="py-2.5 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between">
-                        <a href="index.html?id=${item.id}" class="text-amber-800 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title}</a>
-                        <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold shrink-0 ml-2">${item.type}</span>
+                    <li class="py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 rounded transition cursor-pointer flex items-center justify-between">
+                        <a href="index.html?id=${item.id}" class="text-amber-800 dark:text-amber-400 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title}</a>
+                        <span class="text-[10px] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded font-bold shrink-0 ml-2">${item.type}</span>
                     </li>
                 `;
             });
             document.getElementById('answerKeyList').innerHTML = ansHtml;
 
-            // Render Private List
             let privateHtml = "";
             if(allPrivate.length === 0) privateHtml = `<p class="text-xs text-gray-400 italic py-4 text-center">कोई प्राइवेट जॉब नहीं मिली।</p>`;
             allPrivate.forEach(item => {
                 privateHtml += `
-                    <li class="py-2.5 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between">
-                        <a href="index.html?id=${item.id}" class="text-blue-700 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || 'India'})</span></a>
-                        <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold shrink-0 ml-2">Private</span>
+                    <li class="py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 rounded transition cursor-pointer flex items-center justify-between">
+                        <a href="index.html?id=${item.id}" class="text-blue-700 dark:text-blue-400 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || 'India'})</span></a>
+                        <span class="text-[10px] bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded font-bold shrink-0 ml-2">Private</span>
                     </li>
                 `;
             });
