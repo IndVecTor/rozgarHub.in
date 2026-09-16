@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RozgarHub.in - Latest Sarkari & Private Jobs Portal</title>
+    <title>RozgarHub.in - India's #1 Sarkari & Private Jobs Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .box-header-sarkari {
@@ -24,7 +24,7 @@
             <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
             <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
                 <a href="candidate-login.html" class="bg-blue-800 hover:bg-blue-900 px-3 py-2 rounded-lg transition">👤 कैंडिडेट पोर्टल</a>
-                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 एप्लॉयर</a>
+                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 एप्लॉयर पोर्टल</a>
                 <a href="resume-builder.html" class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg transition">📄 AI रिज्यूमे मेकर</a>
             </div>
         </div>
@@ -34,15 +34,15 @@
     <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
         <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Live Alert</span>
         <marquee behavior="scroll" direction="left" scrollamount="5">
-            🔥 नई सरकारी और प्राइवेट वैकेंसियाँ लाइव हो चुकी हैं | 📢 RozgarHub Admin Panel के जरिए अपडेट्स तुरंत यहाँ देखें | ✨ AI रिज्यूमे मेकर का उपयोग करें!
+            🔥 UPSC & SSC 2026 Online Forms Live | 📢 सरकारी नौकरियों के लिए किसी लॉगिन की आवश्यकता नहीं, डायरेक्ट क्लिक करके विवरण देखें! | ✨ RozgarHub AI Resume Maker Live!
         </marquee>
     </div>
 
     <!-- Hero Header Banner -->
     <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-10 px-4 text-center shadow-md">
         <div class="container mx-auto max-w-2xl space-y-3">
-            <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और वैकेंसी पोर्टल</h1>
-            <p class="text-xs md:text-sm text-blue-200">सरकारी वैकेंसियाँ, एडमिट कार्ड, रिजल्ट और प्राइवेट नौकरियां एक ही मंच पर।</p>
+            <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और सरकारी वैकेंसी पोर्टल</h1>
+            <p class="text-xs md:text-sm text-blue-200">सरकारी नौकरियों के लिए सीधे आवेदन करें • प्राइवेट जॉब्स के लिए कैंडिडेट और एप्लॉयर पोर्टल उपलब्ध।</p>
         </div>
     </section>
 
@@ -51,27 +51,27 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- COLUMN 1: LATEST VACANCY & SARKARI UPDATES -->
+            <!-- COLUMN 1: LATEST SARKARI VACANCY (No Login Required) -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                 <div class="box-header-sarkari p-4 text-center">
-                    <h2 class="text-lg md:text-xl font-black tracking-wide uppercase">🏛️ Latest Vacancy & Results</h2>
-                    <p class="text-[11px] text-red-100">सरकारी नौकरियां, एडमिट कार्ड और रिजल्ट्स</p>
+                    <h2 class="text-lg md:text-xl font-black tracking-wide uppercase">🏛️ Latest Sarkari Vacancy</h2>
+                    <p class="text-[11px] text-red-100">बिना किसी लॉगिन के सीधे विवरण देखें और अप्लाई करें</p>
                 </div>
                 <div class="p-4">
-                    <ul id="latestVacancyList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
+                    <ul id="sarkariList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
                         <!-- Dynamically loaded -->
                     </ul>
                 </div>
             </div>
 
-            <!-- COLUMN 2: PRIVATE & DIRECT JOBS -->
+            <!-- COLUMN 2: PRIVATE & DIRECT JOBS (Login & Portal Active) -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border">
                 <div class="box-header-private p-4 text-center">
-                    <h2 class="text-lg md:text-xl font-black tracking-wide uppercase">🏢 Private & Direct Jobs</h2>
-                    <p class="text-[11px] text-blue-100">कंपनियों और डायरेक्ट एंप्लॉयमेंट के अवसर</p>
+                    <h2 class="text-lg md:text-xl font-black tracking-wide uppercase">🏢 Private & Corporate Jobs</h2>
+                    <p class="text-[11px] text-blue-100">कंपनियों के लिए एप्लॉयर और उम्मीदवारों के लिए पोर्टल</p>
                 </div>
                 <div class="p-4">
-                    <ul id="privateJobsList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
+                    <ul id="privateList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
                         <!-- Dynamically loaded -->
                     </ul>
                 </div>
@@ -84,7 +84,7 @@
             <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-5 rounded-2xl shadow-md flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-sm">💬 RozgarHub व्हाट्सएप चैनल</h3>
-                    <p class="text-[11px] text-green-100 mt-0.5">हर नई वैकेंसी का नोटिफिकेशन सीधे व्हाट्सएप पर पाएं।</p>
+                    <p class="text-[11px] text-green-100 mt-0.5">हर नई वैकेंसी का अलर्ट सबसे पहले अपने फोन पर पाएं।</p>
                 </div>
                 <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-white text-green-800 px-4 py-2 rounded-xl text-xs font-extrabold shadow hover:bg-green-50 transition">जॉइन करें</a>
             </div>
@@ -100,12 +100,13 @@
 
     </main>
 
-    <!-- FULL DETAIL POP-UP MODAL (NO SEPARATE PAGE NEEDED) -->
-    <div id="quickModal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50">
+    <!-- FULL DETAIL POP-UP MODAL (WITH WHATSAPP & SHARE BUTTONS) -->
+    <div id="jobModal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50">
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg w-full space-y-4 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeQuickModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold text-2xl">&times;</button>
+            <button onclick="closeJobModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold text-2xl">&times;</button>
+            
             <div>
-                <span id="mCategory" class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full uppercase">Category</span>
+                <span id="mBadge" class="text-[10px] font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-full uppercase">Category</span>
                 <h3 id="mTitle" class="text-xl font-black text-gray-900 mt-2">Job Title</h3>
                 <p id="mOrg" class="text-xs font-bold text-blue-600 mt-0.5">Organization</p>
             </div>
@@ -121,11 +122,29 @@
                 <p id="mDesc" class="text-xs text-gray-700 bg-blue-50/50 p-3 rounded-xl border leading-relaxed">विवरण...</p>
             </div>
 
+            <!-- WhatsApp Channel Alert Box inside Modal -->
+            <div class="bg-green-50 border border-green-300 p-3 rounded-xl flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl">💬</span>
+                    <div>
+                        <p class="font-bold text-green-900">व्हाट्सएप पर अपडेट पाएं!</p>
+                        <p class="text-[10px] text-green-700">RozgarHub ऑफिशियल चैनल ज्वाइन करें।</p>
+                    </div>
+                </div>
+                <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-green-700 transition">जॉइन करें</a>
+            </div>
+
+            <!-- Action Buttons (Share, Close, Apply) -->
             <div class="pt-3 border-t flex flex-wrap items-center justify-between gap-3">
-                <button onclick="closeQuickModal()" class="px-4 py-2.5 bg-gray-200 rounded-xl font-bold text-xs text-gray-700 hover:bg-gray-300">बंद करें</button>
-                <a id="mApplyBtn" href="candidate-login.html" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs shadow transition">
-                    🚀 ऑनलाइन अप्लाई करें (Apply Now)
-                </a>
+                <button onclick="shareCurrentJob()" class="px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl font-bold text-xs flex items-center gap-1 transition">
+                    🔗 शेयर करें
+                </button>
+                <div class="flex space-x-2">
+                    <button onclick="closeJobModal()" class="px-4 py-2 bg-gray-200 rounded-xl font-bold text-xs text-gray-700 hover:bg-gray-300">बंद करें</button>
+                    <a id="mApplyBtn" href="#" target="_blank" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow transition">
+                        🚀 आधिकारिक वेबसाइट पर जाएं (Apply)
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -139,79 +158,99 @@
         </p>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript Logic -->
     <script>
-        const staticVacancyData = [
-            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online on official UPSC portal.", type: "Sarkari" },
+        const sarkariData = [
+            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal without any login.", type: "Sarkari" },
             { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts. Minimum qualification: Graduation.", type: "Sarkari" },
             { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP. Check eligibility, fee, and syllabus.", type: "Sarkari" }
         ];
 
-        const staticPrivateData = [
-            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and Hindi/English typing skills for office administration.", type: "Private" },
+        const privateData = [
+            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills for office administration. Candidate portal login required.", type: "Private" },
             { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels with good communication skills. 3 months experience preferred.", type: "Private" }
         ];
 
         window.onload = function() {
-            renderHomepageLists();
+            renderLists();
         };
 
-        function renderHomepageLists() {
+        function renderLists() {
             let adminPosts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
             let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
 
             let adminSarkari = adminPosts.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari' || p.category === 'AdmitCard' || p.category === 'Result');
             let adminPrivate = adminPosts.filter(p => p.type === 'Private' || p.category === 'Private');
 
-            let allVacancies = [...adminSarkari, ...staticVacancyData];
-            let allPrivates = [...adminPrivate, ...employerJobs, ...staticPrivateData];
+            let allSarkari = [...adminSarkari, ...sarkariData];
+            let allPrivate = [...adminPrivate, ...employerJobs, ...privateData];
 
-            let vacHtml = "";
-            allVacancies.forEach(item => {
-                let safeItemStr = JSON.stringify(item).replace(/'/g, "&#39;");
-                vacHtml += `
-                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openQuickModal(${safeItemStr})'>
+            // Render Sarkari List
+            let sarkariHtml = "";
+            allSarkari.forEach(item => {
+                let safeStr = JSON.stringify(item).replace(/'/g, "&#39;");
+                sarkariHtml += `
+                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openJobModal(${safeStr})'>
                         <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title}</span>
                         <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold shrink-0">${item.category || 'New'}</span>
                     </li>
                 `;
             });
-            document.getElementById('latestVacancyList').innerHTML = vacHtml;
+            document.getElementById('sarkariList').innerHTML = sarkariHtml;
 
-            let privHtml = "";
-            allPrivates.forEach(item => {
-                let safeItemStr = JSON.stringify(item).replace(/'/g, "&#39;");
-                privHtml += `
-                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openQuickModal(${safeItemStr})'>
-                        <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || item.state || 'India'})</span></span>
+            // Render Private List
+            let privateHtml = "";
+            allPrivate.forEach(item => {
+                let safeStr = JSON.stringify(item).replace(/'/g, "&#39;");
+                privateHtml += `
+                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openJobModal(${safeStr})'>
+                        <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || 'India'})</span></span>
                         <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold shrink-0">Private</span>
                     </li>
                 `;
             });
-            document.getElementById('privateJobsList').innerHTML = privHtml;
+            document.getElementById('privateList').innerHTML = privateHtml;
         }
 
-        function openQuickModal(post) {
-            document.getElementById('mCategory').innerText = post.category || post.type || 'Job Post';
+        let currentJobTitle = "";
+        let currentJobCity = "";
+
+        function openJobModal(post) {
+            currentJobTitle = post.title;
+            currentJobCity = post.city || post.state || 'India';
+
+            document.getElementById('mBadge').innerText = post.category || post.type || 'Job Notice';
             document.getElementById('mTitle').innerText = post.title;
-            document.getElementById('mOrg').innerText = post.org || post.company || 'RozgarHub Verified Partner';
-            document.getElementById('mCity').innerText = post.city || post.state || 'All India';
+            document.getElementById('mOrg').innerText = post.org || post.company || 'RozgarHub Verified Board';
+            document.getElementById('mCity').innerText = currentJobCity;
             document.getElementById('mSalary').innerText = post.salary || 'Best in Industry';
             document.getElementById('mDate').innerText = post.date || 'Openings Active';
             document.getElementById('mDesc').innerText = post.desc || post.summary || 'डिटेल उपलब्ध है। आधिकारिक वेबसाइट पर जाकर आवेदन करें।';
             
-            if(post.link) {
-                document.getElementById('mApplyBtn').href = post.link;
-                document.getElementById('mApplyBtn').setAttribute('target', '_blank');
+            const applyBtn = document.getElementById('mApplyBtn');
+            if(post.type === 'Private' || post.category === 'Private') {
+                applyBtn.innerText = "👤 कैंडिडेट पोर्टल से अप्लाई करें";
+                applyBtn.href = "candidate-login.html";
             } else {
-                document.getElementById('mApplyBtn').href = 'candidate-login.html';
+                applyBtn.innerText = "🚀 आधिकारिक वेबसाइट पर जाएं";
+                applyBtn.href = post.link || "https://www.google.com";
             }
 
-            document.getElementById('quickModal').classList.remove('hidden');
+            document.getElementById('jobModal').classList.remove('hidden');
         }
 
-        function closeQuickModal() {
-            document.getElementById('quickModal').classList.add('hidden');
+        function closeJobModal() {
+            document.getElementById('jobModal').classList.add('hidden');
+        }
+
+        function shareCurrentJob() {
+            const shareText = `🔥 नई जॉब अपडेट: *${currentJobTitle}* (${currentJobCity})\nपूरी जानकारी और आवेदन के लिए RozgarHub.in पर विजिट करें!`;
+            if (navigator.share) {
+                navigator.share({ title: currentJobTitle, text: shareText, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText);
+                alert("जॉब की जानकारी और लिंक कॉपी हो गया है! इसे व्हाट्सएप पर शेयर करें।");
+            }
         }
     </script>
 </body>
