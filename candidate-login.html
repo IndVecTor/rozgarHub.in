@@ -48,7 +48,7 @@
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
                 <div>
                     <label class="block font-bold mb-1">ईमेल आईडी (Email)</label>
-                    <input type="email5" id="loginEmail" placeholder="candidate@gmail.com" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
+                    <input type="email" id="loginEmail" placeholder="candidate@gmail.com" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
                 </div>
                 <div>
                     <label class="block font-bold mb-1">पासवर्ड (Password)</label>
@@ -88,12 +88,16 @@
     <!-- DASHBOARD VIEW (Next-Level Candidate Hub) -->
     <main id="dashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-6">
         
-        <!-- Welcome Profile Banner & Match Score -->
+        <!-- Welcome Profile Banner & Photo with AI Match Score -->
         <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-2xl shadow-xl flex flex-wrap justify-between items-center gap-4">
-            <div class="space-y-1">
-                <span class="bg-yellow-400 text-gray-900 px-2.5 py-0.5 rounded text-[10px] font-black uppercase">Verified Candidate</span>
-                <h1 id="userWelcomeName" class="text-xl md:text-2xl font-black">नमस्ते, अमन कुमार!</h1>
-                <p id="userWelcomeMeta" class="text-xs text-blue-200">योग्यता: स्नातक (Graduate) • पसंदीदा शहर: Azamgarh / Remote</p>
+            <div class="flex items-center space-x-4">
+                <!-- Candidate Profile Photo -->
+                <img id="userWelcomePhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Candidate Photo" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-yellow-400 shadow-lg">
+                <div class="space-y-1">
+                    <span class="bg-yellow-400 text-gray-900 px-2.5 py-0.5 rounded text-[10px] font-black uppercase">Verified Candidate</span>
+                    <h1 id="userWelcomeName" class="text-xl md:text-2xl font-black">नमस्ते, अमन कुमार!</h1>
+                    <p id="userWelcomeMeta" class="text-xs text-blue-200">योग्यता: स्नातक (Graduate) • Azamgarh</p>
+                </div>
             </div>
             <!-- AI Match Score Card -->
             <div class="bg-white/10 backdrop-blur p-4 rounded-xl border border-white/20 text-center flex items-center gap-3">
@@ -107,33 +111,69 @@
 
         <!-- Dashboard Navigation Tabs -->
         <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
-            <button onclick="switchDashTab('applied')" id="dTabApplied" class="px-4 py-2 rounded-xl bg-blue-700 text-white shadow">📥 अप्लाइड जॉब्स व टाइमलाइन</button>
-            <button onclick="switchDashTab('jobs')" id="dTabJobs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">🎯 1-क्लिक इंस्टेंट अप्लाई</button>
-            <button onclick="switchDashTab('vault')" id="dTabVault" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📁 डॉक्यूमेंट वॉल्ट (Locker)</button>
-            <button onclick="switchDashTab('prefs')" id="dTabPrefs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">⚙️ जॉब अलर्ट प्रेफरेंस</button>
-            <button onclick="switchDashTab('prep')" id="dTabPrep" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📚 करेंट अफेयर्स व क्विज़</button>
+            <button onclick="switchDashTab('applied')" id="dTabApplied" class="px-4 py-2 rounded-xl bg-blue-700 text-white shadow">📥 अप्लाइड जॉब्स</button>
+            <button onclick="switchDashTab('jobs')" id="dTabJobs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">🎯 इंस्टेंट अप्लाई</button>
+            <button onclick="switchDashTab('profile')" id="dTabProfile" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">👤 प्रोफाइल एडिट</button>
+            <button onclick="switchDashTab('vault')" id="dTabVault" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📁 डॉक्यूमेंट वॉल्ट</button>
+            <button onclick="switchDashTab('prefs')" id="dTabPrefs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">⚙️ अलर्ट सेटिंग्स</button>
+            <button onclick="switchDashTab('prep')" id="dTabPrep" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📚 करेंट अफेयर्स</button>
         </div>
 
         <!-- TAB CONTENT 1: APPLIED JOBS & TIMELINE -->
         <div id="contentApplied" class="space-y-4">
             <h3 class="font-black text-sm uppercase text-gray-700 dark:text-gray-300">📋 आपके आवेदन और एप्लीकेशन प्रोग्रेस</h3>
-            <div id="appliedJobsListContainer" class="space-y-4">
-                <!-- Dynamically Rendered -->
-            </div>
+            <div id="appliedJobsListContainer" class="space-y-4"></div>
         </div>
 
-        <!-- TAB CONTENT 2: 1-CLICK INSTANT APPLY (Job Recommendations) -->
+        <!-- TAB CONTENT 2: 1-CLICK INSTANT APPLY -->
         <div id="contentJobs" class="space-y-4 hidden">
             <div class="flex justify-between items-center">
                 <h3 class="font-black text-sm uppercase text-gray-700 dark:text-gray-300">🎯 आपके लिए बेस्ट जॉब्स (1-Click Instant Apply)</h3>
                 <a href="resume-builder.html" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold shadow hover:bg-green-700">📄 AI रिज्यूमे बनाएं</a>
             </div>
-            <div id="instantJobsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Dynamically Rendered -->
+            <div id="instantJobsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- TAB CONTENT 3: PROFILE EDIT SECTION -->
+        <div id="contentProfile" class="space-y-4 hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl border dark:border-gray-700 space-y-6">
+                <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
+                    <h3 class="font-black text-base uppercase text-blue-700 dark:text-blue-400">👤 कैंडिडेट पर्सनल डिटेल्स और फोटो एडिट करें</h3>
+                    <span class="text-xs text-gray-500">कैंडिडेट आईडी: #RH-2026</span>
+                </div>
+
+                <form onsubmit="saveProfileDetails(event)" class="space-y-4 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">पूरा नाम (Full Name)</label>
+                            <input type="text" id="editName" required class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">ईमेल आईडी (Email)</label>
+                            <input type="email" id="editEmail" required class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">योग्यता (Qualification)</label>
+                            <select id="editQual" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="10th">10वीं पास</option>
+                                <option value="12th">12वीं पास</option>
+                                <option value="Graduate">स्नातक (Graduate)</option>
+                                <option value="ITI">ITI / डिप्लोमा</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">प्रोफाइल फोटो का लिंक (Photo URL)</label>
+                            <input type="url" id="editPhotoUrl" placeholder="https://example.com/photo.jpg" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black text-xs shadow-lg transition">प्रोफाइल सेव करें 💾</button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <!-- TAB CONTENT 3: DOCUMENT VAULT (DIGITAL LOCKER) -->
+        <!-- TAB CONTENT 4: DOCUMENT VAULT -->
         <div id="contentVault" class="space-y-4 hidden">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
                 <h3 class="font-black text-sm uppercase text-blue-700 dark:text-blue-400">📁 डिजिटल डॉक्यूमेंट लॉकर (Document Vault)</h3>
@@ -142,40 +182,40 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">🪪 आधार कार्ड (Aadhar Card)</p>
-                        <input type="text" id="vaultAadhar" placeholder="डॉक्यूमेंट लिंक या नंबर दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="text" id="vaultAadhar" placeholder="डॉक्यूमेंट लिंक या नंबर" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
                     </div>
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">🎓 10वीं/12वीं मार्कशीट (Marksheet)</p>
-                        <input type="text" id="vaultMarksheet" placeholder="मार्कशीट लिंक दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="text" id="vaultMarksheet" placeholder="मार्कशीट लिंक" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
                     </div>
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">🖼️ पासपोर्ट साइज फोटो (Photo)</p>
-                        <input type="text" id="vaultPhoto" placeholder="फोटो का लिंक दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="text" id="vaultPhoto" placeholder="फोटो लिंक" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
                     </div>
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">✍️ हस्ताक्षर (Signature)</p>
-                        <input type="text" id="vaultSign" placeholder="हस्ताक्षर का लिंक दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="text" id="vaultSign" placeholder="हस्ताक्षर लिंक" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
                     </div>
                 </div>
                 <button onclick="saveVaultData()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow transition">डॉक्यूमेंट सेव करें 💾</button>
             </div>
         </div>
 
-        <!-- TAB CONTENT 4: JOB PREFERENCES & SMART ALERTS -->
+        <!-- TAB CONTENT 5: JOB PREFERENCES -->
         <div id="contentPrefs" class="space-y-4 hidden">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
-                <h3 class="font-black text-sm uppercase text-purple-700 dark:text-purple-400">⚙️ स्मार्ट जॉब अलर्ट प्रेफरेंस (Job Preferences)</h3>
+                <h3 class="font-black text-sm uppercase text-purple-700 dark:text-purple-400">⚙️ स्मार्ट जॉब अलर्ट प्रेफरेंस</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div>
-                        <label class="block font-bold mb-1">पसंदीदा शहर / जिला (Preferred Location)</label>
+                        <label class="block font-bold mb-1">पसंदीदा शहर / जिला</label>
                         <input type="text" id="prefCity" value="Azamgarh, Varanasi" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
                     </div>
                     <div>
-                        <label class="block font-bold mb-1">पसंदीदा सेक्टर (Job Category)</label>
+                        <label class="block font-bold mb-1">पसंदीदा सेक्टर</label>
                         <select id="prefCat" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
-                            <option value="All">सभी सेक्टर (Govt & Private)</option>
-                            <option value="Sarkari">केवल सरकारी नौकरियां</option>
-                            <option value="Private">केवल प्राइवेट और कॉर्पोरेट</option>
+                            <option value="All">सभी सेक्टर</option>
+                            <option value="Sarkari">केवल सरकारी</option>
+                            <option value="Private">केवल प्राइवेट</option>
                         </select>
                     </div>
                 </div>
@@ -183,24 +223,15 @@
             </div>
         </div>
 
-        <!-- TAB CONTENT 5: EXAM PREP & CURRENT AFFAIRS -->
+        <!-- TAB CONTENT 6: EXAM PREP -->
         <div id="contentPrep" class="space-y-4 hidden">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
-                <h3 class="font-black text-sm uppercase text-amber-600 dark:text-amber-400">📚 डेली करेंट अफेयर्स और प्रैक्टिस क्विज़ (Exam Prep Corner)</h3>
+                <h3 class="font-black text-sm uppercase text-amber-600 dark:text-amber-400">📚 डेली करेंट अफेयर्स और प्रैक्टिस क्विज़</h3>
                 <div class="space-y-3 text-xs">
                     <div class="p-4 bg-amber-50 dark:bg-gray-700 border border-amber-200 dark:border-gray-600 rounded-xl space-y-1">
                         <span class="text-[10px] font-black bg-amber-200 text-amber-900 px-2 py-0.5 rounded">Today's Update</span>
-                        <h4 class="font-bold text-sm text-gray-900 dark:text-white mt-1">करेंट अफेयर्स 16 सितम्बर 2026: प्रमुख राष्ट्रीय और अंतर्राष्ट्रीय अपडेट</h4>
-                        <p class="text-gray-600 dark:text-gray-300">हाल ही में केंद्रीय मंत्रिमंडल द्वारा शुरू की गई नई डिजिटल रोजगार योजना के तहत उत्तर प्रदेश और बिहार के युवाओं को विशेष प्राथमिकता दी जाएगी।</p>
-                    </div>
-                    <div class="p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-xl space-y-2">
-                        <h4 class="font-bold text-sm text-gray-900 dark:text-white">🎯 त्वरित मॉक क्विज़ (Quick GK Quiz)</h4>
-                        <p class="font-medium text-gray-700 dark:text-gray-200">प्रश्न: भारत में 'कंप्यूटर ऑपरेटर' और डेटा गवर्नेंस नीति लागू करने वाला पहला राज्य कौन-सा है?</p>
-                        <div class="flex gap-2 pt-1">
-                            <button onclick="alert('बिल्कुल सही जवाब! उत्तर प्रदेश सही विकल्प है।')" class="bg-white dark:bg-gray-800 border dark:border-gray-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100">A) उत्तर प्रदेश</button>
-                            <button onclick="alert('गलत जवाब, प्रयास जारी रखें!')" class="bg-white dark:bg-gray-800 border dark:border-gray-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100">B) महाराष्ट्र</button>
-                            <button onclick="alert('गलत जवाब, प्रयास जारी रखें!')" class="bg-white dark:bg-gray-800 border dark:border-gray-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100">C) कर्नाटक</button>
-                        </div>
+                        <h4 class="font-bold text-sm text-gray-900 dark:text-white mt-1">करेंट अफेयर्स 16 सितम्बर 2026: प्रमुख राष्ट्रीय अपडेट</h4>
+                        <p class="text-gray-600 dark:text-gray-300">केंद्रीय मंत्रिमंडल द्वारा शुरू की गई नई डिजिटल रोजगार योजना के तहत युवाओं को विशेष प्राथमिकता दी जाएगी।</p>
                     </div>
                 </div>
             </div>
@@ -213,7 +244,7 @@
         <p>&copy; 2026 RozgarHub.in • Next-Level Candidate Career Hub</p>
     </footer>
 
-    <!-- Candidate Portal JavaScript Logic -->
+    <!-- Script Logic -->
     <script>
         function switchAuthTab(tab) {
             if(tab === 'login') {
@@ -234,10 +265,11 @@
             const user = {
                 name: document.getElementById('signupName').value,
                 email: document.getElementById('signupEmail').value,
-                qual: document.getElementById('signupQual').value
+                qual: document.getElementById('signupQual').value,
+                photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
             };
             localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
-            alert("सफलतापूर्वक खाता बन गया है!");
+            alert("खाता सफलतापर्वक बन गया है!");
             checkAuthAndLoadDashboard();
         }
 
@@ -246,7 +278,7 @@
             const email = document.getElementById('loginEmail').value;
             let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
             if(!user) {
-                user = { name: "अमन कुमार", email: email, qual: "Graduate" };
+                user = { name: "अमन कुमार", email: email, qual: "Graduate", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" };
                 localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
             }
             alert("लॉगिन सफल!");
@@ -263,13 +295,25 @@
         };
 
         function checkAuthAndLoadDashboard() {
-            const user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
             if(user) {
                 document.getElementById('authView').classList.add('hidden');
                 document.getElementById('dashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
+
+                // Update welcome banner info & photo
                 document.getElementById('userWelcomeName').innerText = `नमस्ते, ${user.name}!`;
-                document.getElementById('userWelcomeMeta').innerText = `योग्यता: ${user.qual} • पसंदीदा शहर: Azamgarh`;
+                document.getElementById('userWelcomeMeta').innerText = `योग्यता: ${user.qual} • Azamgarh`;
+                if(user.photo) {
+                    document.getElementById('userWelcomePhoto').src = user.photo;
+                }
+
+                // Populate profile edit fields
+                document.getElementById('editName').value = user.name || "";
+                document.getElementById('editEmail').value = user.email || "";
+                document.getElementById('editQual').value = user.qual || "Graduate";
+                document.getElementById('editPhotoUrl').value = user.photo || "";
+
                 renderAppliedJobsWithTimeline();
                 renderInstantApplyJobs();
                 loadVaultData();
@@ -280,10 +324,25 @@
             }
         }
 
+        function saveProfileDetails(e) {
+            e.preventDefault();
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser')) || {};
+            user.name = document.getElementById('editName').value;
+            user.email = document.getElementById('editEmail').value;
+            user.qual = document.getElementById('editQual').value;
+            user.photo = document.getElementById('editPhotoUrl').value || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150";
+
+            localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+            alert("कैंडिडेट प्रोफाइल सफलतापूर्वक अपडेट हो गई है!");
+            checkAuthAndLoadDashboard();
+        }
+
         function switchDashTab(tab) {
-            ['applied', 'jobs', 'vault', 'prefs', 'prep'].forEach(t => {
-                document.getElementById('content' + capitalize(t)).classList.add('hidden');
-                document.getElementById('dTab' + capitalize(t)).className = "px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50";
+            ['applied', 'jobs', 'profile', 'vault', 'prefs', 'prep'].forEach(t => {
+                let el = document.getElementById('content' + capitalize(t));
+                let btn = document.getElementById('dTab' + capitalize(t));
+                if(el) el.classList.add('hidden');
+                if(btn) btn.className = "px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50";
             });
             document.getElementById('content' + capitalize(tab)).classList.remove('hidden');
             document.getElementById('dTab' + capitalize(tab)).className = "px-4 py-2 rounded-xl bg-blue-700 text-white shadow";
@@ -301,8 +360,8 @@
             let html = "";
             applied.forEach(job => {
                 let step1 = "bg-green-600 text-white";
-                let step2 = job.status === "Submitted" ? "bg-gray-200 text-gray-600" : "bg-green-600 text-white";
-                let step3 = (job.status === "Shortlisted" || job.status === "Interview") ? "bg-green-600 text-white" : "bg-gray-200 text-gray-600";
+                let step2 = job.status === "Submitted" ? "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400" : "bg-green-600 text-white";
+                let step3 = (job.status === "Shortlisted" || job.status === "Interview") ? "bg-green-600 text-white" : "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400";
 
                 html += `
                     <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border dark:border-gray-700 space-y-3 text-xs">
@@ -313,7 +372,6 @@
                             </div>
                             <span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold uppercase text-[10px]">${job.status}</span>
                         </div>
-                        <!-- Visual Timeline Progress Bar -->
                         <div class="pt-2 border-t dark:border-gray-700 grid grid-cols-3 gap-2 text-center font-bold text-[10px]">
                             <div class="p-2 rounded-lg ${step1}">1. आवेदन जमा (Submitted)</div>
                             <div class="p-2 rounded-lg ${step2}">2. समीक्षा (Viewed)</div>
@@ -341,14 +399,14 @@
                             <p class="text-gray-500">${job.org} • 📍 ${job.city}</p>
                             <p class="font-bold text-green-600 mt-1">💰 वेतन: ${job.salary}</p>
                         </div>
-                        <button onclick="instantApply(${job.id}, '${job.title}', '${job.org}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold shadow transition">1-क्लिक अप्लाई करें ⚡</button>
+                        <button onclick="instantApply('${job.title}', '${job.org}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold shadow transition">1-क्लिक अप्लाई करें ⚡</button>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        function instantApply(id, title, org) {
+        function instantApply(title, org) {
             let applied = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [];
             if(applied.some(j => j.title === title)) {
                 alert("आप इस जॉब के लिए पहले ही आवेदन कर चुके हैं!");
@@ -383,7 +441,7 @@
         }
 
         function savePreferences() {
-            alert("आपकी जॉब प्रेफरेंस और अलर्ट सेटिंग्स सेव हो गई हैं!");
+            alert("आपकी जॉब प्रेफरेंस सेटिंग्स सेव हो गई हैं!");
         }
     </script>
 </body>
