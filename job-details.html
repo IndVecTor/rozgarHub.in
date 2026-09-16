@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Full Details - RozgarHub.in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <header class="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
+            <a href="index.html" class="bg-white text-blue-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-100 transition shadow">&larr; होम पेज पर वापस जाएं</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-10 max-w-3xl flex-grow">
+        <div class="bg-white p-8 rounded-2xl shadow-xl border space-y-6">
+            
+            <!-- Job Header -->
+            <div class="border-b pb-4 space-y-2">
+                <span id="detailCategory" class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full uppercase">Verified Vacancy</span>
+                <h1 id="detailTitle" class="text-2xl md:text-3xl font-extrabold text-gray-900 mt-2">Loading Job Title...</h1>
+                <p id="detailOrg" class="text-sm font-bold text-blue-600">Organization Name</p>
+            </div>
+
+            <!-- Key Info Box -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 bg-blue-50 p-4 rounded-xl border border-blue-200 text-xs">
+                <div>
+                    <p class="text-gray-500 font-semibold">लोकेशन (Location)</p>
+                    <p id="detailCity" class="font-bold text-gray-900 mt-0.5">-</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-semibold">वेतन (Salary)</p>
+                    <p id="detailSalary" class="font-bold text-gray-900 mt-0.5">-</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-semibold">अंतिम तिथि (Last Date)</p>
+                    <p id="detailDate" class="font-bold text-red-600 mt-0.5">-</p>
+                </div>
+            </div>
+
+            <!-- Full Description / Responsibilities -->
+            <div class="space-y-3">
+                <h3 class="font-bold text-sm uppercase text-gray-800 border-b pb-1">📋 विस्तृत विवरण और योग्यता (Full Description & Eligibility)</h3>
+                <p id="detailFullDesc" class="text-sm text-gray-700 leading-relaxed">
+                    यहाँ इस वैकेंसी की पूरी जानकारी, शैक्षणिक योग्यता (Educational Qualification), चयन प्रक्रिया (Selection Process) और कार्य विवरण प्रदर्शित किया जाएगा।
+                </p>
+            </div>
+
+            <!-- Action Buttons (Apply, WhatsApp Channel, Share) -->
+            <div class="pt-4 border-t flex flex-wrap items-center justify-between gap-4">
+                <a href="candidate-login.html" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold text-sm shadow transition">
+                    🚀 इस जॉब के लिए अप्लाई करें (Apply Now)
+                </a>
+                <div class="flex items-center space-x-3">
+                    <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow">
+                        💬 व्हाट्सएप चैनल जॉइन करें
+                    </a>
+                    <button onclick="shareCurrentJob()" class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-3 rounded-xl font-bold text-xs shadow">
+                        🔗 शेयर करें
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-6 text-xs mt-12">
+        &copy; 2026 RozgarHub.in • Dedicated Job Detail View
+    </footer>
+
+    <!-- JavaScript to Read URL parameters -->
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const title = urlParams.get('title');
+            
+            if(title) {
+                document.getElementById('detailTitle').innerText = decodeURIComponent(title);
+                document.getElementById('detailOrg').innerText = "RozgarHub Verified Partner / Sarkari Board";
+                document.getElementById('detailCity').innerText = "Azamgarh / All India";
+                document.getElementById('detailSalary').innerText = "As per industry standards";
+                document.getElementById('detailDate').innerText = "Open / Active";
+                document.getElementById('detailFullDesc').innerText = `Full detailed information regarding ${decodeURIComponent(title)}. Candidates are advised to check all eligibility criteria, required documents (Aadhar, Resume, Certificates), and apply before the closing date.`;
+            }
+        };
+
+        function shareCurrentJob() {
+            if (navigator.share) {
+                navigator.share({ title: document.getElementById('detailTitle').innerText, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("पेज का लिंक कॉपी हो गया है!");
+            }
+        }
+    </script>
+</body>
+</html>

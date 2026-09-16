@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Login - RozgarHub.in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Navbar -->
+    <header class="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
+            <a href="index.html" class="bg-white text-blue-600 px-4 py-2 rounded-lg text-xs md:text-sm font-bold hover:bg-gray-100 transition shadow">&larr; होम पेज</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-12 max-w-md flex-grow flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-blue-600 w-full">
+            
+            <div class="flex border-b mb-6 text-sm">
+                <button id="tabLogin" onclick="switchAuthMode('login')" class="flex-1 pb-3 font-bold text-blue-600 border-b-2 border-blue-600 text-center">लॉगिन (Login)</button>
+                <button id="tabSignup" onclick="switchAuthMode('signup')" class="flex-1 pb-3 font-bold text-gray-400 text-center">नया रजिस्ट्रेशन (Signup)</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">मोबाइल नंबर (Mobile Number)</label>
+                    <input type="tel" id="logMobile" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">4-Digit पिन (PIN)</label>
+                    <input type="password" id="logPin" placeholder="••••" pattern="[0-9]{4}" maxlength="4" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                    <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-1.5"> याद रखें</label>
+                    <a href="#" onclick="openForgotModal()" class="text-blue-600 font-semibold hover:underline">पिन भूल गए?</a>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow">लॉगिन करें</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-4 text-sm hidden">
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">पूरा नाम (Full Name)</label>
+                    <input type="text" id="regName" placeholder="अपना पूरा नाम लिखें" required class="w-full border p-2.5 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">मोबाइल नंबर (Mobile Number)</label>
+                    <input type="tel" id="regMobile" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required class="w-full border p-2.5 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">4-Digit नया पिन बनाएं</label>
+                    <input type="password" id="regPin" placeholder="4 अंकों का पिन" pattern="[0-9]{4}" maxlength="4" required class="w-full border p-2.5 rounded-lg">
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition shadow">रजिस्ट्रेशन पूरा करें</button>
+            </form>
+
+            <div id="authAlert" class="mt-4 p-3 rounded-lg text-center text-xs hidden font-bold"></div>
+        </div>
+    </main>
+
+    <!-- Forgot PIN Modal -->
+    <div id="forgotModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full text-sm">
+            <h3 class="font-bold text-lg text-blue-700 mb-2">पिन रीसेट करें</h3>
+            <p class="text-gray-600 text-xs mb-4">अपना 10 अंकों का रजिस्टर्ड मोबाइल नंबर दर्ज करें:</p>
+            <input type="tel" id="fgtMobile" placeholder="मोबाइल नंबर" maxlength="10" class="w-full border p-2.5 rounded-lg mb-4">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeForgotModal()" class="px-4 py-2 bg-gray-200 rounded-lg text-xs font-bold">रद्द करें</button>
+                <button onclick="submitForgot()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold">ओटीपी भेजें</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white text-center py-4 text-xs">
+        &copy; 2026 RozgarHub.in • Candidate Login Portal
+    </footer>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyDummyKey", authDomain: "rozgarhub.firebaseapp.com", projectId: "rozgarhub" };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+
+        function switchAuthMode(mode) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const tabLogin = document.getElementById('tabLogin');
+            const tabSignup = document.getElementById('tabSignup');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.className = "flex-1 pb-3 font-bold text-blue-600 border-b-2 border-blue-600 text-center";
+                tabSignup.className = "flex-1 pb-3 font-bold text-gray-400 text-center";
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabSignup.className = "flex-1 pb-3 font-bold text-green-600 border-b-2 border-green-600 text-center";
+                tabLogin.className = "flex-1 pb-3 font-bold text-gray-400 text-center";
+            }
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const mobile = document.getElementById('regMobile').value.trim();
+            const pin = document.getElementById('regPin').value.trim();
+
+            let users = JSON.parse(localStorage.getItem('registeredCandidates')) || [];
+            if (users.some(u => u.mobile === mobile)) {
+                showAlert("यह मोबाइल नंबर पहले से रजिस्टर्ड है!", "bg-red-100 text-red-700");
+                return;
+            }
+
+            const newUser = {
+                name, mobile, pin, email: "", city: "", dob: "", headline: "", totalExp: "", lastCompany: "", skills: "", qualification: "", prefLocation: "", expectedSalary: "", photo: "",
+                appliedJobs: [], savedJobs: []
+            };
+
+            users.push(newUser);
+            localStorage.setItem('registeredCandidates', JSON.stringify(users));
+            showAlert("रजिस्ट्रेशन सफल! अब लॉगिन करें।", "bg-green-100 text-green-700");
+            setTimeout(() => switchAuthMode('login'), 1500);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const mobile = document.getElementById('logMobile').value.trim();
+            const pin = document.getElementById('logPin').value.trim();
+
+            let users = JSON.parse(localStorage.getItem('registeredCandidates')) || [];
+            let user = users.find(u => u.mobile === mobile && u.pin === pin);
+
+            if (!user && mobile === "9876543210" && pin === "1234") {
+                user = {
+                    name: "Aman Kumar",
+                    mobile: "9876543210",
+                    pin: "1234",
+                    headline: "Experienced Computer Operator",
+                    skills: "Basic Excel, MS Office, Typing",
+                    city: "Azamgarh",
+                    totalExp: "8 Years",
+                    appliedJobs: [],
+                    savedJobs: []
+                };
+            }
+
+            if (user) {
+                if(!user.appliedJobs) user.appliedJobs = [];
+                if(!user.savedJobs) user.savedJobs = [];
+                localStorage.setItem('activeCandidate', JSON.stringify(user));
+                showAlert("लॉगिन सफल! डैशबोर्ड पर जा रहे हैं...", "bg-green-100 text-green-700");
+                setTimeout(() => {
+                    window.location.href = "dashboard-candidate.html";
+                }, 1000);
+            } else {
+                showAlert("गलत मोबाइल नंबर या पिन!", "bg-red-100 text-red-700");
+            }
+        }
+
+        function showAlert(msg, cls) {
+            const el = document.getElementById('authAlert');
+            el.innerText = msg;
+            el.className = `mt-4 p-3 rounded-lg text-center text-xs font-bold ${cls}`;
+            el.classList.remove('hidden');
+        }
+
+        function openForgotModal() { document.getElementById('forgotModal').classList.remove('hidden'); }
+        function closeForgotModal() { document.getElementById('forgotModal').classList.add('hidden'); }
+        function submitForgot() {
+            if (document.getElementById('fgtMobile').value.trim().length === 10) {
+                alert("पिन रीसेट निर्देश आपके मोबाइल नंबर पर भेज दिए गए हैं।");
+                closeForgotModal();
+            } else { alert("कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें।"); }
+        }
+    </script>
+</body>
+</html>

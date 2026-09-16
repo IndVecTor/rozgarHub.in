@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Portal & Dashboard - RozgarHub.in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <header class="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
+            <a href="index.html" class="bg-white text-blue-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-100 transition shadow">&larr; होम पेज</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-10 max-w-2xl">
+        <!-- Employer Auth / Dashboard Box -->
+        <div id="empAuthBox" class="bg-white p-8 rounded-xl shadow-md border-t-4 border-yellow-500">
+            <h1 class="text-2xl font-extrabold text-gray-900 mb-2 text-center">🏢 एप्लॉयर पोर्टल (Employer Signup / Login)</h1>
+            <p class="text-gray-600 text-xs text-center mb-6">कर्मचारी नियुक्त करने के लिए रजिस्टर करें या लॉगिन करें।</p>
+
+            <form onsubmit="handleEmpAuth(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block font-semibold mb-1">संस्थान या कंपनी का नाम</label>
+                    <input type="text" id="empCompName" placeholder="जैसे: Tech Solutions" required class="w-full border p-2.5 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">आधिकारिक मोबाइल नंबर</label>
+                    <input type="tel" id="empCompMobile" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required class="w-full border p-2.5 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">पासवर्ड / पिन</label>
+                    <input type="password" id="empCompPin" placeholder="••••" required class="w-full border p-2.5 rounded-lg">
+                </div>
+                <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3 rounded-lg font-bold hover:bg-yellow-400 transition shadow">एप्लॉयर डैशबोर्ड में प्रवेश करें</button>
+            </form>
+        </div>
+
+        <!-- Employer Dashboard -->
+        <div id="empDashboard" class="bg-white p-8 rounded-xl shadow-md hidden space-y-6">
+            <div class="flex justify-between items-center border-b pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900" id="dashCompTitle">कंपनी डैशबोर्ड</h2>
+                    <p class="text-xs text-gray-500">अपनी नई जॉब वैकेंसी यहाँ पब्लिश करें।</p>
+                </div>
+                <button onclick="empLogout" class="bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs font-bold">लॉग आउट</button>
+            </div>
+
+            <!-- Job Post Form Inside Dashboard -->
+            <form onsubmit="postNewJob(event)" class="space-y-4 text-sm bg-gray-50 p-6 rounded-xl border">
+                <h3 class="font-bold text-blue-700 text-base mb-2">➕ नई जॉब वैकेंसी जोड़ें</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold mb-1">जॉब का शीर्षक (Job Title)</label>
+                        <input type="text" id="jobTitle" placeholder="जैसे: Computer Operator" required class="w-full border p-2.5 rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">शहर / लोकेशन</label>
+                        <input type="text" id="jobCity" placeholder="जैसे: Azamgarh" required class="w-full border p-2.5 rounded-lg bg-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold mb-1">वेतन (Salary)</label>
+                        <input type="text" id="jobSalary" placeholder="जैसे: ₹15,000 / महीना" required class="w-full border p-2.5 rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">आवश्यक स्किल्स</label>
+                        <input type="text" id="jobSkills" placeholder="जैसे: Basic Excel, Typing" required class="w-full border p-2.5 rounded-lg bg-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">विवरण (Description)</label>
+                    <textarea id="jobDesc" rows="2" placeholder="कार्य विवरण लिखें..." required class="w-full border p-2.5 rounded-lg bg-white"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-2.5 rounded-lg font-bold hover:bg-yellow-400 transition shadow">जॉब तुरंत लाइव करें</button>
+            </form>
+            <div id="postSuccess" class="hidden p-3 bg-green-100 text-green-800 rounded-lg text-center text-xs font-bold">जوب सफलतापूर्वक पब्लिश हो गई है!</div>
+        </div>
+    </main>
+
+    <script>
+        function handleEmpAuth(e) {
+            e.preventDefault();
+            const comp = document.getElementById('empCompName').value;
+            const mob = document.getElementById('empCompMobile').value;
+            localStorage.setItem('activeEmployer', comp);
+            showEmpDash(comp);
+        }
+
+        function showEmpDash(compName) {
+            document.getElementById('empAuthBox').classList.add('hidden');
+            document.getElementById('empDashboard').classList.remove('hidden');
+            document.getElementById('dashCompTitle').innerText = `कंपनी: ${compName}`;
+        }
+
+        function postNewJob(e) {
+            e.preventDefault();
+            const newJob = {
+                id: Date.now(),
+                title: document.getElementById('jobTitle').value,
+                company: localStorage.getItem('activeEmployer') || "Private Firm",
+                city: document.getElementById('jobCity').value,
+                salary: document.getElementById('jobSalary').value,
+                skills: document.getElementById('jobSkills').value,
+                desc: document.getElementById('jobDesc').value
+            };
+
+            let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+            jobs.unshift(newJob);
+            localStorage.setItem('rozgarHubEmployerJobs', JSON.stringify(jobs));
+
+            document.getElementById('postSuccess').classList.remove('hidden');
+            setTimeout(() => { document.getElementById('postSuccess').classList.add('hidden'); }, 3000);
+            e.target.reset();
+        }
+
+        function empLogout() {
+            localStorage.removeItem('activeEmployer');
+            location.reload();
+        }
+
+        window.onload = function() {
+            let active = localStorage.getItem('activeEmployer');
+            if(active) { showEmpDash(active); }
+        }
+    </script>
+</body>
+</html>

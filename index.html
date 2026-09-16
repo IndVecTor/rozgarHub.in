@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RozgarHub.in - All India Sarkari Naukri, Latest Jobs & AI Resume Maker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Top Navbar -->
+    <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
+            <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
+                <a href="candidate-login.html" class="bg-blue-800 hover:bg-blue-900 px-3 py-2 rounded-lg transition">👤 कैंडिडेट पोर्टल</a>
+                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 एप्लॉयर (जॉब पोस्ट)</a>
+                <a href="resume-builder.html" class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg transition">📄 AI रिज्यूमे मेकर</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Live Urgent Notification Marquee Ticker -->
+    <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
+        <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">All India Alert</span>
+        <marquee behavior="scroll" direction="left" scrollamount="5">
+            🔥 UPSC Civil Services & SSC CGL 2026 Notifications Released | 📢 Railway RRB NTPC & Group D Direct Recruitment | ✨ RozgarHub AI Resume Builder live with 15+ Templates!
+        </marquee>
+    </div>
+
+    <!-- Hero Search & Pan-India Section -->
+    <section class="bg-gradient-to-r from-blue-800 via-indigo-800 to-blue-900 text-white py-12 px-4 text-center shadow-md">
+        <div class="container mx-auto max-w-3xl space-y-4">
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight">भारत की हर सरकारी व प्राइवेट नौकरी सबसे पहले</h1>
+            <p class="text-xs md:text-sm text-blue-200">पूरे भारत के राज्यों (UP, Bihar, Delhi, Maharashtra आदि) की सभी वैकेंसियाँ एक ही मंच पर।</p>
+            
+            <!-- Search & State Filter Bar -->
+            <div class="pt-4 flex flex-col sm:flex-row max-w-2xl mx-auto bg-white rounded-xl p-2 shadow-xl gap-2">
+                <input type="text" id="searchInput" oninput="filterHomeJobs()" placeholder="जॉब या पद का नाम सर्च करें (जैसे: SSC, Railway, Operator)..." class="w-full px-3 py-2 text-sm text-gray-800 focus:outline-none">
+                <select id="stateFilterSelect" onchange="filterHomeJobs()" class="bg-gray-100 text-xs font-bold text-gray-700 p-2.5 rounded-lg border focus:outline-none">
+                    <option value="ALL">सभी राज्य (All India)</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh (UP)</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Delhi">Delhi NCR</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh (MP)</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                </select>
+                <button onclick="filterHomeJobs()" class="bg-blue-700 text-white px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-blue-800 transition">खोजें</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Category Filter Pills -->
+    <div class="bg-white border-b shadow-sm py-3 px-4">
+        <div class="container mx-auto flex flex-wrap justify-center gap-2 text-xs font-bold">
+            <button onclick="filterByCategory('ALL')" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow transition">सभी अपडेट</button>
+            <button onclick="filterByCategory('Sarkari')" class="bg-gray-100 hover:bg-red-100 hover:text-red-700 text-gray-700 px-4 py-2 rounded-full transition">🏛️ ऑल इंडिया सरकारी जॉब</button>
+            <button onclick="filterByCategory('Direct')" class="bg-gray-100 hover:bg-blue-100 hover:text-blue-700 text-gray-700 px-4 py-2 rounded-full transition">📍 प्राइवेट / कॉर्पोरेट जॉब्स</button>
+            <button onclick="filterByCategory('AdmitCard')" class="bg-gray-100 hover:bg-yellow-100 hover:text-yellow-800 text-gray-700 px-4 py-2 rounded-full transition">🖨️ एडमिट कार्ड</button>
+            <button onclick="filterByCategory('Result')" class="bg-gray-100 hover:bg-green-100 hover:text-green-800 text-gray-700 px-4 py-2 rounded-full transition">🏆 परीक्षा रिजल्ट्स</button>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <main class="container mx-auto px-4 py-8 flex-grow max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left 2 Columns: Job Posts Feed -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h2 class="text-lg font-black text-gray-900 flex items-center gap-2">
+                    <span>⚡ राष्ट्रीय जॉब फीड (Pan-India Job Feed)</span>
+                </h2>
+                <span id="postCount" class="text-xs font-semibold text-gray-500">Showing all posts</span>
+            </div>
+
+            <!-- Jobs Feed Container -->
+            <div id="homeJobsFeed" class="space-y-4">
+                <!-- Dynamically rendered via JS -->
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="space-y-6">
+            
+            <!-- WhatsApp Channel Alert Box -->
+            <div class="bg-gradient-to-br from-green-600 to-emerald-700 text-white p-5 rounded-2xl shadow-lg space-y-3">
+                <div class="flex items-center space-x-3">
+                    <span class="text-3xl">💬</span>
+                    <div>
+                        <h3 class="font-black text-base">RozgarHub ऑल-इंडिया व्हाट्सएप ग्रुप</h3>
+                        <p class="text-xs text-green-100">हर राज्य की सरकारी जॉब का अलर्ट सबसे पहले पाएं!</p>
+                    </div>
+                </div>
+                <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="block bg-white text-green-800 text-center py-2.5 rounded-xl font-extrabold text-xs shadow hover:bg-green-50 transition">
+                    अभी चैनल जॉइन करें (Join Free) &rarr;
+                </a>
+            </div>
+
+            <!-- AI Resume Builder Promo Box -->
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-lg space-y-3">
+                <div class="flex items-center space-x-3">
+                    <span class="text-3xl">📄</span>
+                    <div>
+                        <h3 class="font-black text-base">AI एटीएस रिज्यूमे मेकर</h3>
+                        <p class="text-xs text-blue-100">15+ प्रोफेशनल इंग्लिश टेम्पलेट्स में अपना रिज्यूमे बनाएं।</p>
+                    </div>
+                </div>
+                <a href="resume-builder.html" class="block bg-yellow-400 text-gray-900 text-center py-2.5 rounded-xl font-extrabold text-xs shadow hover:bg-yellow-300 transition">
+                    फ्री रिज्यूमे बनाएं &rarr;
+                </a>
+            </div>
+
+            <!-- Important National Links -->
+            <div class="bg-white p-5 rounded-2xl shadow-md border space-y-3">
+                <h3 class="font-black text-sm uppercase text-blue-900 border-b pb-2">🔗 महत्वपूर्ण लिंक्स (Quick Links)</h3>
+                <ul class="space-y-2 text-xs font-semibold text-blue-700">
+                    <li><a href="candidate-login.html" class="hover:underline flex items-center gap-1.5">👉 कैंडिडेट पोर्टल और डैशबोर्ड</a></li>
+                    <li><a href="employer-login.html" class="hover:underline flex items-center gap-1.5">👉 एप्लॉयर जॉब पोस्टिंग पोर्टल</a></li>
+                    <li><a href="#" class="hover:underline flex items-center gap-1.5">👉 UPSC & SSC Official Portals</a></li>
+                    <li><a href="#" class="hover:underline flex items-center gap-1.5">👉 Railway & Banking Exam Updates</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- QUICK JOB DETAIL MODAL -->
+    <div id="quickModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center p-4 z-50">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg w-full space-y-4 relative">
+            <button onclick="closeQuickModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold text-xl">&times;</button>
+            <div>
+                <span id="mCategory" class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full uppercase">Category</span>
+                <h3 id="mTitle" class="text-xl font-black text-gray-900 mt-2">Job Title</h3>
+                <p id="mOrg" class="text-xs font-semibold text-gray-600 mt-0.5">Organization / Company</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs bg-gray-50 p-3 rounded-xl border">
+                <p>📍 <strong>Location / State:</strong> <span id="mCity">-</span></p>
+                <p>💰 <strong>Salary:</strong> <span id="mSalary">-</span></p>
+                <p class="col-span-2">📅 <strong>Last Date:</strong> <span id="mDate">-</span></p>
+            </div>
+            <div>
+                <h4 class="font-bold text-xs uppercase text-gray-700 mb-1">📝 संक्षिप्त विवरण (Short Summary):</h4>
+                <p id="mDesc" class="text-xs text-gray-600 bg-blue-50/50 p-3 rounded-xl border leading-relaxed">विवरण...</p>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t">
+                <button onclick="closeQuickModal()" class="px-4 py-2 bg-gray-200 rounded-lg font-bold text-xs text-gray-700">बंद करें</button>
+                <a id="mFullDetailLink" href="#" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold text-xs hover:bg-blue-800 shadow">व्यू फुल डिटेल (View Full Detail) &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-8 text-xs mt-12 space-y-3">
+        <div class="container mx-auto px-4 max-w-4xl space-y-2">
+            <p class="font-bold text-sm">RozgarHub.in • भारत का विश्वसनीय ऑल-इंडिया जॉब और सरकारी वैकेंसी पोर्टल</p>
+            <p class="text-gray-400">Disclaimer: यह वेबसाइट केवल सूचना के उद्देश्य से है। उम्मीदवारों को सलाह दी जाती है कि वे आवेदन करने से पहले आधिकारिक वेबसाइट अवश्य जाँच लें।</p>
+            <p class="text-gray-500">&copy; 2026 RozgarHub.in. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Pan-India Data & Filtering -->
+    <script>
+        const allJobsDatabase = [
+            {
+                id: 1,
+                title: "UPSC Civil Services IAS / IPS Exam 2026",
+                org: "Union Public Service Commission",
+                category: "Sarkari",
+                state: "All India",
+                city: "New Delhi / All India",
+                salary: "Level-10 Pay Matrix (IAS/IPS)",
+                date: "10 October 2026",
+                desc: "UPSC has announced notification for Civil Services Preliminary Examination. Graduates from any recognized university across India can apply online."
+            },
+            {
+                id: 2,
+                title: "SSC CGL Graduate Level Recruitment 2026",
+                org: "Staff Selection Commission",
+                category: "Sarkari",
+                state: "All India",
+                city: "All India",
+                salary: "₹45,000 - ₹85,000 / month",
+                date: "25 October 2026",
+                desc: "Combined Graduate Level Examination for Inspector, Auditor, and Assistant posts across various central government ministries and departments."
+            },
+            {
+                id: 3,
+                title: "UPSSSC PET & Lekhpal Recruitment 2026",
+                org: "UPSSSC Lucknow",
+                category: "Sarkari",
+                state: "Uttar Pradesh",
+                city: "Uttar Pradesh",
+                salary: "As per 7th Pay Commission",
+                date: "15 October 2026",
+                desc: "Applications invited for thousands of vacancies across UP government departments. Check eligibility, age limit, and application process."
+            },
+            {
+                id: 4,
+                title: "BPSC Teacher TRE 5.0 Recruitment 2026",
+                org: "Bihar Public Service Commission",
+                category: "Sarkari",
+                state: "Bihar",
+                city: "Bihar (All Districts)",
+                salary: "₹35,000 - ₹55,000 / month",
+                date: "05 November 2026",
+                desc: "BPSC invites online applications for Primary, Secondary, and Higher Secondary teachers across Bihar state schools."
+            },
+            {
+                id: 5,
+                title: "Delhi Police Constable Executive Exam 2026",
+                org: "Staff Selection Commission / Delhi Police",
+                category: "Sarkari",
+                state: "Delhi",
+                city: "New Delhi",
+                salary: "₹30,000 - ₹45,000 / month",
+                date: "18 October 2026",
+                desc: "Recruitment for Constable (Executive) male and female in Delhi Police. 10+2 Intermediate passed candidates from any state can apply."
+            },
+            {
+                id: 6,
+                title: "MPSC State Service Gazetted Exam 2026",
+                org: "Maharashtra Public Service Commission",
+                category: "Sarkari",
+                state: "Maharashtra",
+                city: "Mumbai, Pune, Nagpur",
+                salary: "Gazetted Officer Scale",
+                date: "30 October 2026",
+                desc: "MPSC civil services recruitment for administrative posts in Maharashtra state government departments."
+            },
+            {
+                id: 7,
+                title: "Software Support & Data Operations Executive",
+                org: "TechCorp Global Services",
+                category: "Direct",
+                state: "Uttar Pradesh",
+                city: "Noida / Remote",
+                salary: "₹22,000 / month",
+                date: "Active Opening",
+                desc: "Private corporate opening for computer operators and data operations executives with strong MS Office skills and good communication."
+            },
+            {
+                id: 8,
+                title: "RRB NTPC Graduate & Undergraduate Posts",
+                org: "Railway Recruitment Board",
+                category: "Sarkari",
+                state: "All India",
+                city: "All India Railway Zones",
+                salary: "₹25,000 - ₹60,000 / month",
+                date: "12 November 2026",
+                desc: "RRB invites applications for Non-Technical Popular Categories (NTPC) including Station Master, Goods Train Manager, and Clerks."
+            }
+        ];
+
+        window.onload = function() {
+            renderFeed(allJobsDatabase);
+        };
+
+        let currentActiveCategory = 'ALL';
+
+        function renderFeed(jobsArray) {
+            const feedContainer = document.getElementById('homeJobsFeed');
+            let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+            let combined = [...employerJobs, ...jobsArray];
+
+            document.getElementById('postCount').innerText = `Showing ${combined.length} posts`;
+
+            if(combined.length === 0) {
+                feedContainer.innerHTML = `<p class="text-xs text-gray-500 italic p-6 bg-white rounded-xl text-center shadow-sm">इस फिल्टर या सर्च के आधार पर कोई वैकेंसी नहीं मिली।</p>`;
+                return;
+            }
+
+            let html = "";
+            combined.forEach(post => {
+                let badgeColor = post.category === 'Sarkari' ? 'bg-red-100 text-red-700' : (post.category === 'AdmitCard' ? 'bg-yellow-100 text-yellow-800' : (post.category === 'Result' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-700'));
+                let badgeText = post.category === 'Sarkari' ? '🏛️ Sarkari Vacancy' : (post.category === 'AdmitCard' ? '🖨️ Admit Card' : (post.category === 'Result' ? '🏆 Result' : '📍 Corporate / Direct Job'));
+                let locationBadge = post.state ? `📍 ${post.state} (${post.city})` : `📍 ${post.city || 'All India'}`;
+
+                html += `
+                    <div class="bg-white p-5 rounded-2xl shadow-md border hover:shadow-lg transition flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-bold ${badgeColor} px-2.5 py-1 rounded-full uppercase">${badgeText}</span>
+                                <span class="text-[11px] text-gray-500 font-semibold">📅 ${post.date || 'Active'}</span>
+                            </div>
+                            <h3 class="text-base font-extrabold text-gray-900 hover:text-blue-700 cursor-pointer" onclick='openQuickModal(${JSON.stringify(post).replace(/'/g, "&#39;")})'>${post.title}</h3>
+                            <p class="text-xs font-semibold text-blue-600 mt-0.5">${post.org || post.company || 'RozgarHub Verified'} • ${locationBadge}</p>
+                            <p class="text-xs text-gray-600 mt-2 line-clamp-2">${post.desc || post.summary || 'Click view detail to check full eligibility and requirements.'}</p>
+                        </div>
+
+                        <div class="pt-3 border-t flex flex-wrap items-center justify-between gap-2">
+                            <button onclick='openQuickModal(${JSON.stringify(post).replace(/'/g, "&#39;")})' class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-3.5 py-2 rounded-xl text-xs font-bold transition">
+                                🔍 Job Detail & Apply
+                            </button>
+                            <div class="flex items-center space-x-2">
+                                <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1 transition shadow-sm" title="WhatsApp Alert">
+                                    💬 WhatsApp
+                                </a>
+                                <button onclick="sharePost('${post.title}', '${post.city || 'India'}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-xl text-xs font-bold transition">
+                                    🔗 शेयर
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            feedContainer.innerHTML = html;
+        }
+
+        function filterByCategory(cat) {
+            currentActiveCategory = cat;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const selectedState = document.getElementById('stateFilterSelect').value;
+
+            let filtered = allJobsDatabase.filter(j => {
+                let matchesCategory = (currentActiveCategory === 'ALL' || j.category === currentActiveCategory);
+                let matchesState = (selectedState === 'ALL' || j.state === selectedState || (j.state === 'All India') || (j.city && j.city.toLowerCase().includes(selectedState.toLowerCase())));
+                let matchesQuery = (!query || j.title.toLowerCase().includes(query) || (j.city && j.city.toLowerCase().includes(query)) || (j.org && j.org.toLowerCase().includes(query)));
+                
+                return matchesCategory && matchesState && matchesQuery;
+            });
+
+            renderFeed(filtered);
+        }
+
+        function filterHomeJobs() {
+            applyFilters();
+        }
+
+        function openQuickModal(post) {
+            document.getElementById('mCategory').innerText = post.category || 'Job Post';
+            document.getElementById('mTitle').innerText = post.title;
+            document.getElementById('mOrg').innerText = post.org || post.company || 'RozgarHub Partner';
+            document.getElementById('mCity').innerText = post.state ? `${post.state} - ${post.city}` : (post.city || 'All India');
+            document.getElementById('mSalary').innerText = post.salary || 'Best in Industry';
+            document.getElementById('mDate').innerText = post.date || 'Openings Open';
+            document.getElementById('mDesc').innerText = post.desc || post.summary || 'Detailed description available on full detail page.';
+            
+            document.getElementById('mFullDetailLink').href = `job-detail.html?id=${post.id || 1}&title=${encodeURIComponent(post.title)}`;
+            document.getElementById('quickModal').classList.remove('hidden');
+        }
+
+        function closeQuickModal() {
+            document.getElementById('quickModal').classList.add('hidden');
+        }
+
+        function sharePost(title, city) {
+            const shareText = `🔥 नई ऑल-इंडिया जॉब अपडेट: *${title}* (${city})\nपूरी जानकारी और आवेदन के लिए RozgarHub.in पर विजिट करें!`;
+            if (navigator.share) {
+                navigator.share({ title: title, text: shareText, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText);
+                alert("लिंक और विवरण कॉपी हो गया है! इसे व्हाट्सएप पर शेयर करें।");
+            }
+        }
+    </script>
+</body>
+</html>

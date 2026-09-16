@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - RozgarHub.in</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans" onload="loadEmployerData()">
+
+    <!-- Header Navbar -->
+    <header class="bg-yellow-600 text-white shadow-md">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">RozgarHub<span class="text-yellow-200">.in</span></a>
+            <div class="flex items-center space-x-4">
+                <span id="employerCompanyName" class="bg-yellow-700 px-3 py-1.5 rounded-lg text-sm font-medium">🏢 Loading Company...</span>
+                <button onclick="logout()" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-red-600 transition">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Sidebar: Advanced Post New Job Form -->
+        <div class="bg-white p-6 rounded-xl shadow-md h-fit">
+            <h2 class="text-xl font-bold text-yellow-700 mb-4 pb-2 border-b">📝 Post a New Job</h2>
+            <form onsubmit="postNewJob(event)" class="space-y-3 text-sm">
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Job Title</label>
+                    <input type="text" id="jobTitle" required placeholder="e.g. Computer Operator" class="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Category</label>
+                        <select id="jobCategory" class="w-full p-2.5 border rounded-lg focus:outline-none">
+                            <option>Back Office / Computer Operator</option>
+                            <option>Customer Support / BPO</option>
+                            <option>Retail & E-commerce Operations</option>
+                            <option>Sales & Marketing</option>
+                            <option>Other / General</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Job Type</label>
+                        <select id="jobType" class="w-full p-2.5 border rounded-lg focus:outline-none">
+                            <option>Full Time</option>
+                            <option>Part Time</option>
+                            <option>Work From Home</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Salary Range</label>
+                        <input type="text" id="jobSalary" required placeholder="e.g. ₹12,000 - ₹18,000" class="w-full p-2.5 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Location / City</label>
+                        <input type="text" id="jobLocation" required placeholder="e.g. Azamgarh" class="w-full p-2.5 border rounded-lg">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Min Qualification</label>
+                        <select id="jobQual" class="w-full p-2.5 border rounded-lg">
+                            <option>10th Pass</option>
+                            <option>12th Pass</option>
+                            <option>Graduate</option>
+                            <option>ITI / Diploma</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Experience</label>
+                        <select id="jobExp" class="w-full p-2.5 border rounded-lg">
+                            <option>Fresher (0 Years)</option>
+                            <option>1+ Years</option>
+                            <option>2+ Years</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Required Skills <span class="text-gray-400 font-normal">(Optional)</span></label>
+                    <input type="text" id="jobSkills" placeholder="e.g. MS Office, Basic Excel" class="w-full p-2.5 border rounded-lg">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Openings</label>
+                        <input type="number" id="jobOpenings" min="1" value="1" required class="w-full p-2.5 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Last Date</label>
+                        <input type="date" id="jobLastDate" required class="w-full p-2.5 border rounded-lg">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Job Description & Timings</label>
+                    <textarea id="jobDesc" rows="3" required placeholder="Write details about work & office timings..." class="w-full p-2.5 border rounded-lg"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-yellow-600 text-white py-3 rounded-lg font-bold hover:bg-yellow-700 transition mt-2">Publish Job Live</button>
+            </form>
+        </div>
+
+        <!-- Right Main Area: My Posted Jobs & Candidates Applications -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Section 1: Active Posted Jobs with Delete/Close option -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex justify-between items-center">
+                    <span>📌 My Active Job Postings</span>
+                    <span class="text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">Managed Live</span>
+                </h2>
+                <div id="postedJobsList" class="space-y-3 text-sm text-gray-500">
+                    Loading your posted jobs...
+                </div>
+            </div>
+
+            <!-- Section 2: Candidate Applications Received -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">👥 Candidate Applications Received</h2>
+                <div id="applicantsList" class="space-y-4 text-sm text-gray-500">
+                    No applications received yet.
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Firebase Logic Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
+            authDomain: "rozgarhub-aa22b.firebaseapp.com",
+            projectId: "rozgarhub-aa22b",
+            storageBucket: "rozgarhub-aa22b.firebasestorage.app",
+            messagingSenderId: "979487527584",
+            appId: "1:979487527584:web:43b1f8eeb07c6631f42fc5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.loadEmployerData = async function() {
+            const empStr = localStorage.getItem('currentEmployer');
+            if(!empStr) {
+                alert("Please login first!");
+                window.location.href = "employer-login.html";
+                return;
+            }
+
+            const emp = JSON.parse(empStr);
+            document.getElementById('employerCompanyName').innerText = "🏢 " + emp.company;
+
+            await fetchEmployerJobs(emp.email);
+            await fetchApplicants(emp.company);
+        }
+
+        window.postNewJob = async function(e) {
+            e.preventDefault();
+            const empStr = localStorage.getItem('currentEmployer');
+            const emp = JSON.parse(empStr);
+
+            const jobData = {
+                title: document.getElementById('jobTitle').value,
+                category: document.getElementById('jobCategory').value,
+                type: document.getElementById('jobType').value,
+                salary: document.getElementById('jobSalary').value,
+                location: document.getElementById('jobLocation').value,
+                qualification: document.getElementById('jobQual').value,
+                experience: document.getElementById('jobExp').value,
+                skills: document.getElementById('jobSkills').value || "Not Specified",
+                openings: document.getElementById('jobOpenings').value,
+                lastDate: document.getElementById('jobLastDate').value,
+                description: document.getElementById('jobDesc').value,
+                company: emp.company,
+                employerEmail: emp.email,
+                createdAt: new Date().toLocaleDateString()
+            };
+
+            try {
+                await addDoc(collection(db, "jobs"), jobData);
+                alert("Success! Your job has been published live.");
+                e.target.reset();
+                fetchEmployerJobs(emp.email);
+            } catch (err) {
+                console.error(err);
+                alert("Failed to post job.");
+            }
+        }
+
+        async function fetchEmployerJobs(email) {
+            try {
+                const q = query(collection(db, "jobs"), where("employerEmail", "==", email));
+                const querySnapshot = await getDocs(q);
+                const listContainer = document.getElementById('postedJobsList');
+                
+                if(querySnapshot.empty) {
+                    listContainer.innerHTML = "<p class='italic'>You have not posted any jobs yet.</p>";
+                    return;
+                }
+
+                let html = "";
+                querySnapshot.forEach((docSnap) => {
+                    const job = docSnap.data();
+                    const jobId = docSnap.id;
+                    html += `
+                        <div class="p-4 border rounded-xl flex justify-between items-center bg-yellow-50/30">
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-base">${job.title}</h3>
+                                <p class="text-xs text-gray-600">${job.category} • Location: ${job.location} | Salary: ${job.salary}</p>
+                                <p class="text-xs text-gray-500 mt-0.5">Last Date: ${job.lastDate}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs bg-green-100 text-green-800 px-2.5 py-1 rounded-full font-semibold">Live</span>
+                                <button onclick="deleteJob('${jobId}', '${email}')" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-600 transition">Close / Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                listContainer.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        window.deleteJob = async function(jobId, email) {
+            if(confirm("Are you sure you want to close and remove this job posting?")) {
+                try {
+                    await deleteDoc(doc(db, "jobs", jobId));
+                    alert("Job closed successfully.");
+                    fetchEmployerJobs(email);
+                } catch(err) {
+                    console.error(err);
+                    alert("Failed to delete job.");
+                }
+            }
+        }
+
+        async function fetchApplicants(companyName) {
+            try {
+                const q = query(collection(db, "applications"), where("companyName", "==", companyName));
+                const querySnapshot = await getDocs(q);
+                const appContainer = document.getElementById('applicantsList');
+
+                if(querySnapshot.empty) {
+                    appContainer.innerHTML = "<p class='italic text-gray-500'>No candidate applications received yet.</p>";
+                    return;
+                }
+
+                let html = "";
+                querySnapshot.forEach((doc) => {
+                    const app = doc.data();
+                    html += `
+                        <div class="p-4 border rounded-xl bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-lg">${app.candidateName}</h3>
+                                <p class="text-xs text-gray-600 mt-0.5">Applied for: <span class="font-semibold text-blue-600">${app.jobTitle}</span></p>
+                                <p class="text-xs text-gray-500 mt-1">Qual: ${app.qualification} • Mobile: ${app.mobile} • City: ${app.city}</p>
+                            </div>
+                            <button onclick="alert('Candidate Resume: ${app.resumeName || "Not Uploaded"}')" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-700 transition">View Resume</button>
+                        </div>
+                    `;
+                });
+                appContainer.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        window.logout = function() {
+            localStorage.removeItem('currentEmployer');
+            window.location.href = "index.html";
+        }
+    </script>
+
+</body>
+</html>
