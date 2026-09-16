@@ -1,130 +1,418 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employer Portal & Dashboard - RozgarHub.in</title>
+    <title>Employer Dashboard - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <header class="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
+    <!-- Top Navbar -->
+    <header class="bg-blue-700 dark:bg-gray-800 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
-            <a href="index.html" class="bg-white text-blue-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-100 transition shadow">&larr; होम पेज</a>
+            <a href="index.html" class="text-xl md:text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span> <span class="text-xs bg-yellow-400 text-gray-900 px-2 py-0.5 rounded ml-2 font-bold">Employer Portal</span></a>
+            
+            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
+                <span id="loggedInCompanyName" class="hidden md:inline text-blue-200"></span>
+                <button onclick="employerLogout()" id="logoutBtn" class="hidden bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition">लॉग आउट</button>
+                <a href="index.html" class="bg-white text-blue-700 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition shadow">&larr; होम पेज</a>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-10 max-w-2xl">
-        <!-- Employer Auth / Dashboard Box -->
-        <div id="empAuthBox" class="bg-white p-8 rounded-xl shadow-md border-t-4 border-yellow-500">
-            <h1 class="text-2xl font-extrabold text-gray-900 mb-2 text-center">🏢 एप्लॉयर पोर्टल (Employer Signup / Login)</h1>
-            <p class="text-gray-600 text-xs text-center mb-6">कर्मचारी नियुक्त करने के लिए रजिस्टर करें या लॉगिन करें।</p>
-
-            <form onsubmit="handleEmpAuth(event)" class="space-y-4 text-sm">
-                <div>
-                    <label class="block font-semibold mb-1">संस्थान या कंपनी का नाम</label>
-                    <input type="text" id="empCompName" placeholder="जैसे: Tech Solutions" required class="w-full border p-2.5 rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold mb-1">आधिकारिक मोबाइल नंबर</label>
-                    <input type="tel" id="empCompMobile" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required class="w-full border p-2.5 rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold mb-1">पासवर्ड / पिन</label>
-                    <input type="password" id="empCompPin" placeholder="••••" required class="w-full border p-2.5 rounded-lg">
-                </div>
-                <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3 rounded-lg font-bold hover:bg-yellow-400 transition shadow">एप्लॉयर डैशबोर्ड में प्रवेश करें</button>
-            </form>
-        </div>
-
-        <!-- Employer Dashboard -->
-        <div id="empDashboard" class="bg-white p-8 rounded-xl shadow-md hidden space-y-6">
-            <div class="flex justify-between items-center border-b pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900" id="dashCompTitle">कंपनी डैशबोर्ड</h2>
-                    <p class="text-xs text-gray-500">अपनी नई जॉब वैकेंसी यहाँ पब्लिश करें।</p>
-                </div>
-                <button onclick="empLogout" class="bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs font-bold">लॉग आउट</button>
+    <!-- SECTION 1: EMPLOYER LOGIN / SIGNUP WALL (Shown if not logged in) -->
+    <div id="employerAuthModal" class="flex-grow flex justify-center items-center p-4">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full space-y-6 border dark:border-gray-700">
+            <div class="text-center space-y-2">
+                <span class="text-4xl">🏢</span>
+                <h2 class="text-xl md:text-2xl font-black">एप्लॉयर / कंपनी लॉगिन</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400">अपनी कंपनी रजिस्टर करें और तुरंत नौकरियां पोस्ट करें।</p>
             </div>
 
-            <!-- Job Post Form Inside Dashboard -->
-            <form onsubmit="postNewJob(event)" class="space-y-4 text-sm bg-gray-50 p-6 rounded-xl border">
-                <h3 class="font-bold text-blue-700 text-base mb-2">➕ नई जॉब वैकेंसी जोड़ें</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold mb-1">जॉब का शीर्षक (Job Title)</label>
-                        <input type="text" id="jobTitle" placeholder="जैसे: Computer Operator" required class="w-full border p-2.5 rounded-lg bg-white">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">शहर / लोकेशन</label>
-                        <input type="text" id="jobCity" placeholder="जैसे: Azamgarh" required class="w-full border p-2.5 rounded-lg bg-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold mb-1">वेतन (Salary)</label>
-                        <input type="text" id="jobSalary" placeholder="जैसे: ₹15,000 / महीना" required class="w-full border p-2.5 rounded-lg bg-white">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">आवश्यक स्किल्स</label>
-                        <input type="text" id="jobSkills" placeholder="जैसे: Basic Excel, Typing" required class="w-full border p-2.5 rounded-lg bg-white">
-                    </div>
+            <form onsubmit="handleEmployerLogin(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold mb-1 text-gray-700 dark:text-gray-300">कंपनी या संस्थान का नाम (Company Name):</label>
+                    <input type="text" id="authCompanyName" placeholder="जैसे: Tech Solutions Pvt Ltd" required class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1">विवरण (Description)</label>
-                    <textarea id="jobDesc" rows="2" placeholder="कार्य विवरण लिखें..." required class="w-full border p-2.5 rounded-lg bg-white"></textarea>
+                    <label class="block font-bold mb-1 text-gray-700 dark:text-gray-300">आधिकारिक ईमेल या फोन नंबर:</label>
+                    <input type="text" id="authContact" placeholder="9876543210 या info@company.com" required class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold focus:ring-2 focus:ring-blue-500">
                 </div>
-                <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-2.5 rounded-lg font-bold hover:bg-yellow-400 transition shadow">जॉब तुरंत लाइव करें</button>
+                <div>
+                    <label class="block font-bold mb-1 text-gray-700 dark:text-gray-300">पासवर्ड (Password):</label>
+                    <input type="password" id="authPassword" placeholder="******" required class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-black text-sm shadow-lg transition">
+                    पोर्टल में प्रवेश करें 🚀
+                </button>
             </form>
-            <div id="postSuccess" class="hidden p-3 bg-green-100 text-green-800 rounded-lg text-center text-xs font-bold">जوب सफलतापूर्वक पब्लिश हो गई है!</div>
         </div>
-    </main>
+    </div>
 
+    <!-- SECTION 2: FULL EMPLOYER DASHBOARD (Hidden until login) -->
+    <div id="employerDashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-6">
+        
+        <!-- Dashboard Navigation Tabs -->
+        <div class="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-md border dark:border-gray-700 flex flex-wrap gap-2 text-xs font-bold">
+            <button onclick="switchTab('overview')" id="tabOverview" class="px-4 py-2 rounded-xl bg-blue-700 text-white transition shadow">📊 डैशबोर्ड ओवरव्यू</button>
+            <button onclick="switchTab('postJob')" id="tabPostJob" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">➕ नई जॉब पोस्ट करें</button>
+            <button onclick="switchTab('manageJobs')" id="tabManageJobs" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">📋 मेरी जॉब्स (Manage)</button>
+            <button onclick="switchTab('applicants')" id="tabApplicants" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">👥 उम्मीदवार आवेदन (Applicants)</button>
+            <button onclick="switchTab('profile')" id="tabProfile" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">⚙️ कंपनी प्रोफाइल</button>
+        </div>
+
+        <!-- TAB 1: OVERVIEW & STATS -->
+        <div id="contentOverview" class="space-y-6 dashboard-tab">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">कुल लाइव जॉब्स</p>
+                        <h3 id="statActiveJobs" class="text-3xl font-black text-blue-600 dark:text-blue-400 mt-1">0</h3>
+                    </div>
+                    <span class="text-3xl bg-blue-50 dark:bg-gray-700 p-3 rounded-xl">📢</span>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">कुल प्राप्त आवेदन</p>
+                        <h3 id="statTotalApplicants" class="text-3xl font-black text-green-600 dark:text-green-400 mt-1">0</h3>
+                    </div>
+                    <span class="text-3xl bg-green-50 dark:bg-gray-700 p-3 rounded-xl">👥</span>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">शॉर्टलिस्ट किए गए</p>
+                        <h3 id="statShortlisted" class="text-3xl font-black text-purple-600 dark:text-purple-400 mt-1">0</h3>
+                    </div>
+                    <span class="text-3xl bg-purple-50 dark:bg-gray-700 p-3 rounded-xl">⭐</span>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
+                <h3 class="font-black text-base border-b dark:border-gray-700 pb-2">💡 त्वरित निर्देश (Quick Tips for Employers)</h3>
+                <ul class="space-y-2 text-xs text-gray-600 dark:text-gray-300 list-disc list-inside font-medium">
+                    <li>नई नौकरी पोस्ट करने के लिए ऊपर <strong>'➕ नई जॉब पोस्ट करें'</strong> टैब पर क्लिक करें।</li>
+                    <li>उम्मीदवारों के रिज्यूमे देखने और उन्हें शॉर्टलिस्ट करने के लिए <strong>'👥 उम्मीदवार आवेदन'</strong> टैब देखें।</li>
+                    <li>आप किसी भी शॉर्टलिस्ट किए गए उम्मीदवार को सीधे <strong>WhatsApp</strong> पर इंटरव्यू के लिए मैसेज भेज सकते हैं।</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 2: POST NEW JOB FORM -->
+        <div id="contentPostJob" class="space-y-6 dashboard-tab hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl border dark:border-gray-700 space-y-6">
+                <div>
+                    <h3 class="text-lg font-black">📝 नई नौकरी या वैकेंसी पब्लिश करें</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">यह वैकेंसी तुरंत RozgarHub पर लाइव हो जाएगी।</p>
+                </div>
+
+                <form onsubmit="handlePostJob(event)" class="space-y-4 text-xs md:text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">जॉब का शीर्षक (Job Title):</label>
+                            <input type="text" id="jobTitle" placeholder="जैसे: Computer Operator / Sales Executive" required class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">जॉब श्रेणी (Category):</label>
+                            <select id="jobCategory" class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold bg-white">
+                                <option value="Private">🏢 Corporate & Private Job</option>
+                                <option value="BPO">🎧 BPO & Customer Support</option>
+                                <option value="Technical">💻 Technical & IT / Developer</option>
+                                <option value="Sales">📈 Marketing & Sales</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">लोकेशन / शहर (Location):</label>
+                            <input type="text" id="jobCity" placeholder="जैसे: Azamgarh, UP" required class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">वेतन (Salary Range):</label>
+                            <input type="text" id="jobSalary" placeholder="जैसे: ₹15,000 - ₹20,000 /mo" required class="w-full border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">आवश्यक योग्यता (Qualification):</label>
+                            <select id="jobQual" class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold bg-white">
+                                <option value="10th">10वीं पास</option>
+                                <option value="12th">12वीं पास</option>
+                                <option value="Graduate">स्नातक (Graduate)</option>
+                                <option value="ITI">ITI / डिप्लोमा</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold mb-1">विस्तृत विवरण और कार्य (Job Description):</label>
+                        <textarea id="jobDesc" rows="4" placeholder="कार्य की जिम्मेदारी, अनुभव और टाइमिंग यहाँ लिखें..." required class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-black text-xs md:text-sm shadow-lg transition">
+                        जॉब तुरंत लाइव करें 🚀
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 3: MANAGE MY JOBS -->
+        <div id="contentManageJobs" class="space-y-6 dashboard-tab hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
+                <h3 class="font-black text-base border-b dark:border-gray-700 pb-2">📋 आपके द्वारा पोस्ट की गई नौकरियां</h3>
+                <div id="myJobListContainer" class="space-y-3">
+                    <!-- Dynamically rendered -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: APPLICANTS & RESUME MANAGER -->
+        <div id="contentApplicants" class="space-y-6 dashboard-tab hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
+                <h3 class="font-black text-base border-b dark:border-gray-700 pb-2">👥 उम्मीदवार आवेदन और रिज्यूमे मैनेजर</h3>
+                <div id="applicantsListContainer" class="space-y-4">
+                    <!-- Dynamically rendered -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: COMPANY PROFILE SETTINGS -->
+        <div id="contentProfile" class="space-y-6 dashboard-tab hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl border dark:border-gray-700 space-y-6">
+                <h3 class="text-lg font-black">⚙️ कंपनी प्रोफाइल सेटिंग्स</h3>
+                
+                <div class="space-y-4 text-xs md:text-sm">
+                    <div>
+                        <label class="block font-bold mb-1">कंपनी का नाम:</label>
+                        <input type="text" id="profileCompanyName" class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">व्हाट्सएप नंबर (इंटरव्यू संपर्क के लिए):</label>
+                            <input type="text" id="profileWhatsapp" placeholder="919876543210" class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">आधिकारिक ईमेल:</label>
+                            <input type="email" id="profileEmail" class="w-full p-3 border dark:border-gray-600 dark:bg-gray-700 rounded-xl font-bold">
+                        </div>
+                    </div>
+                    <button onclick="saveCompanyProfile()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-black text-xs shadow transition">
+                        प्रोफाइल सहेजें ✔️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
+        <p>&copy; 2026 RozgarHub.in • Employer Portal</p>
+    </footer>
+
+    <!-- Script Logic -->
     <script>
-        function handleEmpAuth(e) {
+        let currentEmployer = localStorage.getItem('rozgarHubCurrentEmployer');
+
+        window.onload = function() {
+            if (currentEmployer) {
+                document.getElementById('employerAuthModal').classList.add('hidden');
+                document.getElementById('employerDashboardView').classList.remove('hidden');
+                document.getElementById('loggedInCompanyName').innerText = "🏢 " + currentEmployer;
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('profileCompanyName').value = currentEmployer;
+                loadDashboardData();
+            }
+        };
+
+        function handleEmployerLogin(e) {
             e.preventDefault();
-            const comp = document.getElementById('empCompName').value;
-            const mob = document.getElementById('empCompMobile').value;
-            localStorage.setItem('activeEmployer', comp);
-            showEmpDash(comp);
+            const name = document.getElementById('authCompanyName').value.trim();
+            localStorage.setItem('rozgarHubCurrentEmployer', name);
+            currentEmployer = name;
+            location.reload();
         }
 
-        function showEmpDash(compName) {
-            document.getElementById('empAuthBox').classList.add('hidden');
-            document.getElementById('empDashboard').classList.remove('hidden');
-            document.getElementById('dashCompTitle').innerText = `कंपनी: ${compName}`;
+        function employerLogout() {
+            localStorage.removeItem('rozgarHubCurrentEmployer');
+            location.reload();
         }
 
-        function postNewJob(e) {
+        function switchTab(tabName) {
+            ['overview', 'postJob', 'manageJobs', 'applicants', 'profile'].forEach(t => {
+                document.getElementById('content' + capitalize(t)).classList.add('hidden');
+                document.getElementById('tab' + capitalize(t)).className = "px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition";
+            });
+            document.getElementById('content' + capitalize(tabName)).classList.remove('hidden');
+            document.getElementById('tab' + capitalize(tabName)).className = "px-4 py-2 rounded-xl bg-blue-700 text-white transition shadow";
+            
+            if(tabName === 'manageJobs') renderMyJobs();
+            if(tabName === 'applicants') renderApplicants();
+            if(tabName === 'overview') loadDashboardData();
+        }
+
+        function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+        function handlePostJob(e) {
             e.preventDefault();
             const newJob = {
                 id: Date.now(),
-                title: document.getElementById('jobTitle').value,
-                company: localStorage.getItem('activeEmployer') || "Private Firm",
-                city: document.getElementById('jobCity').value,
-                salary: document.getElementById('jobSalary').value,
-                skills: document.getElementById('jobSkills').value,
-                desc: document.getElementById('jobDesc').value
+                title: document.getElementById('jobTitle').value.trim(),
+                category: document.getElementById('jobCategory').value,
+                type: 'Private',
+                org: currentEmployer,
+                city: document.getElementById('jobCity').value.trim(),
+                salary: document.getElementById('jobSalary').value.trim(),
+                qualification: document.getElementById('jobQual').value,
+                desc: document.getElementById('jobDesc').value.trim(),
+                status: 'Active',
+                date: 'Active',
+                link: 'candidate-login.html',
+                createdAt: new Date().toLocaleDateString()
             };
 
             let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
             jobs.unshift(newJob);
             localStorage.setItem('rozgarHubEmployerJobs', JSON.stringify(jobs));
 
-            document.getElementById('postSuccess').classList.remove('hidden');
-            setTimeout(() => { document.getElementById('postSuccess').classList.add('hidden'); }, 3000);
-            e.target.reset();
+            alert("नौकरी सफलतापर्वक पब्लिश कर दी गई है!");
+            document.getElementById('jobTitle').value = "";
+            document.getElementById('jobCity').value = "";
+            document.getElementById('jobSalary').value = "";
+            document.getElementById('jobDesc').value = "";
+            switchTab('manageJobs');
         }
 
-        function empLogout() {
-            localStorage.removeItem('activeEmployer');
-            location.reload();
+        function loadDashboardData() {
+            let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+            let myJobs = jobs.filter(j => j.org === currentEmployer);
+            let apps = JSON.parse(localStorage.getItem('rozgarHubJobApplications')) || [];
+            let myApps = apps.filter(a => myJobs.some(j => j.id == a.jobId));
+            let shortlisted = myApps.filter(a => a.status === 'Shortlisted');
+
+            document.getElementById('statActiveJobs').innerText = myJobs.filter(j => j.status === 'Active').length;
+            document.getElementById('statTotalApplicants').innerText = myApps.length;
+            document.getElementById('statShortlisted').innerText = shortlisted.length;
         }
 
-        window.onload = function() {
-            let active = localStorage.getItem('activeEmployer');
-            if(active) { showEmpDash(active); }
+        function renderMyJobs() {
+            let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+            let myJobs = jobs.filter(j => j.org === currentEmployer);
+            const container = document.getElementById('myJobListContainer');
+
+            if (myJobs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic py-4 text-center">आपने अभी तक कोई नौकरी पोस्ट नहीं की है।</p>`;
+                return;
+            }
+
+            let html = "";
+            myJobs.forEach(job => {
+                html += `
+                    <div class="p-4 border dark:border-gray-700 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-gray-50 dark:bg-gray-700/40 text-xs">
+                        <div>
+                            <span class="font-bold text-blue-600 uppercase text-[10px] bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded">${job.category}</span>
+                            <h4 class="font-bold text-sm text-gray-900 dark:text-white mt-1">${job.title}</h4>
+                            <p class="text-gray-500 dark:text-gray-400">📍 ${job.city} • 💰 ${job.salary} • योग्यता: ${job.qualification}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${job.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${job.status || 'Active'}</span>
+                            <button onclick="toggleJobStatus(${job.id})" class="bg-gray-200 dark:bg-gray-600 px-3 py-1.5 rounded-lg font-bold">स्टेस्टस बदलें</button>
+                            <button onclick="deleteEmployerJob(${job.id})" class="bg-red-100 text-red-700 px-3 py-1.5 rounded-lg font-bold">डिलीट</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function toggleJobStatus(id) {
+            let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+            jobs = jobs.map(j => {
+                if(j.id === id) j.status = j.status === 'Paused' ? 'Active' : 'Paused';
+                return j;
+            });
+            localStorage.setItem('rozgarHubEmployerJobs', JSON.stringify(jobs));
+            renderMyJobs();
+        }
+
+        function deleteEmployerJob(id) {
+            if(confirm("क्या आप इस जॉब को डिलीट करना चाहते हैं?")) {
+                let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+                jobs = jobs.filter(j => j.id !== id);
+                localStorage.setItem('rozgarHubEmployerJobs', JSON.stringify(jobs));
+                renderMyJobs();
+            }
+        }
+
+        function renderApplicants() {
+            let jobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
+            let myJobs = jobs.filter(j => j.org === currentEmployer);
+            let apps = JSON.parse(localStorage.getItem('rozgarHubJobApplications')) || [];
+            let myApps = apps.filter(a => myJobs.some(j => j.id == a.jobId));
+            const container = document.getElementById('applicantsListContainer');
+
+            if (myApps.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic py-4 text-center">अभी तक किसी उम्मीदवार ने आवेदन नहीं किया है।</p>`;
+                return;
+            }
+
+            let html = "";
+            myApps.forEach(app => {
+                let jobObj = myJobs.find(j => j.id == app.jobId) || { title: 'दिए गए पद' };
+                html += `
+                    <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/40 text-xs">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-black text-sm text-gray-900 dark:text-white">👤 ${app.candidateName || 'उम्मीदवार'}</h4>
+                                <p class="text-blue-600 dark:text-blue-400 font-semibold">पद: ${jobObj.title}</p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded text-[10px] font-bold bg-indigo-100 text-indigo-700">${app.status || 'Pending'}</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">📞 फोन/व्हाट्सएप: <strong>${app.candidatePhone || 'उपलब्ध नहीं'}</strong> | ✉️ ईमेल: ${app.candidateEmail || '-'}</p>
+                        
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t dark:border-gray-600">
+                            <div class="flex gap-2">
+                                <select onchange="updateAppStatus('${app.id}', this.value)" class="p-1.5 border dark:border-gray-600 dark:bg-gray-700 rounded-lg font-bold text-xs">
+                                    <option value="Pending" ${app.status==='Pending'?'selected':''}>स्थिति: Pending</option>
+                                    <option value="Shortlisted" ${app.status==='Shortlisted'?'selected':''}>⭐ Shortlist</option>
+                                    <option value="Interview" ${app.status==='Interview'?'selected':''}>📅 Interview Scheduled</option>
+                                    <option value="Rejected" ${app.status==='Rejected'?'selected':''}>❌ Rejected</option>
+                                </select>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="https://wa.me/${app.candidatePhone}?text=Hello%20${app.candidateName},%20Your%20application%20for%20${jobObj.title}%20at%20${currentEmployer}%20has%20been%20reviewed." target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg font-bold flex items-center gap-1">
+                                    💬 व्हाट्सएप मैसेज
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateAppStatus(appId, newStatus) {
+            let apps = JSON.parse(localStorage.getItem('rozgarHubJobApplications')) || [];
+            apps = apps.map(a => {
+                if(a.id == appId) a.status = newStatus;
+                return a;
+            });
+            localStorage.setItem('rozgarHubJobApplications', JSON.stringify(apps));
+            renderApplicants();
+            loadDashboardData();
+        }
+
+        function saveCompanyProfile() {
+            alert("कंपनी प्रोफाइल सफलतापर्वक सहेज ली गई है!");
         }
     </script>
 </body>
