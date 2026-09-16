@@ -29,7 +29,7 @@
         </div>
     </header>
 
-    <!-- AUTH SECTION (Login / Signup View) -->
+    <!-- AUTH SECTION -->
     <main id="authView" class="container mx-auto px-4 py-12 flex-grow flex justify-center items-center max-w-md">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border dark:border-gray-700 w-full space-y-6">
             <div class="text-center space-y-1">
@@ -38,13 +38,11 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400">लॉगिन करें और अपने जॉब एप्लीकेशन ट्रैक करें</p>
             </div>
 
-            <!-- Tabs for Login / Register -->
             <div class="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-xl text-xs font-bold text-center">
                 <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2 rounded-lg bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 shadow">लॉगिन</button>
                 <button onclick="switchAuthTab('signup')" id="tabSignup" class="flex-1 py-2 rounded-lg text-gray-600 dark:text-gray-300">नया खाता बनाएँ</button>
             </div>
 
-            <!-- Login Form -->
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
                 <div>
                     <label class="block font-bold mb-1">ईमेल आईडी (Email)</label>
@@ -57,7 +55,6 @@
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-black text-sm shadow transition">लॉगिन करें 🚀</button>
             </form>
 
-            <!-- Signup Form -->
             <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-4 text-xs hidden">
                 <div>
                     <label class="block font-bold mb-1">पूरा नाम (Full Name)</label>
@@ -85,13 +82,12 @@
         </div>
     </main>
 
-    <!-- DASHBOARD VIEW (Next-Level Candidate Hub) -->
+    <!-- DASHBOARD VIEW -->
     <main id="dashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-6">
         
-        <!-- Welcome Profile Banner & Photo with AI Match Score -->
+        <!-- Welcome Banner with Photo -->
         <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-2xl shadow-xl flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-4">
-                <!-- Candidate Profile Photo -->
                 <img id="userWelcomePhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Candidate Photo" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-yellow-400 shadow-lg">
                 <div class="space-y-1">
                     <span class="bg-yellow-400 text-gray-900 px-2.5 py-0.5 rounded text-[10px] font-black uppercase">Verified Candidate</span>
@@ -99,7 +95,6 @@
                     <p id="userWelcomeMeta" class="text-xs text-blue-200">योग्यता: स्नातक (Graduate) • Azamgarh</p>
                 </div>
             </div>
-            <!-- AI Match Score Card -->
             <div class="bg-white/10 backdrop-blur p-4 rounded-xl border border-white/20 text-center flex items-center gap-3">
                 <div class="text-3xl font-black text-yellow-300">95%</div>
                 <div class="text-left text-[11px]">
@@ -109,7 +104,7 @@
             </div>
         </div>
 
-        <!-- Dashboard Navigation Tabs -->
+        <!-- Dashboard Tabs -->
         <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
             <button onclick="switchDashTab('applied')" id="dTabApplied" class="px-4 py-2 rounded-xl bg-blue-700 text-white shadow">📥 अप्लाइड जॉब्स</button>
             <button onclick="switchDashTab('jobs')" id="dTabJobs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">🎯 इंस्टेंट अप्लाई</button>
@@ -119,13 +114,13 @@
             <button onclick="switchDashTab('prep')" id="dTabPrep" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📚 करेंट अफेयर्स</button>
         </div>
 
-        <!-- TAB CONTENT 1: APPLIED JOBS & TIMELINE -->
+        <!-- TAB CONTENT 1: APPLIED JOBS -->
         <div id="contentApplied" class="space-y-4">
             <h3 class="font-black text-sm uppercase text-gray-700 dark:text-gray-300">📋 आपके आवेदन और एप्लीकेशन प्रोग्रेस</h3>
             <div id="appliedJobsListContainer" class="space-y-4"></div>
         </div>
 
-        <!-- TAB CONTENT 2: 1-CLICK INSTANT APPLY -->
+        <!-- TAB CONTENT 2: INSTANT APPLY -->
         <div id="contentJobs" class="space-y-4 hidden">
             <div class="flex justify-between items-center">
                 <h3 class="font-black text-sm uppercase text-gray-700 dark:text-gray-300">🎯 आपके लिए बेस्ट जॉब्स (1-Click Instant Apply)</h3>
@@ -134,11 +129,11 @@
             <div id="instantJobsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
-        <!-- TAB CONTENT 3: PROFILE EDIT SECTION -->
+        <!-- TAB CONTENT 3: PROFILE EDIT (Direct File Upload for Photo) -->
         <div id="contentProfile" class="space-y-4 hidden">
             <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl border dark:border-gray-700 space-y-6">
                 <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
-                    <h3 class="font-black text-base uppercase text-blue-700 dark:text-blue-400">👤 कैंडिडेट पर्सनल डिटेल्स और फोटो एडिट करें</h3>
+                    <h3 class="font-black text-base uppercase text-blue-700 dark:text-blue-400">👤 कैंडिडेट पर्सनल डिटेल्स और फोटो अपडेट करें</h3>
                     <span class="text-xs text-gray-500">कैंडिडेट आईडी: #RH-2026</span>
                 </div>
 
@@ -162,8 +157,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block font-bold mb-1">प्रोफाइल फोटो का लिंक (Photo URL)</label>
-                            <input type="url" id="editPhotoUrl" placeholder="https://example.com/photo.jpg" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                            <label class="block font-bold mb-1">प्रोफाइल फोटो अपलोड करें (Upload Photo)</label>
+                            <input type="file" id="editPhotoFile" accept="image/*" class="w-full p-2.5 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-xs font-bold">
                         </div>
                     </div>
                     <div class="pt-2">
@@ -173,31 +168,35 @@
             </div>
         </div>
 
-        <!-- TAB CONTENT 4: DOCUMENT VAULT -->
+        <!-- TAB CONTENT 4: DOCUMENT VAULT (Direct File Uploads) -->
         <div id="contentVault" class="space-y-4 hidden">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
-                <h3 class="font-black text-sm uppercase text-blue-700 dark:text-blue-400">📁 डिजिटल डॉक्यूमेंट लॉकर (Document Vault)</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400">फॉर्म भरते समय अपने कागजात तुरंत अटैच करने के लिए यहाँ सुरक्षित रखें।</p>
+                <h3 class="font-black text-sm uppercase text-blue-700 dark:text-blue-400">📁 डिजिटल डॉक्यूमेंट लॉकर (Direct File Upload)</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400">अपने जरूरी कागजात सीधे डिवाइस से अपलोड करके यहाँ सुरक्षित रखें।</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">🪪 आधार कार्ड (Aadhar Card)</p>
-                        <input type="text" id="vaultAadhar" placeholder="डॉक्यूमेंट लिंक या नंबर" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="file" id="vaultAadhar" accept=".pdf,image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p id="statusAadhar" class="text-[10px] text-green-600 font-bold hidden">✅ फाइल अपलोड हो चुकी है</p>
                     </div>
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">🎓 10वीं/12वीं मार्कशीट (Marksheet)</p>
-                        <input type="text" id="vaultMarksheet" placeholder="मार्कशीट लिंक" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="file" id="vaultMarksheet" accept=".pdf,image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p id="statusMarksheet" class="text-[10px] text-green-600 font-bold hidden">✅ फाइल अपलोड हो चुकी है</p>
                     </div>
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">🖼️ पासपोर्ट साइज फोटो (Photo)</p>
-                        <input type="text" id="vaultPhoto" placeholder="फोटो लिंक" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="file" id="vaultPhotoFile" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p id="statusPhoto" class="text-[10px] text-green-600 font-bold hidden">✅ फाइल अपलोड हो चुकी है</p>
                     </div>
                     <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
                         <p class="font-bold">✍️ हस्ताक्षर (Signature)</p>
-                        <input type="text" id="vaultSign" placeholder="हस्ताक्षर लिंक" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                        <input type="file" id="vaultSignFile" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p id="statusSign" class="text-[10px] text-green-600 font-bold hidden">✅ फाइल अपलोड हो चुकी है</p>
                     </div>
                 </div>
-                <button onclick="saveVaultData()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow transition">डॉक्यूमेंट सेव करें 💾</button>
+                <button onclick="saveVaultFiles()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow transition">सभी दस्तावेज सेव करें 💾</button>
             </div>
         </div>
 
@@ -244,7 +243,7 @@
         <p>&copy; 2026 RozgarHub.in • Next-Level Candidate Career Hub</p>
     </footer>
 
-    <!-- Script Logic -->
+    <!-- Script Logic with File Reader -->
     <script>
         function switchAuthTab(tab) {
             if(tab === 'login') {
@@ -301,18 +300,15 @@
                 document.getElementById('dashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
 
-                // Update welcome banner info & photo
                 document.getElementById('userWelcomeName').innerText = `नमस्ते, ${user.name}!`;
                 document.getElementById('userWelcomeMeta').innerText = `योग्यता: ${user.qual} • Azamgarh`;
                 if(user.photo) {
                     document.getElementById('userWelcomePhoto').src = user.photo;
                 }
 
-                // Populate profile edit fields
                 document.getElementById('editName').value = user.name || "";
                 document.getElementById('editEmail').value = user.email || "";
                 document.getElementById('editQual').value = user.qual || "Graduate";
-                document.getElementById('editPhotoUrl').value = user.photo || "";
 
                 renderAppliedJobsWithTimeline();
                 renderInstantApplyJobs();
@@ -330,11 +326,58 @@
             user.name = document.getElementById('editName').value;
             user.email = document.getElementById('editEmail').value;
             user.qual = document.getElementById('editQual').value;
-            user.photo = document.getElementById('editPhotoUrl').value || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150";
 
-            localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
-            alert("कैंडिडेट प्रोफाइल सफलतापूर्वक अपडेट हो गई है!");
-            checkAuthAndLoadDashboard();
+            const photoFile = document.getElementById('editPhotoFile').files[0];
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    user.photo = uploadEvent.target.result;
+                    localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+                    alert("कैंडिडेट प्रोफाइल और फोटो सफलतापूर्वक अपडेट हो गई है!");
+                    checkAuthAndLoadDashboard();
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+                alert("कैंडिडेट प्रोफाइल सफलतापूर्वक अपडेट हो गई है!");
+                checkAuthAndLoadDashboard();
+            }
+        }
+
+        function saveVaultFiles() {
+            let vault = JSON.parse(localStorage.getItem('rozgarHubDocumentVault')) || {};
+            
+            const processFile = (fileInputId, statusId, keyName) => {
+                const file = document.getElementById(fileInputId).files[0];
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        vault[keyName] = e.target.result;
+                        localStorage.setItem('rozgarHubDocumentVault', JSON.stringify(vault));
+                        document.getElementById(statusId).classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            processFile('vaultAadhar', 'statusAadhar', 'aadhar');
+            processFile('vaultMarksheet', 'statusMarksheet', 'marksheet');
+            processFile('vaultPhotoFile', 'statusPhoto', 'photo');
+            processFile('vaultSignFile', 'statusSign', 'sign');
+
+            setTimeout(() => {
+                alert("दस्तावेज डिजिटल लॉकर में सफलतापूर्वक अपलोड हो गए हैं!");
+            }, 500);
+        }
+
+        function loadVaultData() {
+            let vault = JSON.parse(localStorage.getItem('rozgarHubDocumentVault'));
+            if(vault) {
+                if(vault.aadhar) document.getElementById('statusAadhar').classList.remove('hidden');
+                if(vault.marksheet) document.getElementById('statusMarksheet').classList.remove('hidden');
+                if(vault.photo) document.getElementById('statusPhoto').classList.remove('hidden');
+                if(vault.sign) document.getElementById('statusSign').classList.remove('hidden');
+            }
         }
 
         function switchDashTab(tab) {
@@ -417,27 +460,6 @@
             alert("सफलतापूर्वक 1-क्लिक आवेदन हो गया है!");
             renderAppliedJobsWithTimeline();
             switchDashTab('applied');
-        }
-
-        function saveVaultData() {
-            const vault = {
-                aadhar: document.getElementById('vaultAadhar').value,
-                marksheet: document.getElementById('vaultMarksheet').value,
-                photo: document.getElementById('vaultPhoto').value,
-                sign: document.getElementById('vaultSign').value
-            };
-            localStorage.setItem('rozgarHubDocumentVault', JSON.stringify(vault));
-            alert("आपके दस्तावेज डिजिटल लॉकर में सुरक्षित रूप से सेव हो गए हैं!");
-        }
-
-        function loadVaultData() {
-            let vault = JSON.parse(localStorage.getItem('rozgarHubDocumentVault'));
-            if(vault) {
-                if(vault.aadhar) document.getElementById('vaultAadhar').value = vault.aadhar;
-                if(vault.marksheet) document.getElementById('vaultMarksheet').value = vault.marksheet;
-                if(vault.photo) document.getElementById('vaultPhoto').value = vault.photo;
-                if(vault.sign) document.getElementById('vaultSign').value = vault.sign;
-            }
         }
 
         function savePreferences() {
