@@ -22,27 +22,29 @@
     <!-- Main Workspace -->
     <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow space-y-8">
         
-        <!-- Post New Job / Sarkari Vacancy Card -->
+        <!-- Post New Job / Syllabus / Vacancy Card -->
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl border-t-4 border-red-600 space-y-6">
             <div>
-                <h2 class="text-xl font-black text-gray-900">📢 नई सरकारी या प्राइवेट वैकेंसी पब्लिश करें</h2>
-                <p class="text-xs text-gray-500 mt-0.5">यहाँ जो भी जानकारी भरेंगे, वह तुरंत होम पेज पर लाइव हो जाएगी।</p>
+                <h2 class="text-xl font-black text-gray-900">📢 नई वैकेंसी, रिजल्ट या बाइलिंगुअल सिलेबस पब्लिश करें</h2>
+                <p class="text-xs text-gray-500 mt-0.5">यहाँ जो जानकारी भरेंगे, वह तुरंत होम पेज पर लाइव हो जाएगी।</p>
             </div>
 
             <form id="adminPostForm" onsubmit="handleAdminPublish(event)" class="space-y-4 text-xs md:text-sm">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block font-bold mb-1 text-gray-700">वैकेंसी / जॉब का शीर्षक (Title)</label>
-                        <input type="text" id="pTitle" placeholder="जैसे: UPSC Civil Services Exam 2026" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-red-500">
+                        <label class="block font-bold mb-1 text-gray-700">शीर्षक (Title)</label>
+                        <input type="text" id="pTitle" placeholder="जैसे: SSC CHSL Syllabus 2026 PDF" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-red-500">
                     </div>
                     <div>
                         <label class="block font-bold mb-1 text-gray-700">श्रेणी चुनें (Category)</label>
-                        <select id="pCategory" class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-red-500 bg-white font-semibold">
+                        <select id="pCategory" onchange="toggleSyllabusFields()" class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-red-500 bg-white font-semibold">
                             <option value="Sarkari">🏛️ Latest Sarkari Vacancy</option>
                             <option value="Private">🏢 Direct Private Job</option>
                             <option value="AdmitCard">🖨️ Admit Card</option>
                             <option value="Result">🏆 Result</option>
+                            <option value="Syllabus">📚 Exam Syllabus (Bilingual PDFs)</option>
+                            <option value="AnswerKey">📝 Answer Key</option>
                         </select>
                     </div>
                 </div>
@@ -50,32 +52,44 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block font-bold mb-1 text-gray-700">संस्थान / बोर्ड (Organization)</label>
-                        <input type="text" id="pOrg" placeholder="जैसे: UPSC / SSC / Tech Corp" required class="w-full border p-2.5 rounded-lg">
+                        <input type="text" id="pOrg" placeholder="जैसे: UPSC / SSC" required class="w-full border p-2.5 rounded-lg">
                     </div>
                     <div>
-                        <label class="block font-bold mb-1 text-gray-700">राज्य / लोकेशन (State / City)</label>
-                        <input type="text" id="pCity" placeholder="जैसे: All India या Uttar Pradesh" required class="w-full border p-2.5 rounded-lg">
+                        <label class="block font-bold mb-1 text-gray-700">लोकेशन / स्तर (Location / Level)</label>
+                        <input type="text" id="pCity" placeholder="जैसे: All India" required class="w-full border p-2.5 rounded-lg">
                     </div>
                     <div>
-                        <label class="block font-bold mb-1 text-gray-700">अंतिम तिथि (Last Date)</label>
-                        <input type="text" id="pDate" placeholder="जैसे: 25 October 2026" required class="w-full border p-2.5 rounded-lg">
+                        <label class="block font-bold mb-1 text-gray-700">अंतिम तिथि / स्टेटस (Date / Status)</label>
+                        <input type="text" id="pDate" placeholder="जैसे: Active" required class="w-full border p-2.5 rounded-lg">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block font-bold mb-1 text-gray-700">वेतन (Salary Scale)</label>
-                        <input type="text" id="pSalary" placeholder="जैसे: ₹45,000 / month या Level-10" class="w-full border p-2.5 rounded-lg">
+                        <label class="block font-bold mb-1 text-gray-700">वेतन / परीक्षा पैटर्न (Salary / Exam Pattern)</label>
+                        <input type="text" id="pSalary" placeholder="जैसे: Tier-1 Exam या ₹45,000/mo" class="w-full border p-2.5 rounded-lg">
                     </div>
                     <div>
-                        <label class="block font-bold mb-1 text-gray-700">आधिकारिक लिंक (Official Apply Link - वैकल्पिक)</label>
+                        <label class="block font-bold mb-1 text-gray-700">आधिकारिक लिंक (Official Notice Link)</label>
                         <input type="url" id="pLink" placeholder="https://..." class="w-full border p-2.5 rounded-lg">
                     </div>
                 </div>
 
+                <!-- Conditional PDF Links for Syllabus / Answer Key -->
+                <div id="pdfFields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 bg-amber-50 p-4 rounded-xl border border-amber-200">
+                    <div>
+                        <label class="block font-bold mb-1 text-amber-900">📥 हिंदी पीडीएफ लिंक (Hindi PDF URL)</label>
+                        <input type="url" id="pHindiPdf" placeholder="https://... (असली हिंदी पीडीएफ लिंक)" class="w-full border p-2.5 rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1 text-amber-900">📥 अंग्रेजी पीडीएफ लिंक (English PDF URL)</label>
+                        <input type="url" id="pEnglishPdf" placeholder="https://... (असली अंग्रेजी पीडीएफ लिंक)" class="w-full border p-2.5 rounded-lg bg-white">
+                    </div>
+                </div>
+
                 <div>
-                    <label class="block font-bold mb-1 text-gray-700">संक्षिप्त विवरण और योग्यता (Full Description)</label>
-                    <textarea id="pDesc" rows="4" placeholder="योग्यता, आयु सीमा, चयन प्रक्रिया और अन्य विवरण यहाँ लिखें..." required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-red-500"></textarea>
+                    <label class="block font-bold mb-1 text-gray-700">विस्तृत विवरण और योग्यता (Full Description)</label>
+                    <textarea id="pDesc" rows="4" placeholder="योग्यता, परीक्षा के विषय और अन्य विवरण यहाँ लिखें..." required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-red-500"></textarea>
                 </div>
 
                 <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-xl font-black text-sm hover:bg-red-700 transition shadow-lg">🚀 तुरंत पब्लिश करें (Publish Live)</button>
@@ -100,11 +114,22 @@
         &copy; 2026 RozgarHub.in • Secure Admin Panel
     </footer>
 
-    <!-- Admin Panel JavaScript Logic -->
+    <!-- Script -->
     <script>
         window.onload = function() {
             renderAdminPosts();
+            toggleSyllabusFields();
         };
+
+        function toggleSyllabusFields() {
+            const cat = document.getElementById('pCategory').value;
+            const pdfBox = document.getElementById('pdfFields');
+            if(cat === 'Syllabus' || cat === 'AnswerKey') {
+                pdfBox.classList.remove('hidden');
+            } else {
+                pdfBox.classList.add('hidden');
+            }
+        }
 
         function handleAdminPublish(e) {
             e.preventDefault();
@@ -116,11 +141,14 @@
             const salary = document.getElementById('pSalary').value.trim();
             const link = document.getElementById('pLink').value.trim();
             const desc = document.getElementById('pDesc').value.trim();
+            const hindiPdf = document.getElementById('pHindiPdf').value.trim();
+            const englishPdf = document.getElementById('pEnglishPdf').value.trim();
 
             const newPost = {
                 id: Date.now(),
                 title,
                 category,
+                type: category,
                 org,
                 state: city,
                 city,
@@ -128,15 +156,18 @@
                 salary,
                 link,
                 desc,
-                type: category === 'Sarkari' ? 'Sarkari' : 'Private'
+                hindiPdf,
+                englishPdf,
+                qualification: "Graduate"
             };
 
             let posts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
-            posts.unshift(newPost); // Add to top
+            posts.unshift(newPost);
             localStorage.setItem('rozgarHubAdminPosts', JSON.stringify(posts));
 
-            alert("वैकेंसी सफलतापूर्वक पब्लिश कर दी गई है! यह अब लाइव होम पेज पर दिखेगी।");
+            alert("सफलतापूर्वक पब्लिश कर दिया गया है!");
             document.getElementById('adminPostForm').reset();
+            toggleSyllabusFields();
             renderAdminPosts();
         }
 
