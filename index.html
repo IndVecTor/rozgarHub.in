@@ -59,7 +59,7 @@
                 </div>
                 <div class="p-4">
                     <ul id="latestVacancyList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
-                        <!-- Dynamically loaded from Admin + Static -->
+                        <!-- Dynamically loaded -->
                     </ul>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="p-4">
                     <ul id="privateJobsList" class="space-y-3 text-xs md:text-sm font-semibold divide-y divide-gray-100">
-                        <!-- Dynamically loaded from Admin + Static -->
+                        <!-- Dynamically loaded -->
                     </ul>
                 </div>
             </div>
@@ -100,27 +100,32 @@
 
     </main>
 
-    <!-- QUICK JOB DETAIL MODAL -->
-    <div id="quickModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg w-full space-y-4 relative">
-            <button onclick="closeQuickModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold text-xl">&times;</button>
+    <!-- FULL DETAIL POP-UP MODAL (NO SEPARATE PAGE NEEDED) -->
+    <div id="quickModal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg w-full space-y-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeQuickModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 font-bold text-2xl">&times;</button>
             <div>
                 <span id="mCategory" class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full uppercase">Category</span>
                 <h3 id="mTitle" class="text-xl font-black text-gray-900 mt-2">Job Title</h3>
-                <p id="mOrg" class="text-xs font-semibold text-gray-600 mt-0.5">Organization</p>
+                <p id="mOrg" class="text-xs font-bold text-blue-600 mt-0.5">Organization</p>
             </div>
+            
             <div class="grid grid-cols-2 gap-2 text-xs bg-gray-50 p-3 rounded-xl border">
                 <p>📍 <strong>Location:</strong> <span id="mCity">-</span></p>
                 <p>💰 <strong>Salary:</strong> <span id="mSalary">-</span></p>
-                <p class="col-span-2">📅 <strong>Last Date:</strong> <span id="mDate">-</span></p>
+                <p class="col-span-2">📅 <strong>Last Date:</strong> <span id="mDate" class="text-red-600 font-bold">-</span></p>
             </div>
+
             <div>
-                <h4 class="font-bold text-xs uppercase text-gray-700 mb-1">📝 विवरण (Description):</h4>
-                <p id="mDesc" class="text-xs text-gray-600 bg-blue-50/50 p-3 rounded-xl border leading-relaxed">विवरण...</p>
+                <h4 class="font-bold text-xs uppercase text-gray-700 mb-1">📝 विस्तृत विवरण और योग्यता (Full Details):</h4>
+                <p id="mDesc" class="text-xs text-gray-700 bg-blue-50/50 p-3 rounded-xl border leading-relaxed">विवरण...</p>
             </div>
-            <div class="flex justify-between items-center pt-3 border-t">
-                <button onclick="closeQuickModal()" class="px-4 py-2 bg-gray-200 rounded-lg font-bold text-xs text-gray-700">बंद करें</button>
-                <a id="mFullDetailLink" href="#" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold text-xs hover:bg-blue-800 shadow">व्यू फुल डिटेल &rarr;</a>
+
+            <div class="pt-3 border-t flex flex-wrap items-center justify-between gap-3">
+                <button onclick="closeQuickModal()" class="px-4 py-2.5 bg-gray-200 rounded-xl font-bold text-xs text-gray-700 hover:bg-gray-300">बंद करें</button>
+                <a id="mApplyBtn" href="candidate-login.html" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs shadow transition">
+                    🚀 ऑनलाइन अप्लाई करें (Apply Now)
+                </a>
             </div>
         </div>
     </div>
@@ -129,19 +134,22 @@
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
         <p>&copy; 2026 RozgarHub.in • All Rights Reserved</p>
         <p class="text-gray-400">भारत का विश्वसनीय जॉब और सरकारी वैकेंसी पोर्टल।</p>
+        <p class="pt-2">
+            <a href="admin-panel.html" class="text-gray-400 hover:text-white transition underline font-semibold">🛠️ Admin Panel Login</a>
+        </p>
     </footer>
 
-    <!-- JavaScript Integrated with Admin Panel -->
+    <!-- JavaScript -->
     <script>
         const staticVacancyData = [
-            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online.", type: "Sarkari" },
-            { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts.", type: "Sarkari" },
-            { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP.", type: "Sarkari" }
+            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online on official UPSC portal.", type: "Sarkari" },
+            { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts. Minimum qualification: Graduation.", type: "Sarkari" },
+            { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP. Check eligibility, fee, and syllabus.", type: "Sarkari" }
         ];
 
         const staticPrivateData = [
-            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills.", type: "Private" },
-            { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels with good communication.", type: "Private" }
+            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and Hindi/English typing skills for office administration.", type: "Private" },
+            { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels with good communication skills. 3 months experience preferred.", type: "Private" }
         ];
 
         window.onload = function() {
@@ -149,22 +157,20 @@
         };
 
         function renderHomepageLists() {
-            // Fetch admin posted items from localStorage
             let adminPosts = JSON.parse(localStorage.getItem('rozgarHubAdminPosts')) || [];
             let employerJobs = JSON.parse(localStorage.getItem('rozgarHubEmployerJobs')) || [];
 
-            // Separate admin posts into Sarkari / Latest and Private based on category/type
             let adminSarkari = adminPosts.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari' || p.category === 'AdmitCard' || p.category === 'Result');
             let adminPrivate = adminPosts.filter(p => p.type === 'Private' || p.category === 'Private');
 
             let allVacancies = [...adminSarkari, ...staticVacancyData];
             let allPrivates = [...adminPrivate, ...employerJobs, ...staticPrivateData];
 
-            // Render Latest Vacancy List
             let vacHtml = "";
             allVacancies.forEach(item => {
+                let safeItemStr = JSON.stringify(item).replace(/'/g, "&#39;");
                 vacHtml += `
-                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openQuickModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openQuickModal(${safeItemStr})'>
                         <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title}</span>
                         <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold shrink-0">${item.category || 'New'}</span>
                     </li>
@@ -172,11 +178,11 @@
             });
             document.getElementById('latestVacancyList').innerHTML = vacHtml;
 
-            // Render Private Jobs List
             let privHtml = "";
             allPrivates.forEach(item => {
+                let safeItemStr = JSON.stringify(item).replace(/'/g, "&#39;");
                 privHtml += `
-                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openQuickModal(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+                    <li class="pt-2 pb-2 hover:bg-gray-50 px-2 rounded transition cursor-pointer flex items-center justify-between" onclick='openQuickModal(${safeItemStr})'>
                         <span class="text-blue-700 hover:underline flex items-center gap-1.5">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || item.state || 'India'})</span></span>
                         <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold shrink-0">Private</span>
                     </li>
@@ -186,15 +192,21 @@
         }
 
         function openQuickModal(post) {
-            document.getElementById('mCategory').innerText = post.category || 'Job Post';
+            document.getElementById('mCategory').innerText = post.category || post.type || 'Job Post';
             document.getElementById('mTitle').innerText = post.title;
-            document.getElementById('mOrg').innerText = post.org || post.company || 'RozgarHub Verified';
+            document.getElementById('mOrg').innerText = post.org || post.company || 'RozgarHub Verified Partner';
             document.getElementById('mCity').innerText = post.city || post.state || 'All India';
             document.getElementById('mSalary').innerText = post.salary || 'Best in Industry';
-            document.getElementById('mDate').innerText = post.date || 'Open';
-            document.getElementById('mDesc').innerText = post.desc || post.summary || 'Detailed information available on full detail page.';
+            document.getElementById('mDate').innerText = post.date || 'Openings Active';
+            document.getElementById('mDesc').innerText = post.desc || post.summary || 'डिटेल उपलब्ध है। आधिकारिक वेबसाइट पर जाकर आवेदन करें।';
             
-            document.getElementById('mFullDetailLink').href = `job-detail.html?id=${post.id}&title=${encodeURIComponent(post.title)}`;
+            if(post.link) {
+                document.getElementById('mApplyBtn').href = post.link;
+                document.getElementById('mApplyBtn').setAttribute('target', '_blank');
+            } else {
+                document.getElementById('mApplyBtn').href = 'candidate-login.html';
+            }
+
             document.getElementById('quickModal').classList.remove('hidden');
         }
 
