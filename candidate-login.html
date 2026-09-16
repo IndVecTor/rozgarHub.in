@@ -1,183 +1,389 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidate Login - RozgarHub.in</title>
+    <title>Candidate Portal & Career Hub - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Navbar -->
-    <header class="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
+    <!-- Top Navbar -->
+    <header class="bg-blue-700 dark:bg-gray-800 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
-            <a href="index.html" class="bg-white text-blue-600 px-4 py-2 rounded-lg text-xs md:text-sm font-bold hover:bg-gray-100 transition shadow">&larr; होम पेज</a>
+            <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
+            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
+                <a href="index.html" class="bg-blue-800 dark:bg-gray-700 hover:bg-blue-900 px-3 py-2 rounded-lg transition">&larr; होम पेज</a>
+                <button id="logoutBtn" onclick="handleLogout()" class="hidden bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg transition">लॉग आउट</button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="container mx-auto px-4 py-12 max-w-md flex-grow flex items-center justify-center">
-        <div class="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-blue-600 w-full">
-            
-            <div class="flex border-b mb-6 text-sm">
-                <button id="tabLogin" onclick="switchAuthMode('login')" class="flex-1 pb-3 font-bold text-blue-600 border-b-2 border-blue-600 text-center">लॉगिन (Login)</button>
-                <button id="tabSignup" onclick="switchAuthMode('signup')" class="flex-1 pb-3 font-bold text-gray-400 text-center">नया रजिस्ट्रेशन (Signup)</button>
+    <!-- AUTH SECTION (Login / Signup View) -->
+    <main id="authView" class="container mx-auto px-4 py-12 flex-grow flex justify-center items-center max-w-md">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border dark:border-gray-700 w-full space-y-6">
+            <div class="text-center space-y-1">
+                <span class="text-3xl">👤</span>
+                <h1 class="text-xl font-black text-gray-900 dark:text-white">कैंडिडेट करियर पोर्टल</h1>
+                <p class="text-xs text-gray-500 dark:text-gray-400">लॉगिन करें और अपने जॉब एप्लीकेशन ट्रैक करें</p>
+            </div>
+
+            <!-- Tabs for Login / Register -->
+            <div class="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-xl text-xs font-bold text-center">
+                <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2 rounded-lg bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 shadow">लॉगिन</button>
+                <button onclick="switchAuthTab('signup')" id="tabSignup" class="flex-1 py-2 rounded-lg text-gray-600 dark:text-gray-300">नया खाता बनाएँ</button>
             </div>
 
             <!-- Login Form -->
-            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-sm">
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-700">मोबाइल नंबर (Mobile Number)</label>
-                    <input type="tel" id="logMobile" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <label class="block font-bold mb-1">ईमेल आईडी (Email)</label>
+                    <input type="email5" id="loginEmail" placeholder="candidate@gmail.com" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-700">4-Digit पिन (PIN)</label>
-                    <input type="password" id="logPin" placeholder="••••" pattern="[0-9]{4}" maxlength="4" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <label class="block font-bold mb-1">पासवर्ड (Password)</label>
+                    <input type="password" id="loginPass" placeholder="••••••••" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
                 </div>
-                <div class="flex justify-between items-center text-xs">
-                    <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-1.5"> याद रखें</label>
-                    <a href="#" onclick="openForgotModal()" class="text-blue-600 font-semibold hover:underline">पिन भूल गए?</a>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow">लॉगिन करें</button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-black text-sm shadow transition">लॉगिन करें 🚀</button>
             </form>
 
             <!-- Signup Form -->
-            <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-4 text-sm hidden">
+            <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-4 text-xs hidden">
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-700">पूरा नाम (Full Name)</label>
-                    <input type="text" id="regName" placeholder="अपना पूरा नाम लिखें" required class="w-full border p-2.5 rounded-lg">
+                    <label class="block font-bold mb-1">पूरा नाम (Full Name)</label>
+                    <input type="text" id="signupName" placeholder="Aman Kumar" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-700">मोबाइल नंबर (Mobile Number)</label>
-                    <input type="tel" id="regMobile" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required class="w-full border p-2.5 rounded-lg">
+                    <label class="block font-bold mb-1">ईमेल आईडी</label>
+                    <input type="email" id="signupEmail" placeholder="candidate@gmail.com" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1 text-gray-700">4-Digit नया पिन बनाएं</label>
-                    <input type="password" id="regPin" placeholder="4 अंकों का पिन" pattern="[0-9]{4}" maxlength="4" required class="w-full border p-2.5 rounded-lg">
+                    <label class="block font-bold mb-1">योग्यता (Highest Qualification)</label>
+                    <select id="signupQual" class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        <option value="10th">10वीं पास</option>
+                        <option value="12th">12वीं पास</option>
+                        <option value="Graduate" selected>स्नातक (Graduate)</option>
+                        <option value="ITI">ITI / डिप्लोमा</option>
+                    </select>
                 </div>
-                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition shadow">रजिस्ट्रेशन पूरा करें</button>
+                <div>
+                    <label class="block font-bold mb-1">नया पासवर्ड</label>
+                    <input type="password" id="signupPass" placeholder="••••••••" required class="w-full border dark:border-gray-600 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
+                </div>
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-black text-sm shadow transition">रजिस्टर करें ✨</button>
             </form>
-
-            <div id="authAlert" class="mt-4 p-3 rounded-lg text-center text-xs hidden font-bold"></div>
         </div>
     </main>
 
-    <!-- Forgot PIN Modal -->
-    <div id="forgotModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full text-sm">
-            <h3 class="font-bold text-lg text-blue-700 mb-2">पिन रीसेट करें</h3>
-            <p class="text-gray-600 text-xs mb-4">अपना 10 अंकों का रजिस्टर्ड मोबाइल नंबर दर्ज करें:</p>
-            <input type="tel" id="fgtMobile" placeholder="मोबाइल नंबर" maxlength="10" class="w-full border p-2.5 rounded-lg mb-4">
-            <div class="flex justify-end space-x-2">
-                <button onclick="closeForgotModal()" class="px-4 py-2 bg-gray-200 rounded-lg text-xs font-bold">रद्द करें</button>
-                <button onclick="submitForgot()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold">ओटीपी भेजें</button>
+    <!-- DASHBOARD VIEW (Next-Level Candidate Hub) -->
+    <main id="dashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-6">
+        
+        <!-- Welcome Profile Banner & Match Score -->
+        <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 rounded-2xl shadow-xl flex flex-wrap justify-between items-center gap-4">
+            <div class="space-y-1">
+                <span class="bg-yellow-400 text-gray-900 px-2.5 py-0.5 rounded text-[10px] font-black uppercase">Verified Candidate</span>
+                <h1 id="userWelcomeName" class="text-xl md:text-2xl font-black">नमस्ते, अमन कुमार!</h1>
+                <p id="userWelcomeMeta" class="text-xs text-blue-200">योग्यता: स्नातक (Graduate) • पसंदीदा शहर: Azamgarh / Remote</p>
+            </div>
+            <!-- AI Match Score Card -->
+            <div class="bg-white/10 backdrop-blur p-4 rounded-xl border border-white/20 text-center flex items-center gap-3">
+                <div class="text-3xl font-black text-yellow-300">95%</div>
+                <div class="text-left text-[11px]">
+                    <p class="font-bold">एआई जॉब मैच स्कोर</p>
+                    <p class="text-blue-200">आपकी प्रोफाइल के अनुसार</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <footer class="bg-gray-800 text-white text-center py-4 text-xs">
-        &copy; 2026 RozgarHub.in • Candidate Login Portal
+        <!-- Dashboard Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
+            <button onclick="switchDashTab('applied')" id="dTabApplied" class="px-4 py-2 rounded-xl bg-blue-700 text-white shadow">📥 अप्लाइड जॉब्स व टाइमलाइन</button>
+            <button onclick="switchDashTab('jobs')" id="dTabJobs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">🎯 1-क्लिक इंस्टेंट अप्लाई</button>
+            <button onclick="switchDashTab('vault')" id="dTabVault" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📁 डॉक्यूमेंट वॉल्ट (Locker)</button>
+            <button onclick="switchDashTab('prefs')" id="dTabPrefs" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">⚙️ जॉब अलर्ट प्रेफरेंस</button>
+            <button onclick="switchDashTab('prep')" id="dTabPrep" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50">📚 करेंट अफेयर्स व क्विज़</button>
+        </div>
+
+        <!-- TAB CONTENT 1: APPLIED JOBS & TIMELINE -->
+        <div id="contentApplied" class="space-y-4">
+            <h3 class="font-black text-sm uppercase text-gray-700 dark:text-gray-300">📋 आपके आवेदन और एप्लीकेशन प्रोग्रेस</h3>
+            <div id="appliedJobsListContainer" class="space-y-4">
+                <!-- Dynamically Rendered -->
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 2: 1-CLICK INSTANT APPLY (Job Recommendations) -->
+        <div id="contentJobs" class="space-y-4 hidden">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-sm uppercase text-gray-700 dark:text-gray-300">🎯 आपके लिए बेस्ट जॉब्स (1-Click Instant Apply)</h3>
+                <a href="resume-builder.html" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold shadow hover:bg-green-700">📄 AI रिज्यूमे बनाएं</a>
+            </div>
+            <div id="instantJobsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamically Rendered -->
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 3: DOCUMENT VAULT (DIGITAL LOCKER) -->
+        <div id="contentVault" class="space-y-4 hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
+                <h3 class="font-black text-sm uppercase text-blue-700 dark:text-blue-400">📁 डिजिटल डॉक्यूमेंट लॉकर (Document Vault)</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400">फॉर्म भरते समय अपने कागजात तुरंत अटैच करने के लिए यहाँ सुरक्षित रखें।</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
+                        <p class="font-bold">🪪 आधार कार्ड (Aadhar Card)</p>
+                        <input type="text" id="vaultAadhar" placeholder="डॉक्यूमेंट लिंक या नंबर दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                    </div>
+                    <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
+                        <p class="font-bold">🎓 10वीं/12वीं मार्कशीट (Marksheet)</p>
+                        <input type="text" id="vaultMarksheet" placeholder="मार्कशीट लिंक दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                    </div>
+                    <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
+                        <p class="font-bold">🖼️ पासपोर्ट साइज फोटो (Photo)</p>
+                        <input type="text" id="vaultPhoto" placeholder="फोटो का लिंक दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                    </div>
+                    <div class="p-4 border dark:border-gray-700 rounded-xl space-y-2 bg-gray-50 dark:bg-gray-700/50">
+                        <p class="font-bold">✍️ हस्ताक्षर (Signature)</p>
+                        <input type="text" id="vaultSign" placeholder="हस्ताक्षर का लिंक दर्ज करें" class="w-full p-2 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-xs">
+                    </div>
+                </div>
+                <button onclick="saveVaultData()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow transition">डॉक्यूमेंट सेव करें 💾</button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 4: JOB PREFERENCES & SMART ALERTS -->
+        <div id="contentPrefs" class="space-y-4 hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
+                <h3 class="font-black text-sm uppercase text-purple-700 dark:text-purple-400">⚙️ स्मार्ट जॉब अलर्ट प्रेफरेंस (Job Preferences)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <label class="block font-bold mb-1">पसंदीदा शहर / जिला (Preferred Location)</label>
+                        <input type="text" id="prefCity" value="Azamgarh, Varanasi" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">पसंदीदा सेक्टर (Job Category)</label>
+                        <select id="prefCat" class="w-full p-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 font-bold">
+                            <option value="All">सभी सेक्टर (Govt & Private)</option>
+                            <option value="Sarkari">केवल सरकारी नौकरियां</option>
+                            <option value="Private">केवल प्राइवेट और कॉर्पोरेट</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="savePreferences()" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow transition">प्रेफरेंस सेव करें ✅</button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 5: EXAM PREP & CURRENT AFFAIRS -->
+        <div id="contentPrep" class="space-y-4 hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border dark:border-gray-700 space-y-4">
+                <h3 class="font-black text-sm uppercase text-amber-600 dark:text-amber-400">📚 डेली करेंट अफेयर्स और प्रैक्टिस क्विज़ (Exam Prep Corner)</h3>
+                <div class="space-y-3 text-xs">
+                    <div class="p-4 bg-amber-50 dark:bg-gray-700 border border-amber-200 dark:border-gray-600 rounded-xl space-y-1">
+                        <span class="text-[10px] font-black bg-amber-200 text-amber-900 px-2 py-0.5 rounded">Today's Update</span>
+                        <h4 class="font-bold text-sm text-gray-900 dark:text-white mt-1">करेंट अफेयर्स 16 सितम्बर 2026: प्रमुख राष्ट्रीय और अंतर्राष्ट्रीय अपडेट</h4>
+                        <p class="text-gray-600 dark:text-gray-300">हाल ही में केंद्रीय मंत्रिमंडल द्वारा शुरू की गई नई डिजिटल रोजगार योजना के तहत उत्तर प्रदेश और बिहार के युवाओं को विशेष प्राथमिकता दी जाएगी।</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-xl space-y-2">
+                        <h4 class="font-bold text-sm text-gray-900 dark:text-white">🎯 त्वरित मॉक क्विज़ (Quick GK Quiz)</h4>
+                        <p class="font-medium text-gray-700 dark:text-gray-200">प्रश्न: भारत में 'कंप्यूटर ऑपरेटर' और डेटा गवर्नेंस नीति लागू करने वाला पहला राज्य कौन-सा है?</p>
+                        <div class="flex gap-2 pt-1">
+                            <button onclick="alert('बिल्कुल सही जवाब! उत्तर प्रदेश सही विकल्प है।')" class="bg-white dark:bg-gray-800 border dark:border-gray-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100">A) उत्तर प्रदेश</button>
+                            <button onclick="alert('गलत जवाब, प्रयास जारी रखें!')" class="bg-white dark:bg-gray-800 border dark:border-gray-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100">B) महाराष्ट्र</button>
+                            <button onclick="alert('गलत जवाब, प्रयास जारी रखें!')" class="bg-white dark:bg-gray-800 border dark:border-gray-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100">C) कर्नाटक</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
+        <p>&copy; 2026 RozgarHub.in • Next-Level Candidate Career Hub</p>
     </footer>
 
+    <!-- Candidate Portal JavaScript Logic -->
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyDummyKey", authDomain: "rozgarhub.firebaseapp.com", projectId: "rozgarhub" };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-
-        function switchAuthMode(mode) {
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            const tabLogin = document.getElementById('tabLogin');
-            const tabSignup = document.getElementById('tabSignup');
-
-            if (mode === 'login') {
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-                tabLogin.className = "flex-1 pb-3 font-bold text-blue-600 border-b-2 border-blue-600 text-center";
-                tabSignup.className = "flex-1 pb-3 font-bold text-gray-400 text-center";
+        function switchAuthTab(tab) {
+            if(tab === 'login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('signupForm').classList.add('hidden');
+                document.getElementById('tabLogin').className = "flex-1 py-2 rounded-lg bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 shadow";
+                document.getElementById('tabSignup').className = "flex-1 py-2 rounded-lg text-gray-600 dark:text-gray-300";
             } else {
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-                tabSignup.className = "flex-1 pb-3 font-bold text-green-600 border-b-2 border-green-600 text-center";
-                tabLogin.className = "flex-1 pb-3 font-bold text-gray-400 text-center";
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('signupForm').classList.remove('hidden');
+                document.getElementById('tabSignup').className = "flex-1 py-2 rounded-lg bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 shadow";
+                document.getElementById('tabLogin').className = "flex-1 py-2 rounded-lg text-gray-600 dark:text-gray-300";
             }
         }
 
-        function handleSignup(e) {
+        function handleSignupSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('regName').value.trim();
-            const mobile = document.getElementById('regMobile').value.trim();
-            const pin = document.getElementById('regPin').value.trim();
+            const user = {
+                name: document.getElementById('signupName').value,
+                email: document.getElementById('signupEmail').value,
+                qual: document.getElementById('signupQual').value
+            };
+            localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+            alert("सफलतापूर्वक खाता बन गया है!");
+            checkAuthAndLoadDashboard();
+        }
 
-            let users = JSON.parse(localStorage.getItem('registeredCandidates')) || [];
-            if (users.some(u => u.mobile === mobile)) {
-                showAlert("यह मोबाइल नंबर पहले से रजिस्टर्ड है!", "bg-red-100 text-red-700");
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            if(!user) {
+                user = { name: "अमन कुमार", email: email, qual: "Graduate" };
+                localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+            }
+            alert("लॉगिन सफल!");
+            checkAuthAndLoadDashboard();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('rozgarHubCandidateUser');
+            location.reload();
+        }
+
+        window.onload = function() {
+            checkAuthAndLoadDashboard();
+        };
+
+        function checkAuthAndLoadDashboard() {
+            const user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            if(user) {
+                document.getElementById('authView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('userWelcomeName').innerText = `नमस्ते, ${user.name}!`;
+                document.getElementById('userWelcomeMeta').innerText = `योग्यता: ${user.qual} • पसंदीदा शहर: Azamgarh`;
+                renderAppliedJobsWithTimeline();
+                renderInstantApplyJobs();
+                loadVaultData();
+            } else {
+                document.getElementById('authView').classList.remove('hidden');
+                document.getElementById('dashboardView').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
+            }
+        }
+
+        function switchDashTab(tab) {
+            ['applied', 'jobs', 'vault', 'prefs', 'prep'].forEach(t => {
+                document.getElementById('content' + capitalize(t)).classList.add('hidden');
+                document.getElementById('dTab' + capitalize(t)).className = "px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-50";
+            });
+            document.getElementById('content' + capitalize(tab)).classList.remove('hidden');
+            document.getElementById('dTab' + capitalize(tab)).className = "px-4 py-2 rounded-xl bg-blue-700 text-white shadow";
+        }
+
+        function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+        function renderAppliedJobsWithTimeline() {
+            let applied = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [
+                { title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", date: "12 Sep 2026", status: "Shortlisted" },
+                { title: "UPSC Civil Services IAS / IPS Online Form", org: "UPSC Board", date: "10 Sep 2026", status: "Submitted" }
+            ];
+
+            let container = document.getElementById('appliedJobsListContainer');
+            let html = "";
+            applied.forEach(job => {
+                let step1 = "bg-green-600 text-white";
+                let step2 = job.status === "Submitted" ? "bg-gray-200 text-gray-600" : "bg-green-600 text-white";
+                let step3 = (job.status === "Shortlisted" || job.status === "Interview") ? "bg-green-600 text-white" : "bg-gray-200 text-gray-600";
+
+                html += `
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border dark:border-gray-700 space-y-3 text-xs">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-black text-sm text-gray-900 dark:text-white">${job.title}</h4>
+                                <p class="text-gray-500">${job.org} • आवेदन दिनांक: ${job.date}</p>
+                            </div>
+                            <span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold uppercase text-[10px]">${job.status}</span>
+                        </div>
+                        <!-- Visual Timeline Progress Bar -->
+                        <div class="pt-2 border-t dark:border-gray-700 grid grid-cols-3 gap-2 text-center font-bold text-[10px]">
+                            <div class="p-2 rounded-lg ${step1}">1. आवेदन जमा (Submitted)</div>
+                            <div class="p-2 rounded-lg ${step2}">2. समीक्षा (Viewed)</div>
+                            <div class="p-2 rounded-lg ${step3}">3. शॉर्टलिस्टेड (Shortlisted)</div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderInstantApplyJobs() {
+            let instantJobs = [
+                { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹18,000 / mo" },
+                { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix Hub", city: "Varanasi / Remote", salary: "₹20,000 / mo" }
+            ];
+            let container = document.getElementById('instantJobsListContainer');
+            let html = "";
+            instantJobs.forEach(job => {
+                html += `
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border dark:border-gray-700 flex flex-col justify-between space-y-3 text-xs">
+                        <div>
+                            <span class="bg-red-100 text-red-700 px-2.5 py-0.5 rounded font-bold text-[10px]">Instant Apply</span>
+                            <h4 class="font-black text-sm text-gray-900 dark:text-white mt-1">${job.title}</h4>
+                            <p class="text-gray-500">${job.org} • 📍 ${job.city}</p>
+                            <p class="font-bold text-green-600 mt-1">💰 वेतन: ${job.salary}</p>
+                        </div>
+                        <button onclick="instantApply(${job.id}, '${job.title}', '${job.org}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold shadow transition">1-क्लिक अप्लाई करें ⚡</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function instantApply(id, title, org) {
+            let applied = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [];
+            if(applied.some(j => j.title === title)) {
+                alert("आप इस जॉब के लिए पहले ही आवेदन कर चुके हैं!");
                 return;
             }
+            applied.unshift({ title, org, date: "आज", status: "Submitted" });
+            localStorage.setItem('rozgarHubAppliedJobs', JSON.stringify(applied));
+            alert("सफलतापूर्वक 1-क्लिक आवेदन हो गया है!");
+            renderAppliedJobsWithTimeline();
+            switchDashTab('applied');
+        }
 
-            const newUser = {
-                name, mobile, pin, email: "", city: "", dob: "", headline: "", totalExp: "", lastCompany: "", skills: "", qualification: "", prefLocation: "", expectedSalary: "", photo: "",
-                appliedJobs: [], savedJobs: []
+        function saveVaultData() {
+            const vault = {
+                aadhar: document.getElementById('vaultAadhar').value,
+                marksheet: document.getElementById('vaultMarksheet').value,
+                photo: document.getElementById('vaultPhoto').value,
+                sign: document.getElementById('vaultSign').value
             };
-
-            users.push(newUser);
-            localStorage.setItem('registeredCandidates', JSON.stringify(users));
-            showAlert("रजिस्ट्रेशन सफल! अब लॉगिन करें।", "bg-green-100 text-green-700");
-            setTimeout(() => switchAuthMode('login'), 1500);
+            localStorage.setItem('rozgarHubDocumentVault', JSON.stringify(vault));
+            alert("आपके दस्तावेज डिजिटल लॉकर में सुरक्षित रूप से सेव हो गए हैं!");
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const mobile = document.getElementById('logMobile').value.trim();
-            const pin = document.getElementById('logPin').value.trim();
-
-            let users = JSON.parse(localStorage.getItem('registeredCandidates')) || [];
-            let user = users.find(u => u.mobile === mobile && u.pin === pin);
-
-            if (!user && mobile === "9876543210" && pin === "1234") {
-                user = {
-                    name: "Aman Kumar",
-                    mobile: "9876543210",
-                    pin: "1234",
-                    headline: "Experienced Computer Operator",
-                    skills: "Basic Excel, MS Office, Typing",
-                    city: "Azamgarh",
-                    totalExp: "8 Years",
-                    appliedJobs: [],
-                    savedJobs: []
-                };
-            }
-
-            if (user) {
-                if(!user.appliedJobs) user.appliedJobs = [];
-                if(!user.savedJobs) user.savedJobs = [];
-                localStorage.setItem('activeCandidate', JSON.stringify(user));
-                showAlert("लॉगिन सफल! डैशबोर्ड पर जा रहे हैं...", "bg-green-100 text-green-700");
-                setTimeout(() => {
-                    window.location.href = "dashboard-candidate.html";
-                }, 1000);
-            } else {
-                showAlert("गलत मोबाइल नंबर या पिन!", "bg-red-100 text-red-700");
+        function loadVaultData() {
+            let vault = JSON.parse(localStorage.getItem('rozgarHubDocumentVault'));
+            if(vault) {
+                if(vault.aadhar) document.getElementById('vaultAadhar').value = vault.aadhar;
+                if(vault.marksheet) document.getElementById('vaultMarksheet').value = vault.marksheet;
+                if(vault.photo) document.getElementById('vaultPhoto').value = vault.photo;
+                if(vault.sign) document.getElementById('vaultSign').value = vault.sign;
             }
         }
 
-        function showAlert(msg, cls) {
-            const el = document.getElementById('authAlert');
-            el.innerText = msg;
-            el.className = `mt-4 p-3 rounded-lg text-center text-xs font-bold ${cls}`;
-            el.classList.remove('hidden');
-        }
-
-        function openForgotModal() { document.getElementById('forgotModal').classList.remove('hidden'); }
-        function closeForgotModal() { document.getElementById('forgotModal').classList.add('hidden'); }
-        function submitForgot() {
-            if (document.getElementById('fgtMobile').value.trim().length === 10) {
-                alert("पिन रीसेट निर्देश आपके मोबाइल नंबर पर भेज दिए गए हैं।");
-                closeForgotModal();
-            } else { alert("कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें।"); }
+        function savePreferences() {
+            alert("आपकी जॉब प्रेफरेंस और अलर्ट सेटिंग्स सेव हो गई हैं!");
         }
     </script>
 </body>
