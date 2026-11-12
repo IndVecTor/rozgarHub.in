@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RozgarHub.in - India's #1 Private Job Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class', }</script>
+    <script>
+        tailwind.config = { darkMode: 'class', }
+    </script>
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -25,45 +27,129 @@
         window.getDocs = getDocs;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+    </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Navbar -->
-    <header class="bg-blue-800 text-white shadow-lg sticky top-0 z-50">
+    <!-- Top Navbar -->
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50 transition-colors duration-300">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span> (Private Jobs)</a>
-            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
-                <a href="candidate-login.html" class="bg-blue-700 hover:bg-blue-600 px-3 py-2 rounded-lg transition">👤 कैंडिडेट पोर्टल</a>
-                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 HR / एप्लॉयर लॉगिन</a>
+            <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span></a>
+            
+            <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-2 rounded-xl transition flex items-center gap-1 shadow-sm">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <a href="candidate-login.html" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-xl transition shadow">👤 कैंडिडेट पोर्टल</a>
+                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-4 py-2.5 rounded-xl transition shadow">🏢 HR / एप्लॉयर</a>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-12 px-4 text-center space-y-4">
-        <div class="container mx-auto max-w-2xl space-y-2">
-            <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सर्वश्रेष्ठ प्राइवेट और कॉर्पोरेट जॉब पोर्टल</h1>
-            <p class="text-xs md:text-sm text-blue-200">IT, BPO, बैक ऑफिस, रिटेल और सेल्स की बेहतरीन नौकरियां सीधे कंपनियों से।</p>
+    <!-- HERO SECTION WITH ADVANCED SEARCH -->
+    <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-16 px-4 text-center space-y-6 shadow-xl relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="container mx-auto max-w-3xl space-y-3 relative z-10">
+            <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 10,000+ Verified Corporate Jobs</span>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की प्राइवेट नौकरी खोजें</h1>
+            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">IT, BPO, बैक ऑफिस, फाइनेंस और सेल्स में बेहतरीन करियर अवसर सीधे शीर्ष कंपनियों से।</p>
         </div>
-        <div class="container mx-auto max-w-lg px-4">
-            <input type="text" id="searchInput" oninput="filterJobs()" placeholder="🔍 जॉब टाइटल, कंपनी या शहर सर्च करें..." class="w-full py-3 px-4 rounded-xl text-xs md:text-sm text-gray-900 font-bold shadow-lg focus:outline-none">
+        
+        <!-- Search Bar Box -->
+        <div class="container mx-auto max-w-2xl px-4 relative z-10">
+            <div class="bg-white dark:bg-gray-800 p-2.5 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 border dark:border-gray-700">
+                <div class="flex items-center flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                    <span class="text-gray-400 mr-2">🔍</span>
+                    <input type="text" id="searchInput" oninput="filterJobs()" placeholder="जॉब टाइटल, स्किल या कंपनी सर्च करें..." class="w-full bg-transparent text-xs md:text-sm text-gray-900 dark:text-white font-bold focus:outline-none">
+                </div>
+                <div class="flex items-center px-3 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl md:w-48">
+                    <span class="text-gray-400 mr-2">📍</span>
+                    <input type="text" id="locationInput" oninput="filterJobs()" placeholder="लोकेशन / शहर" class="w-full bg-transparent text-xs md:text-sm text-gray-900 dark:text-white font-bold focus:outline-none">
+                </div>
+                <button onclick="filterJobs()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black text-xs md:text-sm shadow transition">सर्च करें</button>
+            </div>
         </div>
     </section>
 
-    <!-- Main Jobs Grid -->
-    <main class="container mx-auto px-4 py-8 flex-grow max-w-5xl space-y-6">
-        <h2 class="text-lg font-black uppercase text-gray-700 dark:text-gray-300 border-b pb-2">🔥 लाइव प्राइवेट जॉब्स (Live Corporate Openings)</h2>
-        <div id="publicJobsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <p class="text-xs text-gray-500">लाइव जॉब्स लोड हो रही हैं...</p>
+    <!-- POPULAR CATEGORIES PILLS -->
+    <section class="container mx-auto px-4 -mt-6 relative z-20 max-w-5xl">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg border dark:border-gray-700 flex flex-wrap items-center justify-center gap-3 text-xs font-bold">
+            <span class="text-gray-400 uppercase tracking-wide text-[10px] mr-2">लोकप्रिय श्रेणियां:</span>
+            <button onclick="filterByCategory('All')" class="px-4 py-2 rounded-xl bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-blue-300 hover:bg-blue-600 hover:text-white transition shadow-sm">सभी जॉब्स</button>
+            <button onclick="filterByCategory('IT/Software')" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white transition shadow-sm">💻 IT & Software</button>
+            <button onclick="filterByCategory('BPO/Voice')" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white transition shadow-sm">🎧 BPO / Call Center</button>
+            <button onclick="filterByCategory('BackOffice')" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white transition shadow-sm">📊 Back Office</button>
+            <button onclick="filterByCategory('Sales/Retail')" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-600 hover:text-white transition shadow-sm">📈 Sales & Retail</button>
+        </div>
+    </section>
+
+    <!-- MAIN JOBS FEED GRID -->
+    <main class="container mx-auto px-4 py-10 flex-grow max-w-5xl space-y-6">
+        <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
+            <h2 class="text-base md:text-lg font-black uppercase text-gray-800 dark:text-gray-200">🔥 ताज़ा कॉर्पोरेट वैकेंसी (Live Openings)</h2>
+            <span id="jobCountBadge" class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold">लोड हो रहा है...</span>
+        </div>
+
+        <div id="publicJobsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamically Loaded via Firebase -->
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-white text-center py-6 text-xs">
-        <p>&copy; 2026 RozgarHub.in • Private Job Marketplace</p>
+    <!-- EMPLOYER BANNER CTA -->
+    <section class="container mx-auto px-4 max-w-5xl pb-10">
+        <div class="bg-gradient-to-r from-yellow-500 to-amber-600 text-gray-900 p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <span class="bg-white/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">For HR & Employers</span>
+                <h3 class="text-xl md:text-2xl font-black">क्या आपकी कंपनी में वैकेंसी है?</h3>
+                <p class="text-xs md:text-sm font-medium opacity-90">लाखों योग्य उम्मीदवारों तक अपनी जॉब पहुँचाएँ और तुरंत हायरिंग शुरू करें।</p>
+            </div>
+            <a href="employer-login.html" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3.5 rounded-2xl font-black text-xs md:text-sm shadow-2xl transition shrink-0">फ्री में जॉब पोस्ट करें 🏢</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-8 text-xs space-y-2 border-t border-gray-800">
+        <p>&copy; 2026 RozgarHub.in • India's Premier Private Job Marketplace</p>
+        <p class="text-gray-400">कंपनियों और नौकरी चाहने वालों का भरोसेमंद डिजिटल प्लेटफॉर्म।</p>
     </footer>
 
+    <!-- Script Logic -->
     <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('rozgarHubTheme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.getElementById('htmlRoot').classList.add('dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+            } else {
+                document.getElementById('htmlRoot').classList.remove('dark');
+                document.getElementById('themeIcon').innerText = '🌙';
+            }
+        }
+
+        function toggleDarkMode() {
+            const root = document.getElementById('htmlRoot');
+            if (root.classList.contains('dark')) {
+                root.classList.remove('dark');
+                localStorage.setItem('rozgarHubTheme', 'light');
+                document.getElementById('themeIcon').innerText = '🌙';
+            } else {
+                root.classList.add('dark');
+                localStorage.setItem('rozgarHubTheme', 'dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+            }
+        }
+
+        initTheme();
+
         let allLiveJobs = [];
+        let currentCategory = 'All';
 
         window.addEventListener('firebase-ready', async () => {
             try {
@@ -74,29 +160,38 @@
                 });
                 renderJobs(allLiveJobs);
             } catch(e) {
-                document.getElementById('publicJobsContainer').innerHTML = `<p class="text-xs text-red-500">डेटा लोड करने में समस्या आई।</p>`;
+                document.getElementById('publicJobsContainer').innerHTML = `<p class="text-xs text-red-500 text-center col-span-2">डेटा लोड करने में समस्या आई। कृपया इंटरनेट या Firebase Config जांचें।</p>`;
             }
         });
 
         function renderJobs(jobs) {
             const container = document.getElementById('publicJobsContainer');
+            document.getElementById('jobCountBadge').innerText = `${jobs.length} जॉब्स उपलब्ध`;
+
             if(jobs.length === 0) {
-                container.innerHTML = `<p class="text-xs text-gray-400 italic">फिलहाल कोई प्राइवेट जॉब उपलब्ध नहीं है।</p>`;
+                container.innerHTML = `<div class="col-span-2 bg-white dark:bg-gray-800 p-12 rounded-2xl text-center space-y-2"><p class="text-sm font-bold text-gray-500">कोई मैचिंग जॉब नहीं मिली।</p></div>`;
                 return;
             }
+
             let html = "";
             jobs.forEach(job => {
                 html += `
-                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border dark:border-gray-700 space-y-3 text-xs flex flex-col justify-between">
-                        <div class="space-y-1">
-                            <span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-2 py-0.5 rounded font-bold uppercase text-[10px]">${job.category || 'Corporate'}</span>
-                            <h3 class="font-black text-sm text-gray-900 dark:text-white mt-1">${job.title}</h3>
-                            <p class="font-bold text-blue-600 dark:text-blue-400">${job.company} • 📍 ${job.city}</p>
-                            <p class="text-gray-600 dark:text-gray-300 line-clamp-2">${job.desc}</p>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 flex flex-col justify-between space-y-4 hover:shadow-2xl transition duration-300">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-3 py-1 rounded-full font-bold uppercase text-[10px]">${job.category || 'Corporate'}</span>
+                                <span class="text-xs text-gray-400 font-medium">🕒 हाल ही में पोस्ट</span>
+                            </div>
+                            <h3 class="font-black text-base md:text-lg text-gray-900 dark:text-white">${job.title}</h3>
+                            <p class="font-bold text-blue-600 dark:text-blue-400 text-xs">${job.company} • 📍 ${job.city}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">${job.desc}</p>
                         </div>
-                        <div class="pt-3 border-t dark:border-gray-700 flex justify-between items-center">
-                            <span class="font-black text-green-600">💰 ${job.salary}</span>
-                            <a href="candidate-login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold transition">अप्लाई करें 🚀</a>
+                        <div class="pt-4 border-t dark:border-gray-700 flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] text-gray-400 font-semibold">मासिक वेतन</p>
+                                <span class="font-black text-sm text-green-600 dark:text-green-400">💰 ${job.salary}</span>
+                            </div>
+                            <a href="candidate-login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">अप्लाई करें 🚀</a>
                         </div>
                     </div>
                 `;
@@ -104,9 +199,26 @@
             container.innerHTML = html;
         }
 
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            applyFilters();
+        }
+
         function filterJobs() {
+            applyFilters();
+        }
+
+        function applyFilters() {
             let q = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = allLiveJobs.filter(j => j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.city.toLowerCase().includes(q));
+            let loc = document.getElementById('locationInput').value.toLowerCase();
+
+            let filtered = allLiveJobs.filter(job => {
+                let matchesCat = (currentCategory === 'All' || job.category === currentCategory);
+                let matchesSearch = (job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q) || job.desc.toLowerCase().includes(q));
+                let matchesLoc = (job.city.toLowerCase().includes(loc));
+                return matchesCat && matchesSearch && matchesLoc;
+            });
+
             renderJobs(filtered);
         }
     </script>
