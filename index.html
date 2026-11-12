@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RozgarHub.in - India's #1 Sarkari & Private Jobs Portal</title>
+    <title>RozgarHub.in - India's #1 Private Job Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', }
-    </script>
-    <!-- Firebase SDKs for Frontend -->
+    <script>tailwind.config = { darkMode: 'class', }</script>
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -19,495 +17,97 @@
             projectId: "rozgarhub-aa22b",
             storageBucket: "rozgarhub-aa22b.firebasestorage.app",
             messagingSenderId: "979487527584",
-            appId: "1:979487527584:web:43b1f8eeb07c6631f42fc5",
-            measurementId: "G-2KW71K5NK1"
+            appId: "1:979487527584:web:43b1f8eeb07c6631f42fc5"
         };
-
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        window.db = db;
+        window.db = getFirestore(app);
         window.collection = collection;
         window.getDocs = getDocs;
-
-        // Trigger load after Firebase is ready
-        window.dispatchEvent(new Event('firebase-loaded'));
+        window.dispatchEvent(new Event('firebase-ready'));
     </script>
-    <style>
-        .box-header-sarkari { background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); color: white; }
-        .box-header-private { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); color: white; }
-        .box-header-extra { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-track { background: #1f2937; }
-        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
-    </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen">
 
-    <!-- Top Navbar -->
-    <header class="bg-blue-700 dark:bg-gray-800 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
+    <!-- Navbar -->
+    <header class="bg-blue-800 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span></a>
-            
-            <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
-                <button onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-blue-800 dark:bg-gray-700 hover:bg-blue-900 dark:hover:bg-gray-600 px-3 py-2 rounded-lg transition flex items-center gap-1 shadow">
-                    <span id="themeIcon">🌙</span> <span class="hidden md:inline" id="themeText">डार्क मोड</span>
-                </button>
-                <a href="candidate-login.html" class="bg-blue-800 hover:bg-blue-900 px-3 py-2 rounded-lg transition">👤 कैंडिडेट</a>
-                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 एप्लॉयर</a>
-                <a href="resume-builder.html" class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg transition hidden md:inline">📄 रिज्यूमे</a>
+            <a href="index.html" class="text-2xl font-black tracking-wide">RozgarHub<span class="text-yellow-300">.in</span> (Private Jobs)</a>
+            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
+                <a href="candidate-login.html" class="bg-blue-700 hover:bg-blue-600 px-3 py-2 rounded-lg transition">👤 कैंडिडेट पोर्टल</a>
+                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3 py-2 rounded-lg transition">🏢 HR / एप्लॉयर लॉगिन</a>
             </div>
         </div>
     </header>
 
-    <!-- LIVE VIEW 1: HOME PAGE -->
-    <div id="homeView" class="flex flex-col flex-grow">
-        <!-- Ticker -->
-        <div class="bg-red-600 text-white py-2 px-4 text-xs md:text-sm font-bold flex items-center shadow-inner">
-            <span class="bg-white text-red-700 px-2 py-0.5 rounded uppercase text-[10px] mr-3 font-extrabold animate-pulse">Cloud Live</span>
-            <marquee behavior="scroll" direction="left" scrollamount="5">
-                🔥 Firebase क्लाउड डेटाबेस से सभी जॉब्स लाइव सिंक हो रही हैं | 🎓 योग्यता के अनुसार जॉब्स फ़िल्टर करें | ⏳ ऑनलाइन आयु कैलकुलेटर का उपयोग करें!
-            </marquee>
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-12 px-4 text-center space-y-4">
+        <div class="container mx-auto max-w-2xl space-y-2">
+            <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सर्वश्रेष्ठ प्राइवेट और कॉर्पोरेट जॉब पोर्टल</h1>
+            <p class="text-xs md:text-sm text-blue-200">IT, BPO, बैक ऑफिस, रिटेल और सेल्स की बेहतरीन नौकरियां सीधे कंपनियों से।</p>
         </div>
-
-        <!-- Hero & Live Search Bar -->
-        <section class="bg-gradient-to-r from-blue-900 to-indigo-900 dark:from-gray-800 dark:to-gray-900 text-white py-10 px-4 text-center shadow-md space-y-4 transition-colors duration-300">
-            <div class="container mx-auto max-w-2xl space-y-2">
-                <h1 class="text-2xl md:text-4xl font-black tracking-tight">भारत का सबसे तेज जॉब और वैकेंसी पोर्टल</h1>
-                <p class="text-xs md:text-sm text-blue-200">सरकारी और प्राइवेट नौकरियां • रियल-टाइम क्लाउड सिंक • डार्क मोड सपोर्ट।</p>
-            </div>
-            <!-- Live Search Input -->
-            <div class="container mx-auto max-w-lg px-4">
-                <div class="relative">
-                    <input type="text" id="searchInput" oninput="handleGlobalSearch()" placeholder="🔍 कोई भी जॉब, वैकेंसी या सिलेबस यहाँ सर्च करें..." class="w-full py-3 px-4 pl-10 rounded-xl text-xs md:text-sm text-gray-900 font-bold shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                    <span class="absolute left-3 top-3.5 text-gray-400">🔍</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Qualification Quick Filters Bar -->
-        <section class="container mx-auto px-4 pt-6 max-w-5xl">
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border dark:border-gray-700 flex flex-wrap items-center justify-between gap-3 transition-colors duration-300">
-                <span class="text-xs font-black text-gray-700 dark:text-gray-200 uppercase tracking-wide">🎓 योग्यता के अनुसार फ़िल्टर करें:</span>
-                <div class="flex flex-wrap gap-2 text-xs font-bold">
-                    <button onclick="filterByQual('All')" id="btnAll" class="px-3 py-1.5 rounded-lg bg-blue-700 text-white transition shadow">सभी जॉब्स</button>
-                    <button onclick="filterByQual('10th')" id="btn10th" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">10वीं पास</button>
-                    <button onclick="filterByQual('12th')" id="btn12th" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">12वीं पास</button>
-                    <button onclick="filterByQual('Graduate')" id="btnGrad" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">स्नातक (Graduate)</button>
-                    <button onclick="filterByQual('ITI')" id="btnITI" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition">ITI / डिप्लोमा</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Grid Sections -->
-        <main class="container mx-auto px-4 py-6 flex-grow max-w-5xl w-full space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- COLUMN 1: Sarkari Vacancy -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border dark:border-gray-700 flex flex-col transition-colors duration-300">
-                    <div class="box-header-sarkari p-4 text-center shrink-0">
-                        <h2 class="text-base font-black uppercase">🏛️ Latest Sarkari Jobs</h2>
-                        <p class="text-[10px] text-red-100">स्क्रॉल करके सभी वैकेंसियाँ देखें</p>
-                    </div>
-                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
-                        <ul id="sarkariList" class="space-y-3 text-xs font-semibold"></ul>
-                    </div>
-                </div>
-
-                <!-- COLUMN 2: Syllabus & Answer Key -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border dark:border-gray-700 flex flex-col transition-colors duration-300">
-                    <div class="box-header-extra p-4 text-center shrink-0">
-                        <h2 class="text-base font-black uppercase">📝 Syllabus & Answer Key</h2>
-                        <p class="text-[10px] text-amber-100">हिंदी और अंग्रेजी पीडीएफ डाउनलोड</p>
-                    </div>
-                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
-                        <ul id="answerKeyList" class="space-y-3 text-xs font-semibold"></ul>
-                    </div>
-                </div>
-
-                <!-- COLUMN 3: Private Jobs -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border dark:border-gray-700 md:col-span-2 lg:col-span-1 flex flex-col transition-colors duration-300">
-                    <div class="box-header-private p-4 text-center shrink-0">
-                        <h2 class="text-base font-black uppercase">🏢 Private & Corporate</h2>
-                        <p class="text-[10px] text-blue-100">डायरेक्ट कॉर्पोरेट अवसर</p>
-                    </div>
-                    <div class="p-4 flex-grow max-h-[450px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
-                        <ul id="privateList" class="space-y-3 text-xs font-semibold"></ul>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Age Calculator Widget -->
-            <div class="bg-gradient-to-br from-indigo-900 to-blue-800 dark:from-gray-800 dark:to-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 border dark:border-gray-700 transition-colors duration-300">
-                <div class="flex items-center space-x-2">
-                    <span class="text-2xl">⏳</span>
-                    <div>
-                        <h3 class="font-black text-sm md:text-base">ऑनलाइन आयु कैलकुलेटर (Age Calculator)</h3>
-                        <p class="text-xs text-blue-200">अपनी जन्मतिथि दर्ज करें और तुरंत अपनी सही आयु जांचें।</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
-                    <div>
-                        <label class="block font-semibold mb-1 text-blue-200">जन्मतिथि (Date of Birth):</label>
-                        <input type="date" id="calcDob" class="w-full p-2.5 rounded-lg text-gray-900 font-bold bg-white">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1 text-blue-200">इस तारीख तक आयु निकालें:</label>
-                        <input type="date" id="calcTargetDate" class="w-full p-2.5 rounded-lg text-gray-900 font-bold bg-white" value="2026-07-01">
-                    </div>
-                    <div class="flex items-end">
-                        <button onclick="calculateAge()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-gray-900 py-2.5 rounded-lg font-black transition shadow">आयु गणना करें 🚀</button>
-                    </div>
-                </div>
-                <div id="calcResult" class="hidden bg-white/10 p-3 rounded-xl border border-white/20 text-xs font-bold text-yellow-300 text-center"></div>
-            </div>
-        </main>
-    </div>
-
-    <!-- LIVE VIEW 2: FULL DETAIL & BILINGUAL SYLLABUS DOWNLOAD PAGE -->
-    <div id="detailView" class="container mx-auto px-4 py-8 max-w-3xl flex-grow hidden w-full">
-        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl border dark:border-gray-700 space-y-6 transition-colors duration-300">
-            <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
-                <a href="index.html" class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-3 py-1.5 rounded-lg font-bold transition">&larr; सभी पोस्ट्स पर वापस जाएं</a>
-                <span id="dCategory" class="text-[10px] font-bold bg-red-100 text-red-700 px-3 py-1 rounded-full uppercase">Category</span>
-            </div>
-
-            <div class="space-y-2">
-                <h1 id="dTitle" class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">Title</h1>
-                <p id="dOrg" class="text-sm font-bold text-blue-600 dark:text-blue-400">Organization</p>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 bg-blue-50/60 dark:bg-gray-700/50 p-4 rounded-xl border border-blue-200 dark:border-gray-600 text-xs">
-                <div>
-                    <p class="text-gray-500 dark:text-gray-300 font-semibold">📍 लोकेशन / परीक्षा स्तर</p>
-                    <p id="dCity" class="font-bold text-gray-900 dark:text-white mt-0.5">-</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 dark:text-gray-300 font-semibold">💰 वेतन / पैटर्न</p>
-                    <p id="dSalary" class="font-bold text-gray-900 dark:text-white mt-0.5">-</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 dark:text-gray-300 font-semibold">📅 स्थिति (Status)</p>
-                    <p id="dDate" class="font-bold text-red-600 dark:text-red-400 mt-0.5">-</p>
-                </div>
-            </div>
-
-            <!-- Standard Description -->
-            <div class="space-y-2">
-                <h3 class="font-bold text-xs uppercase text-gray-800 dark:text-gray-200 border-b dark:border-gray-700 pb-1">📋 विस्तृत विवरण (Full Overview)</h3>
-                <p id="dDesc" class="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border dark:border-gray-600">विवरण...</p>
-            </div>
-
-            <!-- DEDICATED BILINGUAL PDF DOWNLOAD SECTION -->
-            <div id="syllabusDownloadSection" class="hidden space-y-4 bg-amber-50 dark:bg-gray-700 p-5 rounded-2xl border border-amber-300 dark:border-gray-600">
-                <h3 class="font-black text-sm uppercase text-amber-900 dark:text-amber-300 flex items-center gap-2">
-                    <span>📥 बाइलिंगुअल सिलेबस पीडीएफ डाउनलोड (Bilingual PDF Download)</span>
-                </h3>
-                <p class="text-xs text-gray-700 dark:text-gray-300">अपनी पसंद की भाषा में परीक्षा पाठ्यक्रम (Syllabus) का पीडीएफ डाउनलोड करें:</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <a id="downloadHindiBtn" href="#" target="_blank" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
-                        <span>📥 हिंदी में सिलेबस डाउनलोड करें (.PDF)</span>
-                    </a>
-                    <a id="downloadEnglishBtn" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
-                        <span>📥 Download English Syllabus (.PDF)</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Auto Form Filling Guide -->
-            <div id="jobGuideSection" class="space-y-3 bg-yellow-50/60 dark:bg-gray-700 p-5 rounded-2xl border border-yellow-200 dark:border-gray-600">
-                <h3 class="font-black text-xs md:text-sm uppercase text-amber-900 dark:text-amber-300">💡 फॉर्म ऑनलाइन कैसे भरें? (Step-by-Step Guide)</h3>
-                <ul class="space-y-2 text-xs text-gray-700 dark:text-gray-300 font-medium list-disc list-inside">
-                    <li><strong>स्टेप 1:</strong> नीचे दिए गए आधिकारिक बटन पर क्लिक करें।</li>
-                    <li><strong>स्टेप 2:</strong> पोर्टल पर अपना रजिस्ट्रेशन पूरा करें।</li>
-                    <li><strong>स्टेप 3:</strong> अपने जरूरी दस्तावेज सही साइज में अपलोड करें।</li>
-                    <li><strong>स्टेप 4:</strong> आवेदन शुल्क का ऑनलाइन भुगतान करें और प्रिंट सुरक्षित रखें।</li>
-                </ul>
-            </div>
-
-            <!-- Documents Checklist Guide -->
-            <div class="space-y-3 bg-blue-50 dark:bg-gray-700 p-5 rounded-2xl border border-blue-200 dark:border-gray-600">
-                <h3 class="font-black text-xs md:text-sm uppercase text-blue-900 dark:text-blue-300">📁 आवश्यक दस्तावेज गाइड (Documents Checklist)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-800 dark:text-gray-200 font-semibold">
-                    <p>✅ 1. आधार कार्ड (Aadhar Card)</p>
-                    <p>✅ 2. 10वीं / 12वीं की मार्कशीट</p>
-                    <p>✅ 3. पासपोर्ट साइज फोटो</p>
-                    <p>✅ 4. हस्ताक्षर (Signature)</p>
-                    <p>✅ 5. जाति / आय प्रमाण पत्र</p>
-                    <p>✅ 6. मोबाइल नंबर और ईमेल आईडी</p>
-                </div>
-            </div>
-
-            <!-- WhatsApp Box -->
-            <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4 rounded-2xl shadow flex items-center justify-between text-xs">
-                <div class="flex items-center space-x-3">
-                    <span class="text-2xl">💬</span>
-                    <div>
-                        <p class="font-bold">हर नई अपडेट सबसे पहले पाएं!</p>
-                        <p class="text-[11px] text-green-100">RozgarHub ऑफिशियल व्हाट्सएप चैनल ज्वाइन करें।</p>
-                    </div>
-                </div>
-                <a href="https://whatsapp.com/channel/0029VexampleChannel" target="_blank" class="bg-white text-green-800 px-4 py-2 rounded-xl font-extrabold hover:bg-green-50 transition shadow">जॉइन करें</a>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="pt-4 border-t dark:border-gray-700 flex flex-wrap items-center justify-between gap-3">
-                <button onclick="shareJob()" class="px-4 py-2.5 bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-xl font-bold text-xs flex items-center gap-1.5 transition">
-                    🔗 इसे शेयर करें
-                </button>
-                <a id="dApplyBtn" href="#" target="_blank" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-xs shadow-lg transition">
-                    🚀 आधिकारिक वेबसाइट पर जाएं
-                </a>
-            </div>
+        <div class="container mx-auto max-w-lg px-4">
+            <input type="text" id="searchInput" oninput="filterJobs()" placeholder="🔍 जॉब टाइटल, कंपनी या शहर सर्च करें..." class="w-full py-3 px-4 rounded-xl text-xs md:text-sm text-gray-900 font-bold shadow-lg focus:outline-none">
         </div>
-    </div>
+    </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12 space-y-2">
-        <p>&copy; 2026 RozgarHub.in • All Rights Reserved</p>
-        <p class="text-gray-400">भारत का विश्वसनीय जॉब और सिलेबस पोर्टल।</p>
+    <!-- Main Jobs Grid -->
+    <main class="container mx-auto px-4 py-8 flex-grow max-w-5xl space-y-6">
+        <h2 class="text-lg font-black uppercase text-gray-700 dark:text-gray-300 border-b pb-2">🔥 लाइव प्राइवेट जॉब्स (Live Corporate Openings)</h2>
+        <div id="publicJobsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p class="text-xs text-gray-500">लाइव जॉब्स लोड हो रही हैं...</p>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white text-center py-6 text-xs">
+        <p>&copy; 2026 RozgarHub.in • Private Job Marketplace</p>
     </footer>
 
-    <!-- Script Logic with Firebase Sync -->
     <script>
-        function initTheme() {
-            const savedTheme = localStorage.getItem('rozgarHubTheme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.getElementById('htmlRoot').classList.add('dark');
-                document.getElementById('themeIcon').innerText = '☀️';
-                document.getElementById('themeText').innerText = 'लाइट मोड';
-            } else {
-                document.getElementById('htmlRoot').classList.remove('dark');
-                document.getElementById('themeIcon').innerText = '🌙';
-                document.getElementById('themeText').innerText = 'डार्क मोड';
-            }
-        }
+        let allLiveJobs = [];
 
-        function toggleDarkMode() {
-            const root = document.getElementById('htmlRoot');
-            if (root.classList.contains('dark')) {
-                root.classList.remove('dark');
-                localStorage.setItem('rozgarHubTheme', 'light');
-                document.getElementById('themeIcon').innerText = '🌙';
-                document.getElementById('themeText').innerText = 'डार्क मोड';
-            } else {
-                root.classList.add('dark');
-                localStorage.setItem('rozgarHubTheme', 'dark');
-                document.getElementById('themeIcon').innerText = '☀️';
-                document.getElementById('themeText').innerText = 'लाइट मोड';
-            }
-        }
-
-        initTheme();
-
-        const defaultStaticData = [
-            { id: 1, title: "UPSC Civil Services IAS / IPS Online Form 2026", org: "UPSC", city: "All India", salary: "Level-10 Scale", date: "10 Oct 2026", desc: "UPSC Civil Services Prelims exam notification released. Check eligibility and apply online directly on official UPSC portal.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://upsc.gov.in" },
-            { id: 2, title: "SSC CGL Graduate Level Online Form 2026", org: "Staff Selection Commission", city: "All India", salary: "₹45,000+ / mo", date: "25 Oct 2026", desc: "Combined Graduate Level Examination for central government inspector and officer posts.", type: "Sarkari", category: "Sarkari", qualification: "Graduate", link: "https://ssc.nic.in" },
-            { id: 3, title: "UPSSSC PET & Lekhpal Recruitment 2026", org: "UPSSSC Lucknow", city: "Uttar Pradesh", salary: "As per 7th Pay", date: "15 Oct 2026", desc: "Applications invited for various Group C and Lekhpal vacancies across UP.", type: "Sarkari", category: "Sarkari", qualification: "12th", link: "https://upsssc.gov.in" },
-            { id: 4, title: "Railway RRB ALP & Technician Exam Answer Key 2026", org: "RRB Railways", city: "All India", salary: "Official Notice", date: "Active", desc: "RRB has released the official answer key for Assistant Loco Pilot and Technician recruitment exam.", type: "AnswerKey", category: "AnswerKey", qualification: "ITI", link: "https://rrbcdg.gov.in" },
-            { id: 5, title: "SSC CHSL 10+2 Tier-1 Exam Syllabus & Pattern 2026", org: "Staff Selection Commission (SSC)", city: "All India", salary: "Tier-1 Exam", date: "Active", desc: "Detailed syllabus and exam pattern for SSC CHSL 10+2 examination. Download bilingual PDF below.", type: "Syllabus", category: "Syllabus", qualification: "12th", hindiPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", englishPdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", link: "https://ssc.nic.in" }
-        ];
-
-        const privateData = [
-            { id: 101, title: "Computer Operator & Data Entry Executive", org: "Tech Solutions Pvt Ltd", city: "Azamgarh, UP", salary: "₹15,000 - ₹20,000 / mo", date: "Active", desc: "Experienced computer operator required with basic Excel, MS Office, and typing skills.", type: "Private", category: "Private", qualification: "12th", link: "candidate-login.html" },
-            { id: 102, title: "Customer Support Executive (Voice / Chat)", org: "Concentrix / BPO Hub", city: "Varanasi / Remote", salary: "₹18,000 / mo", date: "Active", desc: "Handle customer support inquiries over chat and voice channels.", type: "Private", category: "Private", qualification: "10th", link: "candidate-login.html" }
-        ];
-
-        let currentActiveQual = 'All';
-        let cloudJobs = [];
-
-        window.addEventListener('firebase-loaded', async () => {
+        window.addEventListener('firebase-ready', async () => {
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
-                cloudJobs = [];
-                querySnapshot.forEach((docSnap) => {
-                    let d = docSnap.data();
-                    cloudJobs.push({ id: docSnap.id, ...d });
+                allLiveJobs = [];
+                querySnapshot.forEach((doc) => {
+                    allLiveJobs.push({ id: doc.id, ...doc.data() });
                 });
-            } catch (err) {
-                console.log("Offline or Config Error, using default data");
+                renderJobs(allLiveJobs);
+            } catch(e) {
+                document.getElementById('publicJobsContainer').innerHTML = `<p class="text-xs text-red-500">डेटा लोड करने में समस्या आई।</p>`;
             }
-            initializeAppRouter();
         });
 
-        // Fallback if firebase takes too long
-        setTimeout(() => {
-            if(cloudJobs.length === 0 && document.getElementById('sarkariList').innerHTML === "") {
-                initializeAppRouter();
-            }
-        }, 1500);
-
-        function initializeAppRouter() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const jobId = urlParams.get('id');
-
-            let allJobs = [...cloudJobs, ...defaultStaticData, ...privateData];
-
-            if (jobId) {
-                document.getElementById('homeView').classList.add('hidden');
-                document.getElementById('detailView').classList.remove('hidden');
-
-                let foundJob = allJobs.find(j => String(j.id) === String(jobId));
-                if (foundJob) {
-                    document.getElementById('dCategory').innerText = foundJob.category || foundJob.type || 'Job Notice';
-                    document.getElementById('dTitle').innerText = foundJob.title;
-                    document.getElementById('dOrg').innerText = foundJob.org || foundJob.company || 'RozgarHub Verified Board';
-                    document.getElementById('dCity').innerText = foundJob.city || foundJob.state || 'All India';
-                    document.getElementById('dSalary').innerText = foundJob.salary || 'Best in Industry';
-                    document.getElementById('dDate').innerText = foundJob.date || 'Openings Active';
-                    document.getElementById('dDesc').innerText = foundJob.desc || foundJob.summary || 'डिटेल उपलब्ध है।';
-
-                    const applyBtn = document.getElementById('dApplyBtn');
-                    const syllabusSec = document.getElementById('syllabusDownloadSection');
-                    const jobGuideSec = document.getElementById('jobGuideSection');
-
-                    if (foundJob.type === 'Syllabus') {
-                        syllabusSec.classList.remove('hidden');
-                        jobGuideSec.classList.add('hidden');
-                        applyBtn.innerText = "🌐 आधिकारिक वेबसाइट देखें";
-                        applyBtn.href = foundJob.link || "https://ssc.nic.in";
-
-                        if(foundJob.hindiPdf) document.getElementById('downloadHindiBtn').href = foundJob.hindiPdf;
-                        if(foundJob.englishPdf) document.getElementById('downloadEnglishBtn').href = foundJob.englishPdf;
-                    } else {
-                        syllabusSec.classList.add('hidden');
-                        jobGuideSec.classList.remove('hidden');
-                        if (foundJob.type === 'Private' || foundJob.category === 'Private') {
-                            applyBtn.innerText = "👤 कैंडिडेट पोर्टल से अप्लाई करें";
-                            applyBtn.href = foundJob.link || "candidate-login.html";
-                        } else {
-                            applyBtn.innerText = "🚀 आधिकारिक वेबसाइट पर जाएं (Apply)";
-                            applyBtn.href = foundJob.link || "https://www.google.com";
-                        }
-                    }
-                } else {
-                    document.getElementById('detailView').innerHTML = `
-                        <div class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow text-center space-y-4">
-                            <h2 class="text-xl font-bold text-red-600">❌ यह पोस्ट नहीं मिली या हटा दी गई है।</h2>
-                            <a href="index.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-bold">होम पर जाएं</a>
-                        </div>
-                    `;
-                }
-            } else {
-                renderHomeLists('All', '');
-            }
-        }
-
-        function filterByQual(qual) {
-            currentActiveQual = qual;
-            ['All', '10th', '12th', 'Grad', 'ITI'].forEach(id => {
-                let btn = document.getElementById('btn' + id);
-                if(btn) btn.className = "px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 transition";
-            });
-            let activeId = qual === 'All' ? 'All' : (qual === 'Graduate' ? 'Grad' : qual);
-            let activeBtn = document.getElementById('btn' + activeId);
-            if(activeBtn) activeBtn.className = "px-3 py-1.5 rounded-lg bg-blue-700 text-white transition shadow";
-            
-            let query = document.getElementById('searchInput').value;
-            renderHomeLists(qual, query);
-        }
-
-        function handleGlobalSearch() {
-            let query = document.getElementById('searchInput').value;
-            renderHomeLists(currentActiveQual, query);
-        }
-
-        function renderHomeLists(qualFilter, searchQuery) {
-            let allSarkari = [...cloudJobs.filter(p => p.type === 'Sarkari' || p.category === 'Sarkari'), ...defaultStaticData.filter(s => s.type === 'Sarkari')];
-            let allAnswerKey = [...cloudJobs.filter(p => p.type === 'Syllabus' || p.type === 'AnswerKey' || p.category === 'Syllabus'), ...defaultStaticData.filter(s => s.type === 'AnswerKey' || s.type === 'Syllabus')];
-            let allPrivate = [...cloudJobs.filter(p => p.type === 'Private' || p.category === 'Private'), ...privateData];
-
-            if(qualFilter !== 'All') {
-                allSarkari = allSarkari.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
-                allPrivate = allPrivate.filter(i => !i.qualification || i.qualification.toLowerCase() === qualFilter.toLowerCase());
-            }
-
-            if(searchQuery && searchQuery.trim() !== "") {
-                let q = searchQuery.toLowerCase();
-                allSarkari = allSarkari.filter(i => i.title.toLowerCase().includes(q) || i.org.toLowerCase().includes(q));
-                allAnswerKey = allAnswerKey.filter(i => i.title.toLowerCase().includes(q) || i.org.toLowerCase().includes(q));
-                allPrivate = allPrivate.filter(i => i.title.toLowerCase().includes(q) || i.org.toLowerCase().includes(q));
-            }
-
-            let sarkariHtml = "";
-            if(allSarkari.length === 0) sarkariHtml = `<p class="text-xs text-gray-400 italic py-4 text-center">कोई वैकेंसी नहीं मिली।</p>`;
-            allSarkari.forEach(item => {
-                sarkariHtml += `
-                    <li class="py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 rounded transition cursor-pointer flex items-center justify-between">
-                        <a href="index.html?id=${item.id}" class="text-blue-700 dark:text-blue-400 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title}</a>
-                        <span class="text-[10px] bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 px-2 py-0.5 rounded font-bold shrink-0 ml-2">${item.qualification || 'Govt'}</span>
-                    </li>
-                `;
-            });
-            document.getElementById('sarkariList').innerHTML = sarkariHtml;
-
-            let ansHtml = "";
-            if(allAnswerKey.length === 0) ansHtml = `<p class="text-xs text-gray-400 italic py-4 text-center">कोई सिलेबस नहीं मिला।</p>`;
-            allAnswerKey.forEach(item => {
-                ansHtml += `
-                    <li class="py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 rounded transition cursor-pointer flex items-center justify-between">
-                        <a href="index.html?id=${item.id}" class="text-amber-800 dark:text-amber-400 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title}</a>
-                        <span class="text-[10px] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded font-bold shrink-0 ml-2">${item.type}</span>
-                    </li>
-                `;
-            });
-            document.getElementById('answerKeyList').innerHTML = ansHtml;
-
-            let privateHtml = "";
-            if(allPrivate.length === 0) privateHtml = `<p class="text-xs text-gray-400 italic py-4 text-center">कोई प्राइवेट जॉब नहीं मिली।</p>`;
-            allPrivate.forEach(item => {
-                privateHtml += `
-                    <li class="py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 px-2 rounded transition cursor-pointer flex items-center justify-between">
-                        <a href="index.html?id=${item.id}" class="text-blue-700 dark:text-blue-400 hover:underline flex items-center gap-1.5 flex-grow font-semibold">👉 ${item.title} <span class="text-gray-400 font-normal">(${item.city || 'India'})</span></a>
-                        <span class="text-[10px] bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded font-bold shrink-0 ml-2">Private</span>
-                    </li>
-                `;
-            });
-            document.getElementById('privateList').innerHTML = privateHtml;
-        }
-
-        function calculateAge() {
-            const dobInput = document.getElementById('calcDob').value;
-            const targetInput = document.getElementById('calcTargetDate').value;
-            const resultBox = document.getElementById('calcResult');
-
-            if (!dobInput) {
-                alert("कृपया अपनी जन्मतिथि चुनें!");
+        function renderJobs(jobs) {
+            const container = document.getElementById('publicJobsContainer');
+            if(jobs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic">फिलहाल कोई प्राइवेट जॉब उपलब्ध नहीं है।</p>`;
                 return;
             }
-
-            const dob = new Date(dobInput);
-            const target = targetInput ? new Date(targetInput) : new Date();
-
-            let years = target.getFullYear() - dob.getFullYear();
-            let months = target.getMonth() - dob.getMonth();
-            let days = target.getDate() - dob.getDate();
-
-            if (days < 0) {
-                months--;
-                let prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
-                days += prevMonth.getDate();
-            }
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-
-            resultBox.classList.remove('hidden');
-            resultBox.innerHTML = `✨ आपकी आयु: <strong>${years} वर्ष, ${months} महीने, और ${days} दिन</strong> है।`;
+            let html = "";
+            jobs.forEach(job => {
+                html += `
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border dark:border-gray-700 space-y-3 text-xs flex flex-col justify-between">
+                        <div class="space-y-1">
+                            <span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-2 py-0.5 rounded font-bold uppercase text-[10px]">${job.category || 'Corporate'}</span>
+                            <h3 class="font-black text-sm text-gray-900 dark:text-white mt-1">${job.title}</h3>
+                            <p class="font-bold text-blue-600 dark:text-blue-400">${job.company} • 📍 ${job.city}</p>
+                            <p class="text-gray-600 dark:text-gray-300 line-clamp-2">${job.desc}</p>
+                        </div>
+                        <div class="pt-3 border-t dark:border-gray-700 flex justify-between items-center">
+                            <span class="font-black text-green-600">💰 ${job.salary}</span>
+                            <a href="candidate-login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold transition">अप्लाई करें 🚀</a>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
-        function shareJob() {
-            if (navigator.share) {
-                navigator.share({ title: document.getElementById('dTitle').innerText, url: window.location.href }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("लिंक कॉपी हो गया है!");
-            }
+        function filterJobs() {
+            let q = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allLiveJobs.filter(j => j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.city.toLowerCase().includes(q));
+            renderJobs(filtered);
         }
     </script>
 </body>
