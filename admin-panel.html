@@ -1,27 +1,22 @@
 <!DOCTYPE html>
-<html lang="hi" id="htmlRoot" class="scroll-smooth">
+<html lang="hi" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Panel - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', }
-    </script>
-    <!-- Firebase SDKs (Firestore only) -->
+    <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
+        const app = initializeApp({
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
             authDomain: "rozgarhub-aa22b.firebaseapp.com",
             projectId: "rozgarhub-aa22b",
             storageBucket: "rozgarhub-aa22b.firebasestorage.app",
             messagingSenderId: "979487527584",
             appId: "1:979487527584:web:43b1f8eeb07c6631f42fc5"
-        };
-        const app = initializeApp(firebaseConfig);
+        });
         window.db = getFirestore(app);
         window.collection = collection;
         window.getDocs = getDocs;
@@ -30,192 +25,74 @@
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-track { background: #0f172a; }
-        .dark ::-webkit-scrollbar-thumb { background: #ef4444; }
         .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); }
         .dark .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
-
-    <!-- Top Navbar -->
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen">
     <header class="glass-card shadow-lg sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide bg-gradient-to-r from-red-600 to-amber-600 bg-clip-text text-transparent">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-white font-bold px-2.5 py-1 bg-red-600 rounded-full shadow">👑 Super Admin</span></a>
-            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
-                <button onclick="toggleDarkMode()" id="themeToggleBtn" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm"><span id="themeIcon">🌙</span></button>
-                <a href="index.html" class="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-slate-800">🏠 होम पेज</a>
-                <button id="logoutBtn" onclick="handleAdminLogout()" class="hidden px-4 py-2.5 rounded-2xl bg-red-600 text-white hover:bg-red-700 transition shadow">लॉग आउट</button>
+            <a href="index.html" class="text-2xl font-black text-red-600">RozgarHub<span class="text-yellow-500">.in</span> | Super Admin</a>
+            <div class="flex items-center space-x-3 text-sm font-bold">
+                <button onclick="document.getElementById('htmlRoot').classList.toggle('dark')" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900">🌙</button>
+                <a href="index.html" class="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-900">🏠 होम</a>
+                <button id="logoutBtn" onclick="localStorage.removeItem('rozgarHubAdminLoggedIn'); location.reload();" class="hidden px-4 py-2 rounded-2xl bg-red-600 text-white">लॉग आउट</button>
             </div>
         </div>
     </header>
 
-    <!-- ADMIN LOGIN MODAL -->
     <main id="adminAuthView" class="container mx-auto px-4 py-16 flex-grow flex justify-center items-center max-w-md">
-        <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 w-full space-y-6 text-center">
-            <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600 flex items-center justify-center text-3xl shadow-xl shadow-red-600/30 text-white font-black">🔐</div>
-            <div class="space-y-1">
-                <h1 class="text-2xl font-black tracking-tight">सुपर एडमिन लॉगिन</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">पासवर्ड दर्ज करें (पासवर्ड: 2026)</p>
-            </div>
-
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs text-left">
-                <div class="space-y-1">
-                    <label class="block font-bold">एडमिन पासवर्ड</label>
-                    <input type="password" id="adminPassInput" placeholder="••••" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-red-600 outline-none">
-                </div>
-                <button type="submit" class="w-full py-4 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-black text-sm shadow-xl shadow-red-600/30 transition">लॉगिन करें 🛡️</button>
+        <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl border w-full space-y-6 text-center">
+            <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600 flex items-center justify-center text-3xl text-white font-black">🔐</div>
+            <h1 class="text-2xl font-black">सुपर एडमिन लॉगिन</h1>
+            <form onsubmit="if(document.getElementById('pInput').value === '2026') { localStorage.setItem('rozgarHubAdminLoggedIn', 'true'); alert('लॉगिन सफल!'); location.reload(); } else { alert('गलत पासवर्ड! (पासवर्ड 2026 है)'); } event.preventDefault();" class="space-y-4 text-xs text-left">
+                <div><label class="font-bold">पासवर्ड (2026)</label><input type="password" id="pInput" required class="w-full border p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold"></div>
+                <button type="submit" class="w-full py-4 rounded-2xl bg-red-600 text-white font-black shadow-lg">लॉगिन करें 🛡️</button>
             </form>
         </div>
     </main>
 
-    <!-- ADMIN DASHBOARD VIEW -->
     <main id="adminDashboardView" class="container mx-auto px-4 py-10 max-w-6xl flex-grow hidden space-y-8">
-        
-        <!-- Stats Bar -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-500 font-bold uppercase">Total Live Jobs</p>
-                    <h3 id="statTotalJobs" class="text-3xl font-black text-red-600 mt-1">0</h3>
-                </div>
-                <span class="text-4xl">📢</span>
-            </div>
-            <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-500 font-bold uppercase">System Status</p>
-                    <h3 class="text-3xl font-black text-emerald-600 mt-1">Secure 🟢</h3>
-                </div>
-                <span class="text-4xl">🛡️</span>
-            </div>
-            <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-500 font-bold uppercase">Database</p>
-                    <h3 class="text-3xl font-black text-indigo-600 mt-1">Firestore</h3>
-                </div>
-                <span class="text-4xl">⚡</span>
-            </div>
+        <div class="glass-card p-6 rounded-3xl shadow-lg border flex justify-between items-center">
+            <div><p class="text-xs text-slate-500 font-bold uppercase">Total Live Jobs</p><h3 id="statTotalJobs" class="text-3xl font-black text-red-600 mt-1">0</h3></div>
+            <span class="text-4xl">📢</span>
         </div>
 
-        <!-- Job Moderation Section -->
-        <div class="glass-card p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
-                <h3 class="font-black text-base uppercase text-slate-900 dark:text-white">📋 सभी जॉब्स का मॉडरेशन (Job Moderation & Delete)</h3>
-                <button onclick="loadAdminJobs()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-xs font-bold hover:bg-slate-200 transition">🔄 रिफ्रेश करें</button>
-            </div>
-
-            <div id="adminJobsContainer" class="space-y-4">
-                <p class="text-xs text-slate-400 text-center py-8">जॉब्स लोड हो रही हैं...</p>
-            </div>
+        <div class="glass-card p-8 rounded-[2.5rem] shadow-xl border space-y-6">
+            <h3 class="font-black text-base uppercase">📋 सभी जॉब्स का मॉडरेशन और डिलीट</h3>
+            <div id="adminJobsContainer" class="space-y-3"><p class="text-xs text-slate-400">लोड हो रहा है...</p></div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="glass-card border-t border-slate-200 dark:border-slate-800 text-center py-6 text-xs mt-12 space-y-1 text-slate-500">
-        <p>&copy; 2026 RozgarHub.in • Super Admin Panel</p>
-    </footer>
-
-    <!-- Script Logic -->
     <script>
-        function initTheme() {
-            const savedTheme = localStorage.getItem('rozgarHubTheme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.getElementById('htmlRoot').classList.add('dark');
-                document.getElementById('themeIcon').innerText = '☀️';
-            } else {
-                document.getElementById('htmlRoot').classList.remove('dark');
-                document.getElementById('themeIcon').innerText = '🌙';
-            }
-        }
-        function toggleDarkMode() {
-            const root = document.getElementById('htmlRoot');
-            if (root.classList.contains('dark')) { root.classList.remove('dark'); localStorage.setItem('rozgarHubTheme', 'light'); document.getElementById('themeIcon').innerText = '🌙'; }
-            else { root.classList.add('dark'); localStorage.setItem('rozgarHubTheme', 'dark'); document.getElementById('themeIcon').innerText = '☀️'; }
-        }
-        initTheme();
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === "2026") {
-                localStorage.setItem('rozgarHubAdminLoggedIn', 'true');
-                alert("एडमिन लॉगिन सफल!");
-                checkAdminAuth();
-            } else {
-                alert("गलत पासवर्ड! कृपया सही पासवर्ड (2026) दर्ज करें।");
-            }
-        }
-
-        function handleAdminLogout() {
-            localStorage.removeItem('rozgarHubAdminLoggedIn');
-            location.reload();
-        }
-
-        window.onload = function() { checkAdminAuth(); };
-
-        function checkAdminAuth() {
-            const isLoggedIn = localStorage.getItem('rozgarHubAdminLoggedIn');
-            if (isLoggedIn === 'true') {
+        window.onload = () => {
+            if(localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') {
                 document.getElementById('adminAuthView').classList.add('hidden');
                 document.getElementById('adminDashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                if (window.db) loadAdminJobs();
-            } else {
-                document.getElementById('adminAuthView').classList.remove('hidden');
-                document.getElementById('adminDashboardView').classList.add('hidden');
-                document.getElementById('logoutBtn').classList.add('hidden');
             }
-        }
-
+        };
         window.addEventListener('firebase-ready', () => {
-            if (localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') {
-                loadAdminJobs();
-            }
+            if(localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') loadAdminJobs();
         });
-
         async function loadAdminJobs() {
-            const container = document.getElementById('adminJobsContainer');
-            container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">डेटा लोड हो रहा है...</p>`;
-            try {
-                const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
-                let html = "";
-                let count = 0;
-                querySnapshot.forEach((docSnap) => {
-                    count++;
-                    let job = docSnap.data();
-                    html += `
-                        <div class="p-4 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/50 dark:bg-slate-900/50 gap-3">
-                            <div class="flex items-center gap-3">
-                                ${job.posterUrl ? `<img src="${job.posterUrl}" class="w-12 h-12 rounded-xl object-cover border">` : `<div class="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-lg">🏢</div>`}
-                                <div class="space-y-1">
-                                    <span class="px-2 py-0.5 rounded font-bold uppercase text-[10px] bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">HR: ${job.hrEmail || 'N/A'}</span>
-                                    <h4 class="font-black text-sm text-slate-900 dark:text-white mt-1">${job.title}</h4>
-                                    <p class="text-slate-500">${job.company} • 📍 ${job.city} • वेतन: ${job.salary}</p>
-                                </div>
-                            </div>
-                            <button onclick="adminDeleteJob('${docSnap.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2.5 rounded-xl font-bold transition shadow-sm">🗑️ हमेशा के लिए डिलीट करें</button>
-                        </div>
-                    `;
-                });
-                document.getElementById('statTotalJobs').innerText = count;
-                container.innerHTML = html || `<p class="text-xs text-slate-400 text-center py-8">कोई जॉब पोस्ट उपलब्ध नहीं है।</p>`;
-            } catch(e) {
-                container.innerHTML = `<p class="text-xs text-red-500 text-center py-8">डेटा लोड करने में एरर आई: ${e.message}</p>`;
-            }
+            let snap = await window.getDocs(window.collection(window.db, "jobs"));
+            let html = "", count = 0;
+            snap.forEach(d => {
+                count++; let j = d.data();
+                html += `<div class="p-4 border rounded-2xl flex justify-between items-center text-xs bg-white/50 dark:bg-slate-900/50">
+                    <div><b>${j.title}</b> • ${j.company} • 📍 ${j.city} • 💰 ${j.salary}</div>
+                    <button onclick="deleteJob('${d.id}')" class="bg-red-100 text-red-700 px-4 py-2 rounded-xl font-bold">🗑️ हमेशा के लिए डिलीट</button>
+                </div>`;
+            });
+            document.getElementById('statTotalJobs').innerText = count;
+            document.getElementById('adminJobsContainer').innerHTML = html || "<p class='text-xs text-slate-400'>कोई जॉब नहीं है।</p>";
         }
-
-        async function adminDeleteJob(docId) {
-            if (confirm("चेतावनी: क्या आप वाकई इस जॉब को डेटाबेस से हमेशा के लिए डिलीट करना चाहते हैं?")) {
-                try {
-                    await window.deleteDoc(window.doc(window.db, "jobs", docId));
-                    alert("जॉब सफलतापर्वक डिलीट कर दी गई है!");
-                    loadAdminJobs();
-                } catch(e) {
-                    alert("डिलिट करने में एरर आई: " + e.message);
-                }
+        async function deleteJob(id) {
+            if(confirm("क्या आप इस जॉब को हमेशा के लिए डिलीट करना चाहते हैं?")) {
+                await window.deleteDoc(window.doc(window.db, "jobs", id));
+                alert("जॉब डिलीट हो गई है!");
+                loadAdminJobs();
             }
         }
     </script>
