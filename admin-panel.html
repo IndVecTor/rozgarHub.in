@@ -8,10 +8,11 @@
     <script>
         tailwind.config = { darkMode: 'class', }
     </script>
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Firestore + Auth with Phone Auth) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -23,6 +24,10 @@
         };
         const app = initializeApp(firebaseConfig);
         window.db = getFirestore(app);
+        window.auth = getAuth(app);
+        window.RecaptchaVerifier = RecaptchaVerifier;
+        window.signInWithPhoneNumber = signInWithPhoneNumber;
+        window.signOut = signOut;
         window.collection = collection;
         window.getDocs = getDocs;
         window.deleteDoc = deleteDoc;
@@ -53,22 +58,38 @@
         </div>
     </header>
 
-    <!-- ADMIN LOGIN MODAL -->
+    <!-- ADMIN PHONE & OTP LOGIN MODAL -->
     <main id="adminAuthView" class="container mx-auto px-4 py-16 flex-grow flex justify-center items-center max-w-md">
         <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 w-full space-y-6 text-center">
-            <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600 flex items-center justify-center text-3xl shadow-xl shadow-red-600/30 text-white font-black">🔐</div>
+            <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600 flex items-center justify-center text-3xl shadow-xl shadow-red-600/30 text-white font-black">📱</div>
             <div class="space-y-1">
-                <h1 class="text-2xl font-black tracking-tight">सुपर एडमिन लॉगिन</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">प्लेटफॉर्म कंट्रोल पैनल (पासवर्ड: rozgaradmin2026)</p>
+                <h1 class="text-2xl font-black tracking-tight">सुपर एडमिन मोबाइल लॉगिन</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">OTP वेरिफिकेशन के साथ सुरक्षित प्रवेश</p>
             </div>
 
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs text-left">
+            <!-- STEP 1: Enter Phone Number -->
+            <div id="phoneStep" class="space-y-4 text-xs text-left">
                 <div class="space-y-1">
-                    <label class="block font-bold">एडमिन पासवर्ड</label>
-                    <input type="password" id="adminPassInput" placeholder="••••••••••••" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-red-600 outline-none">
+                    <label class="block font-bold">मोबाइल नंबर (देश कोड के साथ, जैसे +91...)</label>
+                    <input type="tel" id="adminPhone" placeholder="+919876543210" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-red-600 outline-none">
                 </div>
-                <button type="submit" class="w-full py-4 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-black text-sm shadow-xl shadow-red-600/30 transition">लॉगिन करें 🛡️</button>
-            </form>
+                <button type="button" onclick="sendOtpCode()" class="w-full py-4 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-black text-sm shadow-xl shadow-red-600/30 transition">OTP भेजें 🚀</button>
+            </div>
+
+            <!-- STEP 2: Enter OTP (Hidden Initially) -->
+            <div id="otpStep" class="space-y-4 text-xs text-left hidden">
+                <div class="space-y-1">
+                    <label class="block font-bold">6 अंकों का OTP दर्ज करें</label>
+                    <input type="text" id="otpInput" placeholder="123456" maxlength="6" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold tracking-widest text-center text-lg focus:ring-2 focus:ring-red-600 outline-none">
+                </div>
+                <button type="button" onclick="verifyOtpCode()" class="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-xl shadow-emerald-600/30 transition">वेरीफाई और लॉगिन करें ✅</button>
+                <div class="text-center pt-2">
+                    <button type="button" onclick="resetPhoneStep()" class="text-xs text-slate-500 hover:underline">दूसरा नंबर डालें या दोबारा प्रयास करें</button>
+                </div>
+            </div>
+
+            <!-- Invisible reCAPTCHA container -->
+            <div id="recaptcha-container"></div>
         </div>
     </main>
 
@@ -137,21 +158,84 @@
         }
         initTheme();
 
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === "rozgaradmin2026") {
-                localStorage.setItem('rozgarHubAdminLoggedIn', 'true');
-                alert("एडमिन लॉगिन सफल!");
-                checkAdminAuth();
-            } else {
-                alert("गलत पासवर्ड! कृपया सही पासवर्ड दर्ज करें।");
+        window.addEventListener('firebase-ready', () => {
+            window.auth.onAuthStateChanged((user) => {
+                if (user) {
+                    localStorage.setItem('rozgarHubAdminLoggedIn', 'true');
+                    document.getElementById('adminAuthView').classList.add('hidden');
+                    document.getElementById('adminDashboardView').classList.remove('hidden');
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+                    loadAdminJobs();
+                } else {
+                    if(localStorage.getItem('rozgarHubAdminLoggedIn') !== 'true') {
+                        document.getElementById('adminAuthView').classList.remove('hidden');
+                    }
+                }
+            });
+        });
+
+        function setupRecaptcha() {
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new window.RecaptchaVerifier(window.auth, 'recaptcha-container', {
+                    'size': 'invisible',
+                    'callback': (response) => {
+                        // reCAPTCHA solved
+                    }
+                });
             }
         }
 
-        function handleAdminLogout() {
-            localStorage.removeItem('rozgarHubAdminLoggedIn');
-            location.reload();
+        async function sendOtpCode() {
+            const phoneNumber = document.getElementById('adminPhone').value;
+            if (!phoneNumber || !phoneNumber.startsWith('+')) {
+                alert("कृपया सही फॉर्मेट में मोबाइल नंबर दर्ज करें (जैसे +919876543210)");
+                return;
+            }
+            try {
+                setupRecaptcha();
+                const appVerifier = window.recaptchaVerifier;
+                alert("OTP भेजा जा रहा है... कृपया प्रतीक्षा करें।");
+                window.confirmationResult = await window.signInWithPhoneNumber(window.auth, phoneNumber, appVerifier);
+                alert("OTP आपके फोन नंबर पर भेज दिया गया है!");
+                document.getElementById('phoneStep').classList.add('hidden');
+                document.getElementById('otpStep').classList.remove('hidden');
+            } catch (err) {
+                alert("OTP भेजने में एरर: " + err.message);
+                if(window.recaptchaVerifier) window.recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+            }
+        }
+
+        async function verifyOtpCode() {
+            const code = document.getElementById('otpInput').value;
+            if (!code || code.length < 6) {
+                alert("कृपया पूरा 6 अंकों का OTP दर्ज करें!");
+                return;
+            }
+            try {
+                const result = await window.confirmationResult.confirm(code);
+                const user = result.user;
+                localStorage.setItem('rozgarHubAdminLoggedIn', 'true');
+                alert("OTP वेरीफाई हो गया! एडमिन लॉगिन सफल 🎉");
+                checkAdminAuth();
+            } catch (err) {
+                alert("गलत OTP! कृपया दोबारा सही कोड दर्ज करें। एरर: " + err.message);
+            }
+        }
+
+        function resetPhoneStep() {
+            document.getElementById('otpStep').classList.add('hidden');
+            document.getElementById('phoneStep').classList.remove('hidden');
+        }
+
+        async function handleAdminLogout() {
+            try {
+                await window.signOut(window.auth);
+                localStorage.removeItem('rozgarHubAdminLoggedIn');
+                location.reload();
+            } catch (e) {
+                localStorage.removeItem('rozgarHubAdminLoggedIn');
+                location.reload();
+            }
         }
 
         window.onload = function() { checkAdminAuth(); };
@@ -162,18 +246,8 @@
                 document.getElementById('adminAuthView').classList.add('hidden');
                 document.getElementById('adminDashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-            } else {
-                document.getElementById('adminAuthView').classList.remove('hidden');
-                document.getElementById('adminDashboardView').classList.add('hidden');
-                document.getElementById('logoutBtn').classList.add('hidden');
             }
         }
-
-        window.addEventListener('firebase-ready', () => {
-            if (localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') {
-                loadAdminJobs();
-            }
-        });
 
         async function loadAdminJobs() {
             const container = document.getElementById('adminJobsContainer');
