@@ -253,7 +253,40 @@
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12"><p>&copy; 2026 RozgarHub.in • HR Hub</p></footer>
 
     <script>
-        function toggleDarkMode() { document.getElementById('htmlRoot').classList.toggle('dark'); }
+        function applyDeviceOrSavedTheme() {
+            const root = document.getElementById('htmlRoot');
+            const savedTheme = localStorage.getItem('rozgarHubTheme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
+
+            if (isDark) {
+                root.classList.add('dark');
+            } else {
+                root.classList.remove('dark');
+            }
+
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.innerText = isDark ? '☀️' : '🌙';
+        }
+
+        function toggleDarkMode() {
+            const root = document.getElementById('htmlRoot');
+            const willBeDark = !root.classList.contains('dark');
+            root.classList.toggle('dark', willBeDark);
+            localStorage.setItem('rozgarHubTheme', willBeDark ? 'dark' : 'light');
+
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.innerText = willBeDark ? '☀️' : '🌙';
+        }
+
+        applyDeviceOrSavedTheme();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('rozgarHubTheme')) {
+                applyDeviceOrSavedTheme();
+            }
+        });
+
         function switchAuthTab(t) {
             if(t==='login') {
                 document.getElementById('loginForm').classList.remove('hidden');
@@ -350,7 +383,7 @@
                 deadline: document.getElementById('jDeadline').value,
                 skills: document.getElementById('jSkills').value,
                 hrName: document.getElementById('jHrName').value,
-                hrPhonePrivate: document.getElementById('jHrPhone').value, // Stored privately, hidden on frontend
+                hrPhonePrivate: document.getElementById('jHrPhone').value,
                 hrEmail: u.email || "",
                 desc: document.getElementById('jDesc').value,
                 posterUrl,

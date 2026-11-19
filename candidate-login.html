@@ -234,22 +234,39 @@
 
     <!-- Script Logic -->
     <script>
-        function initTheme() {
+        function applyDeviceOrSavedTheme() {
+            const root = document.getElementById('htmlRoot');
             const savedTheme = localStorage.getItem('rozgarHubTheme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.getElementById('htmlRoot').classList.add('dark');
-                document.getElementById('themeIcon').innerText = '☀️';
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
+
+            if (isDark) {
+                root.classList.add('dark');
             } else {
-                document.getElementById('htmlRoot').classList.remove('dark');
-                document.getElementById('themeIcon').innerText = '🌙';
+                root.classList.remove('dark');
             }
+
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.innerText = isDark ? '☀️' : '🌙';
         }
+
         function toggleDarkMode() {
             const root = document.getElementById('htmlRoot');
-            if (root.classList.contains('dark')) { root.classList.remove('dark'); localStorage.setItem('rozgarHubTheme', 'light'); document.getElementById('themeIcon').innerText = '🌙'; }
-            else { root.classList.add('dark'); localStorage.setItem('rozgarHubTheme', 'dark'); document.getElementById('themeIcon').innerText = '☀️'; }
+            const willBeDark = !root.classList.contains('dark');
+            root.classList.toggle('dark', willBeDark);
+            localStorage.setItem('rozgarHubTheme', willBeDark ? 'dark' : 'light');
+
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.innerText = willBeDark ? '☀️' : '🌙';
         }
-        initTheme();
+
+        applyDeviceOrSavedTheme();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('rozgarHubTheme')) {
+                applyDeviceOrSavedTheme();
+            }
+        });
 
         function switchAuthTab(tab) {
             if(tab === 'login') {

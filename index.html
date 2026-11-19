@@ -71,10 +71,9 @@
         </div>
     </main>
 
-    <!-- FULL JOB DETAIL MODAL (Opens on Card Click) -->
+    <!-- FULL JOB DETAIL MODAL -->
     <div id="jobDetailModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
-            <!-- Modal Header -->
             <div class="flex justify-between items-center p-5 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
                 <div class="flex items-center gap-2">
                     <span id="modalCategoryBadge" class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-3 py-1 rounded-full font-bold uppercase text-[11px]">Corporate</span>
@@ -83,7 +82,6 @@
                 <button onclick="closeJobModal()" class="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-red-500 hover:text-white flex items-center justify-center font-black transition text-sm">✕</button>
             </div>
 
-            <!-- Modal Body (Full Details) -->
             <div class="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
                 <div id="modalPosterContainer" class="w-full rounded-2xl overflow-hidden border dark:border-gray-700 bg-gray-100 dark:bg-gray-900 hidden">
                     <img id="modalPosterImg" src="" alt="Full Job Poster" class="w-full max-h-72 object-contain mx-auto">
@@ -94,7 +92,6 @@
                     <p id="modalCompany" class="font-black text-blue-600 dark:text-blue-400 text-sm">🏢 Company Name</p>
                 </div>
 
-                <!-- Structured Highlights Grid -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
                         <p class="text-[10px] text-gray-400 font-bold">💰 मासिक वेतन</p>
@@ -134,18 +131,15 @@
                     </div>
                 </div>
 
-                <!-- Required Skills -->
                 <div id="modalSkillsBox" class="space-y-1">
                     <h4 class="text-[11px] font-black uppercase text-gray-400 tracking-wider">⚡ आवश्यक स्किल्स (Required Skills)</h4>
                     <p id="modalSkills" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/40 px-4 py-2.5 rounded-xl border border-indigo-100 dark:border-indigo-900/50">-</p>
                 </div>
 
-                <!-- Security Notice (Contact Number Hidden) -->
                 <div class="p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
                     🔒 सुरक्षा और प्राइवेसी नीति: HR का मोबाइल/WhatsApp नंबर सुरक्षा कारणों से गोपनीय रखा गया है। नौकरी के लिए आवेदन करने हेतु नीचे दिए गए बटन से कैंडिडेट पोर्टल में लॉगिन/रजिस्टर कर 1-क्लिक अप्लाई करें।
                 </div>
 
-                <!-- Full Description -->
                 <div class="space-y-2">
                     <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider">📄 नौकरी का पूरा विवरण (Full Description)</h4>
                     <div id="modalFullDesc" class="text-xs md:text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line leading-relaxed bg-gray-50 dark:bg-gray-900/60 p-5 rounded-2xl border dark:border-gray-700">
@@ -154,7 +148,6 @@
                 </div>
             </div>
 
-            <!-- Modal Footer (Actions: WhatsApp Share + Apply) -->
             <div class="p-5 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-wrap justify-between items-center gap-3">
                 <button id="modalWhatsappBtn" onclick="" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-5 rounded-2xl font-black text-xs shadow-lg transition flex items-center justify-center gap-2">
                     <span>📲</span> WhatsApp पर शेयर करें
@@ -176,22 +169,39 @@
     <script>
         let allLoadedJobs = [];
 
-        function initTheme() {
+        function applyDeviceOrSavedTheme() {
+            const root = document.getElementById('htmlRoot');
             const savedTheme = localStorage.getItem('rozgarHubTheme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.getElementById('htmlRoot').classList.add('dark');
-                document.getElementById('themeIcon').innerText = '☀️';
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
+
+            if (isDark) {
+                root.classList.add('dark');
             } else {
-                document.getElementById('htmlRoot').classList.remove('dark');
-                document.getElementById('themeIcon').innerText = '🌙';
+                root.classList.remove('dark');
             }
+
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.innerText = isDark ? '☀️' : '🌙';
         }
+
         function toggleDarkMode() {
             const root = document.getElementById('htmlRoot');
-            if (root.classList.contains('dark')) { root.classList.remove('dark'); localStorage.setItem('rozgarHubTheme', 'light'); document.getElementById('themeIcon').innerText = '🌙'; }
-            else { root.classList.add('dark'); localStorage.setItem('rozgarHubTheme', 'dark'); document.getElementById('themeIcon').innerText = '☀️'; }
+            const willBeDark = !root.classList.contains('dark');
+            root.classList.toggle('dark', willBeDark);
+            localStorage.setItem('rozgarHubTheme', willBeDark ? 'dark' : 'light');
+
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.innerText = willBeDark ? '☀️' : '🌙';
         }
-        initTheme();
+
+        applyDeviceOrSavedTheme();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('rozgarHubTheme')) {
+                applyDeviceOrSavedTheme();
+            }
+        });
 
         window.addEventListener('firebase-ready', async () => {
             try {
