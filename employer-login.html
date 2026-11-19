@@ -38,7 +38,7 @@
     <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center p-4">
             <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> | HR Hub</a>
-            <div class="flex items-center space-x-4 text-sm font-bold">
+            <div class="flex items-center space-x-3 md:space-x-4 text-xs md:text-sm font-bold">
                 <button onclick="toggleDarkMode()" class="bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-xl"><span id="themeIcon">🌙</span></button>
                 <a href="index.html" class="bg-gray-100 dark:bg-gray-700 px-4 py-2.5 rounded-xl">&larr; होम पेज</a>
                 <button id="logoutBtn" onclick="handleLogout()" class="hidden bg-red-600 text-white px-4 py-2.5 rounded-xl">लॉग आउट</button>
@@ -46,6 +46,7 @@
         </div>
     </header>
 
+    <!-- AUTH VIEW -->
     <main id="authView" class="container mx-auto px-4 py-16 flex-grow flex justify-center items-center max-w-md">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl border dark:border-gray-700 w-full space-y-6">
             <div class="text-center space-y-2">
@@ -58,69 +59,198 @@
                 <button onclick="switchAuthTab('signup')" id="tabSignup" class="flex-1 py-2.5 rounded-xl">रजिस्टर</button>
             </div>
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
-                <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="loginEmail" required class="w-full border p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                <div><label class="block font-bold mb-1">पासवर्ड</label><input type="password" id="loginPass" required class="w-full border p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+                <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="loginEmail" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+                <div><label class="block font-bold mb-1">पासवर्ड</label><input type="password" id="loginPass" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
                 <button type="submit" class="w-full bg-blue-600 text-white py-3.5 rounded-2xl font-black text-sm">लॉगिन करें 🚀</button>
             </form>
             <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-4 text-xs hidden">
-                <div><label class="block font-bold mb-1">कंपनी का नाम</label><input type="text" id="regCompany" required class="w-full border p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                <div><label class="block font-bold mb-1">एचआर नाम</label><input type="text" id="regName" required class="w-full border p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="regEmail" required class="w-full border p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                <div><label class="block font-bold mb-1">पासवर्ड</label><input type="password" id="regPass" required class="w-full border p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+                <div><label class="block font-bold mb-1">कंपनी का नाम</label><input type="text" id="regCompany" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+                <div><label class="block font-bold mb-1">एचआर (HR) का नाम</label><input type="text" id="regName" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+                <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="regEmail" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+                <div><label class="block font-bold mb-1">पासवर्ड</label><input type="password" id="regPass" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
                 <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3.5 rounded-2xl font-black text-sm">रजिस्टर करें ✨</button>
             </form>
         </div>
     </main>
 
+    <!-- DASHBOARD VIEW -->
     <main id="dashboardView" class="container mx-auto px-4 py-10 max-w-5xl flex-grow hidden space-y-8">
         <div class="bg-gradient-to-r from-yellow-500 to-amber-600 text-gray-900 p-6 md:p-8 rounded-3xl shadow-xl flex justify-between items-center">
             <div>
                 <h1 id="hrWelcomeName" class="text-xl md:text-2xl font-black">नमस्ते!</h1>
-                <p class="text-xs font-medium">जॉब पोस्टिंग और ATS सिस्टम</p>
+                <p id="hrSubInfo" class="text-xs font-bold">प्रोफेशनल जॉब पोस्टिंग और ATS सिस्टम</p>
             </div>
-            <div class="bg-white/20 p-4 rounded-2xl text-center"><div id="activeJobsCount" class="text-xl font-black">0</div><div class="text-[10px] font-bold">Active Jobs</div></div>
+            <div class="bg-white/25 backdrop-blur p-4 rounded-2xl text-center">
+                <div id="activeJobsCount" class="text-xl font-black">0</div>
+                <div class="text-[10px] font-bold">Live Jobs</div>
+            </div>
         </div>
 
-        <div class="flex gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
-            <button onclick="switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow">➕ नई जॉब</button>
-            <button onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border">📋 मेरी जॉब्स</button>
-            <button onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border">👥 ATS</button>
+        <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
+            <button onclick="switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">➕ नई जॉब पब्लिश करें</button>
+            <button onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">📋 मेरी जॉब्स और स्टेटस</button>
+            <button onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">👥 उम्मीदवार (ATS)</button>
         </div>
 
+        <!-- TAB 1: PROFESSIONAL JOB POST FORM -->
         <div id="contentPost" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border dark:border-gray-700 space-y-6">
-            <h2 class="font-black uppercase border-b pb-2">📢 नई जॉब पब्लिश करें</h2>
-            <form id="jobPostForm" onsubmit="publishJob(event)" class="space-y-4 text-xs">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="block font-bold mb-1">जॉब टाइटल</label><input type="text" id="jTitle" required class="w-full p-3.5 border rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                    <div><label class="block font-bold mb-1">कंपनी</label><input type="text" id="jCompany" required class="w-full p-3.5 border rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
+            <h2 class="font-black text-base uppercase border-b dark:border-gray-700 pb-3 text-blue-700 dark:text-blue-400">📢 नई प्राइवेट जॉब पब्लिश करें (Full Details)</h2>
+            
+            <form id="jobPostForm" onsubmit="publishJob(event)" class="space-y-6 text-xs">
+                
+                <!-- Section 1: Core Info -->
+                <div class="space-y-3">
+                    <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">1. मुख्य जॉब विवरण</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">जॉब टाइटल (Job Title) *</label>
+                            <input type="text" id="jTitle" placeholder="जैसे: Computer Operator / Sales Executive" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">कंपनी / संस्था का नाम *</label>
+                            <input type="text" id="jCompany" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">जॉब कैटेगरी (Department) *</label>
+                            <select id="jCategory" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="IT & Software">IT & Software</option>
+                                <option value="Back Office / Data Entry">Back Office / Data Entry</option>
+                                <option value="BPO / Call Center">BPO / Call Center</option>
+                                <option value="Sales & Retail">Sales & Retail</option>
+                                <option value="Accounts & Finance">Accounts & Finance</option>
+                                <option value="Delivery & Logistics">Delivery & Logistics</option>
+                                <option value="Other Corporate">Other Corporate</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">जॉब लोकेशन (शहर व एरिया) *</label>
+                            <input type="text" id="jCity" placeholder="जैसे: Civil Lines, Azamgarh" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div><label class="block font-bold mb-1">लोकेशन</label><input type="text" id="jCity" required class="w-full p-3.5 border rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                    <div><label class="block font-bold mb-1">वेतन</label><input type="text" id="jSalary" required class="w-full p-3.5 border rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                    <div><label class="block font-bold mb-1">कैटेगरी</label><select id="jCategory" class="w-full p-3.5 border rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"><option value="IT/Software">IT & Software</option><option value="BPO/Voice">BPO</option><option value="BackOffice">Back Office</option><option value="Sales/Retail">Sales</option></select></div>
+
+                <!-- Section 2: Salary & Work Schedule -->
+                <div class="space-y-3 border-t dark:border-gray-700 pt-4">
+                    <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">2. वेतन और कार्यशैली</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">मासिक वेतन (Salary) *</label>
+                            <input type="text" id="jSalary" placeholder="₹12,000 - ₹18,000" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">जॉब का प्रकार (Type)</label>
+                            <select id="jJobType" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="Full-Time">Full-Time</option>
+                                <option value="Part-Time">Part-Time</option>
+                                <option value="Internship">Internship</option>
+                                <option value="Contract">Contract</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">कार्य शैली (Work Mode)</label>
+                            <select id="jWorkMode" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="Work from Office">Work from Office</option>
+                                <option value="Field Work">Field Work</option>
+                                <option value="Work from Home">Work from Home</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">शिफ्ट टाइमिंग (Shift)</label>
+                            <input type="text" id="jShift" placeholder="9:30 AM - 6:30 PM" value="Day Shift (9:30 AM - 6:30 PM)" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                    </div>
                 </div>
-                <div><label class="block font-bold mb-1">विवरण</label><textarea id="jDesc" rows="4" required class="w-full p-3.5 border rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></textarea></div>
-                <div class="p-4 bg-blue-50 dark:bg-gray-700 rounded-2xl space-y-2">
-                    <label class="block font-bold text-xs">🖥️ जॉब पोस्टर अपलोड करें (Optional)</label>
+
+                <!-- Section 3: Requirements & Vacancies -->
+                <div class="space-y-3 border-t dark:border-gray-700 pt-4">
+                    <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">3. योग्यता, अनुभव और रिक्तियां</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">न्यूनतम शिक्षा (Qualification)</label>
+                            <select id="jQual" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="10th Pass">10वीं पास</option>
+                                <option value="12th Pass">12वीं पास</option>
+                                <option value="Graduate" selected>स्नातक (Graduate)</option>
+                                <option value="ITI / Diploma">ITI / डिप्लोमा</option>
+                                <option value="Post Graduate">पोस्ट ग्रेजुएट</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">अनुभव (Experience)</label>
+                            <select id="jExp" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="Fresher (0 साल)">Fresher (0 साल)</option>
+                                <option value="6 महीने - 1 साल">6 महीने - 1 साल</option>
+                                <option value="1 - 3 साल">1 - 3 साल</option>
+                                <option value="3+ साल">3+ साल</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">जेंडर प्रेफरेंस (Gender)</label>
+                            <select id="jGender" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                                <option value="Male & Female Both">Male & Female (दोनों)</option>
+                                <option value="Only Male">Only Male (केवल पुरुष)</option>
+                                <option value="Only Female">Only Female (केवल महिला)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">कुल पद (Openings)</label>
+                            <input type="number" id="jOpenings" min="1" value="2" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">अंतिम तिथि (Deadline)</label>
+                            <input type="date" id="jDeadline" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">आवश्यक स्किल्स (Skills)</label>
+                            <input type="text" id="jSkills" placeholder="Basic Excel, Hindi/Eng Typing" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Private HR Contact & Description -->
+                <div class="space-y-3 border-t dark:border-gray-700 pt-4">
+                    <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">4. HR विवरण और विस्तृत जानकारी</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1">HR / रिक्रूटर का नाम (पब्लिक पर दिखेगा) *</label>
+                            <input type="text" id="jHrName" placeholder="जैसे: Rahul Sharma (HR Manager)" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1 text-red-600 dark:text-red-400">HR मोबाइल / WhatsApp नंबर (गोपनीय - पब्लिक को नहीं दिखेगा) *</label>
+                            <input type="tel" id="jHrPhone" placeholder="केवल एडमिन रिकॉर्ड के लिए" required class="w-full p-3.5 border border-red-200 dark:border-red-900/50 rounded-2xl bg-red-50/30 dark:bg-gray-700 font-bold">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">विस्तृत कार्य विवरण (Job Description & Interview Details) *</label>
+                        <textarea id="jDesc" rows="4" placeholder="काम की जिम्मेदारी, इंटरव्यू का समय व पता और अन्य शर्तें लिखें..." required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></textarea>
+                    </div>
+                </div>
+
+                <!-- Poster Upload -->
+                <div class="p-4 bg-blue-50 dark:bg-gray-700/60 border border-blue-200 dark:border-gray-600 rounded-2xl space-y-2">
+                    <label class="block font-bold text-xs">🖥️ जॉब पोस्टर / बैनर अपलोड करें (Optional)</label>
                     <input type="file" id="jPosterFile" accept="image/*" class="w-full text-xs">
-                    <p id="uploadStatus" class="text-[10px] text-gray-600 hidden">अपलोड हो रहा है...</p>
+                    <p id="uploadStatus" class="text-[10px] text-blue-600 dark:text-blue-300 font-bold hidden">पोस्टर अपलोड हो रहा है... कृपया प्रतीक्षा करें।</p>
                 </div>
-                <button type="submit" id="submitJobBtn" class="w-full bg-yellow-500 text-gray-900 py-4 rounded-2xl font-black shadow-xl">जॉब लाइव करें 🚀</button>
+
+                <button type="submit" id="submitJobBtn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 py-4 rounded-2xl font-black text-sm shadow-xl transition">जॉब लाइव पब्लिश करें 🚀</button>
             </form>
         </div>
 
+        <!-- TAB 2: MY JOBS & STATUS CONTROL -->
         <div id="contentJobs" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4 hidden">
-            <h3 class="font-black uppercase border-b pb-2">📋 मेरी पोस्ट की गई जॉब्स और स्टेटस कंट्रोल</h3>
+            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">📋 मेरी पोस्ट की गई जॉब्स और स्टेटस कंट्रोल</h3>
             <div id="hrJobsContainer" class="space-y-3"></div>
         </div>
 
+        <!-- TAB 3: ATS APPLICANTS -->
         <div id="contentApplicants" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4 hidden">
-            <h3 class="font-black uppercase border-b pb-2">👥 उम्मीदवार आवेदन (ATS)</h3>
-            <div id="hrApplicantsContainer" class="space-y-3"><p class="text-xs text-gray-400">कोई नया आवेदन नहीं है।</p></div>
+            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">👥 उम्मीदवार आवेदन (ATS)</h3>
+            <div id="hrApplicantsContainer" class="space-y-3"><p class="text-xs text-gray-400">अभी कोई नया आवेदन नहीं आया है।</p></div>
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-white text-center py-6 text-xs"><p>&copy; 2026 RozgarHub.in • HR Hub</p></footer>
+    <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12"><p>&copy; 2026 RozgarHub.in • HR Hub</p></footer>
 
     <script>
         function toggleDarkMode() { document.getElementById('htmlRoot').classList.toggle('dark'); }
@@ -151,7 +281,7 @@
             let existing = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
             if (!existing || existing.email !== email) {
                 const companyName = email.split('@')[0] || "Employer";
-                localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company: companyName, email }));
+                localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company: companyName, name: companyName, email }));
             }
             checkAuthAndLoad();
         }
@@ -168,6 +298,7 @@
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('hrWelcomeName').innerText = `नमस्ते, ${u.company}!`;
                 document.getElementById('jCompany').value = u.company;
+                if (u.name) document.getElementById('jHrName').value = u.name;
                 if (window.db) loadHrJobs();
             } else {
                 document.getElementById('authView').classList.remove('hidden');
@@ -176,7 +307,11 @@
             }
         }
         function switchHrTab(tab) {
-            ['post', 'jobs', 'applicants'].forEach(t => { document.getElementById('content' + capitalize(t)).classList.toggle('hidden', t !== tab); });
+            ['post', 'jobs', 'applicants'].forEach(t => {
+                document.getElementById('content' + capitalize(t)).classList.toggle('hidden', t !== tab);
+                let btn = document.getElementById('hrTab' + capitalize(t));
+                btn.className = (t === tab) ? "px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black" : "px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700";
+            });
         }
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
         window.addEventListener('firebase-ready', () => {
@@ -189,6 +324,8 @@
             const btn = document.getElementById('submitJobBtn');
             const stat = document.getElementById('uploadStatus');
             btn.disabled = true; stat.classList.remove('hidden');
+
+            let u = JSON.parse(localStorage.getItem('rozgarHubHrUser')) || {};
             let posterUrl = "";
             let file = document.getElementById('jPosterFile').files[0];
             if (file) {
@@ -196,34 +333,68 @@
                 let snap = await window.uploadBytes(fileRef, file);
                 posterUrl = await window.getDownloadURL(snap.ref);
             }
+
             await window.addDoc(window.collection(window.db, "jobs"), {
                 title: document.getElementById('jTitle').value,
                 company: document.getElementById('jCompany').value,
+                category: document.getElementById('jCategory').value,
                 city: document.getElementById('jCity').value,
                 salary: document.getElementById('jSalary').value,
-                category: document.getElementById('jCategory').value,
+                jobType: document.getElementById('jJobType').value,
+                workMode: document.getElementById('jWorkMode').value,
+                shift: document.getElementById('jShift').value,
+                qual: document.getElementById('jQual').value,
+                exp: document.getElementById('jExp').value,
+                gender: document.getElementById('jGender').value,
+                openings: document.getElementById('jOpenings').value,
+                deadline: document.getElementById('jDeadline').value,
+                skills: document.getElementById('jSkills').value,
+                hrName: document.getElementById('jHrName').value,
+                hrPhonePrivate: document.getElementById('jHrPhone').value, // Stored privately, hidden on frontend
+                hrEmail: u.email || "",
                 desc: document.getElementById('jDesc').value,
-                posterUrl, status: "Active", createdAt: Date.now()
+                posterUrl,
+                status: "Active",
+                createdAt: Date.now()
             });
-            alert("जॉब लाइव हो गई है!");
+
+            alert("प्रोफेशनल जॉब पोस्ट सफलतापूर्वक लाइव हो गई है!");
             document.getElementById('jobPostForm').reset();
+            checkAuthAndLoad();
             loadHrJobs();
             switchHrTab('jobs');
             btn.disabled = false; stat.classList.add('hidden');
+        }
+
+        async function updateJobStatus(docId, newStatus) {
+            await window.updateDoc(window.doc(window.db, "jobs", docId), { status: newStatus });
+            loadHrJobs();
         }
 
         async function loadHrJobs() {
             let snap = await window.getDocs(window.collection(window.db, "jobs"));
             let html = "", count = 0;
             snap.forEach(d => {
-                let j = d.data(); count++;
-                html += `<div class="p-4 border rounded-2xl flex justify-between items-center text-xs bg-gray-50 dark:bg-gray-700/40">
-                    <div><b>${j.title}</b> • ${j.city} • ${j.salary}</div>
-                    <button onclick="window.deleteDoc(window.doc(window.db, 'jobs', '${d.id}')).then(() => loadHrJobs());" class="bg-red-100 text-red-700 px-3 py-1.5 rounded-xl font-bold">डिलीट</button>
+                let j = d.data();
+                if ((j.status || "Active") === "Active") count++;
+                html += `<div class="p-4 border dark:border-gray-700 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-gray-50 dark:bg-gray-700/40 gap-3">
+                    <div class="space-y-1">
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${j.status === 'Closed' ? 'bg-red-100 text-red-700' : (j.status === 'Paused' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700')}">${j.status || 'Active'}</span>
+                        <div class="font-black text-sm">${j.title} <span class="text-gray-400 font-normal">(${j.openings || 1} पद)</span></div>
+                        <div class="text-gray-500">📍 ${j.city} • 💰 ${j.salary} • HR: ${j.hrName || 'N/A'}</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select onchange="updateJobStatus('${d.id}', this.value)" class="p-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 font-bold text-xs">
+                            <option value="Active" ${(j.status || 'Active') === 'Active' ? 'selected' : ''}>🟢 Active</option>
+                            <option value="Paused" ${j.status === 'Paused' ? 'selected' : ''}>🟡 Paused</option>
+                            <option value="Closed" ${j.status === 'Closed' ? 'selected' : ''}>🔴 Closed</option>
+                        </select>
+                        <button onclick="if(confirm('जॉब डिलीट करें?')) window.deleteDoc(window.doc(window.db, 'jobs', '${d.id}')).then(() => loadHrJobs());" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-xl font-bold">डिलीट</button>
+                    </div>
                 </div>`;
             });
             document.getElementById('activeJobsCount').innerText = count;
-            document.getElementById('hrJobsContainer').innerHTML = html || "<p class='text-xs text-gray-400'>कोई जॉब नहीं है।</p>";
+            document.getElementById('hrJobsContainer').innerHTML = html || "<p class='text-xs text-gray-400'>कोई जॉब पोस्ट नहीं की गई है।</p>";
         }
     </script>
 </body>

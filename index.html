@@ -31,8 +31,8 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-track { background: #1f2937; }
         .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .glass-modal { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .glass-modal { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
@@ -50,12 +50,12 @@
     </header>
 
     <!-- HERO SECTION -->
-    <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-16 px-4 text-center space-y-6 shadow-xl relative overflow-hidden">
+    <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-14 px-4 text-center space-y-4 shadow-xl relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="container mx-auto max-w-3xl space-y-3 relative z-10">
             <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 Verified Corporate Jobs</span>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की प्राइवेट नौकरी खोजें</h1>
-            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">किसी भी जॉब कार्ड पर क्लिक करके उसकी पूरी जानकारी देखें या सीधे WhatsApp पर शेयर करें।</p>
+            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">किसी भी जॉब कार्ड पर क्लिक करके योग्यता, शिफ्ट, अनुभव व पूरी जानकारी देखें या WhatsApp पर शेयर करें।</p>
         </div>
     </section>
 
@@ -73,32 +73,79 @@
 
     <!-- FULL JOB DETAIL MODAL (Opens on Card Click) -->
     <div id="jobDetailModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8 animate-fadeIn">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
             <!-- Modal Header -->
             <div class="flex justify-between items-center p-5 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
-                <span id="modalCategoryBadge" class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-3 py-1 rounded-full font-bold uppercase text-[11px]">Corporate</span>
+                <div class="flex items-center gap-2">
+                    <span id="modalCategoryBadge" class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-3 py-1 rounded-full font-bold uppercase text-[11px]">Corporate</span>
+                    <span id="modalJobTypeBadge" class="bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-300 px-3 py-1 rounded-full font-bold text-[11px]">Full-Time</span>
+                </div>
                 <button onclick="closeJobModal()" class="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-red-500 hover:text-white flex items-center justify-center font-black transition text-sm">✕</button>
             </div>
 
             <!-- Modal Body (Full Details) -->
             <div class="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
                 <div id="modalPosterContainer" class="w-full rounded-2xl overflow-hidden border dark:border-gray-700 bg-gray-100 dark:bg-gray-900 hidden">
-                    <img id="modalPosterImg" src="" alt="Full Job Poster" class="w-full max-h-80 object-contain mx-auto">
+                    <img id="modalPosterImg" src="" alt="Full Job Poster" class="w-full max-h-72 object-contain mx-auto">
                 </div>
 
                 <div class="space-y-2">
                     <h2 id="modalJobTitle" class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-snug">Job Title</h2>
-                    <div class="flex flex-wrap gap-3 text-xs font-bold text-gray-600 dark:text-gray-300 pt-1">
-                        <span id="modalCompany" class="bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-xl">🏢 Company</span>
-                        <span id="modalCity" class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-3 py-1.5 rounded-xl">📍 City</span>
-                        <span id="modalSalary" class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-xl">💰 Salary</span>
+                    <p id="modalCompany" class="font-black text-blue-600 dark:text-blue-400 text-sm">🏢 Company Name</p>
+                </div>
+
+                <!-- Structured Highlights Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">💰 मासिक वेतन</p>
+                        <p id="modalSalary" class="font-black text-emerald-600 dark:text-emerald-400 mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">📍 लोकेशन</p>
+                        <p id="modalCity" class="font-bold mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">🎓 न्यूनतम योग्यता</p>
+                        <p id="modalQual" class="font-bold mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">💼 अनुभव (Exp)</p>
+                        <p id="modalExp" class="font-bold mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">🏢 कार्य शैली (Mode)</p>
+                        <p id="modalWorkMode" class="font-bold mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">⏰ शिफ्ट टाइमिंग</p>
+                        <p id="modalShift" class="font-bold mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">👥 जेंडर & पद</p>
+                        <p id="modalGenderOpenings" class="font-bold mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">📅 अंतिम तिथि</p>
+                        <p id="modalDeadline" class="font-bold text-red-600 dark:text-red-400 mt-0.5">-</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <p class="text-[10px] text-gray-400 font-bold">👤 रिक्रूटर / HR</p>
+                        <p id="modalHrName" class="font-bold mt-0.5">-</p>
                     </div>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
-                    🔒 सुरक्षा सूचना: HR का सीधा संपर्क नंबर गोपनीय रखा गया है। आवेदन करने के लिए कैंडिडेट पोर्टल से 1-क्लिक अप्लाई करें।
+                <!-- Required Skills -->
+                <div id="modalSkillsBox" class="space-y-1">
+                    <h4 class="text-[11px] font-black uppercase text-gray-400 tracking-wider">⚡ आवश्यक स्किल्स (Required Skills)</h4>
+                    <p id="modalSkills" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/40 px-4 py-2.5 rounded-xl border border-indigo-100 dark:border-indigo-900/50">-</p>
                 </div>
 
+                <!-- Security Notice (Contact Number Hidden) -->
+                <div class="p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
+                    🔒 सुरक्षा और प्राइवेसी नीति: HR का मोबाइल/WhatsApp नंबर सुरक्षा कारणों से गोपनीय रखा गया है। नौकरी के लिए आवेदन करने हेतु नीचे दिए गए बटन से कैंडिडेट पोर्टल में लॉगिन/रजिस्टर कर 1-क्लिक अप्लाई करें।
+                </div>
+
+                <!-- Full Description -->
                 <div class="space-y-2">
                     <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider">📄 नौकरी का पूरा विवरण (Full Description)</h4>
                     <div id="modalFullDesc" class="text-xs md:text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line leading-relaxed bg-gray-50 dark:bg-gray-900/60 p-5 rounded-2xl border dark:border-gray-700">
@@ -113,7 +160,7 @@
                     <span>📲</span> WhatsApp पर शेयर करें
                 </button>
                 <a href="candidate-login.html" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3.5 px-5 rounded-2xl font-black text-xs shadow-lg transition text-center">
-                    कैंडिडेट पोर्टल से अप्लाई करें 🚀
+                    रजिस्टर / अप्लाई करें 🚀
                 </a>
             </div>
         </div>
@@ -175,12 +222,16 @@
                         <div class="space-y-3">
                             <div class="aspect-video w-full bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border dark:border-gray-600 flex items-center justify-center relative">
                                 ${job.posterUrl ? `<img src="${job.posterUrl}" alt="Job Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">` : `<span class="text-5xl text-gray-300 dark:text-gray-600">📷</span>`}
-                                <span class="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold">पूरी डिटेल देखें ↗</span>
+                                <span class="absolute bottom-2 right-2 bg-black/75 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold">पूरी डिटेल देखें ↗</span>
                             </div>
-                            <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-3 py-1 rounded-full font-bold uppercase text-[10px]">${job.category || 'Corporate'}</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.category || 'Corporate'}</span>
+                                <span class="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.qual || 'Any'}</span>
+                                <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.exp || 'Fresher'}</span>
+                            </div>
                             <h3 class="font-black text-lg text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${job.title}</h3>
                             <p class="font-bold text-blue-600 dark:text-blue-400 text-xs">${job.company} • 📍 ${job.city}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">${job.desc}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">${job.desc}</p>
                         </div>
                         <div class="pt-4 border-t dark:border-gray-700 flex justify-between items-center gap-2">
                             <div>
@@ -203,10 +254,19 @@
             if (!job) return;
 
             document.getElementById('modalCategoryBadge').innerText = job.category || 'Corporate';
+            document.getElementById('modalJobTypeBadge').innerText = job.jobType || 'Full-Time';
             document.getElementById('modalJobTitle').innerText = job.title;
             document.getElementById('modalCompany').innerText = `🏢 ${job.company}`;
-            document.getElementById('modalCity').innerText = `📍 ${job.city}`;
-            document.getElementById('modalSalary').innerText = `💰 ${job.salary}`;
+            document.getElementById('modalSalary').innerText = job.salary || '-';
+            document.getElementById('modalCity').innerText = job.city || '-';
+            document.getElementById('modalQual').innerText = job.qual || 'Any';
+            document.getElementById('modalExp').innerText = job.exp || 'Fresher';
+            document.getElementById('modalWorkMode').innerText = job.workMode || 'Work from Office';
+            document.getElementById('modalShift').innerText = job.shift || 'Day Shift';
+            document.getElementById('modalGenderOpenings').innerText = `${job.gender || 'Any'} (${job.openings || 1} पद)`;
+            document.getElementById('modalDeadline').innerText = job.deadline || 'Open';
+            document.getElementById('modalHrName').innerText = job.hrName || 'Verified HR';
+            document.getElementById('modalSkills').innerText = job.skills || 'Basic Computer & Communication';
             document.getElementById('modalFullDesc').innerText = job.desc || 'विवरण उपलब्ध नहीं है।';
 
             const posterContainer = document.getElementById('modalPosterContainer');
@@ -233,16 +293,16 @@
             if (!job) return;
             const siteUrl = window.location.origin + window.location.pathname;
             const shareText = `🔥 *नौकरी का अवसर - RozgarHub.in*\n\n` +
-                              `📌 *पद (Post):* ${job.title}\n` +
+                              `📌 *पद:* ${job.title}\n` +
                               `🏢 *कंपनी:* ${job.company}\n` +
                               `📍 *लोकेशन:* ${job.city}\n` +
+                              `🎓 *योग्यता:* ${job.qual || 'Any'} | *अनुभव:* ${job.exp || 'Fresher'}\n` +
                               `💰 *वेतन:* ${job.salary}\n\n` +
-                              `पूरी जानकारी देखने और आवेदन करने के लिए नीचे दिए गए लिंक पर क्लिक करें:\n${siteUrl}`;
+                              `पूरी जानकारी देखने और आवेदन करने के लिए लिंक पर क्लिक करें:\n${siteUrl}`;
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
             window.open(whatsappUrl, '_blank');
         }
 
-        // Close modal on outside click
         document.getElementById('jobDetailModal').addEventListener('click', function(e) {
             if (e.target === this) closeJobModal();
         });
