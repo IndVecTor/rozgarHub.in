@@ -189,10 +189,10 @@
         let followerCountsMap = {};
 
         const bannerGradients = [
-            "from-blue-600 via-indigo-600 to-purple-700",
-            "from-emerald-600 via-teal-600 to-cyan-700",
-            "from-rose-600 via-pink-600 to-purple-700",
-            "from-amber-600 via-orange-600 to-red-700"
+            "from-blue-900 via-indigo-900 to-slate-900",
+            "from-slate-900 via-blue-950 to-indigo-900",
+            "from-indigo-950 via-purple-950 to-slate-900",
+            "from-blue-950 via-slate-900 to-indigo-950"
         ];
 
         function getAutoBrandedBanner(job, index) {
@@ -204,17 +204,30 @@
 
             return `
                 <div class="w-full h-full bg-gradient-to-br ${grad} text-white p-4 flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/15 blur-xl pointer-events-none"></div>
-                    <div class="flex justify-between items-center gap-2 z-10">
-                        <span class="bg-black/30 backdrop-blur px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider truncate max-w-[70%]">🏢 ${safeCompany}</span>
-                        <span class="bg-white/20 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Hiring</span>
+                    <!-- RozgarHub.in Watermark -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10">
+                        <span class="text-2xl md:text-3xl font-black tracking-wider -rotate-12">RozgarHub.in</span>
                     </div>
-                    <div class="z-10 my-auto py-1">
+                    <div class="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-yellow-400/10 blur-xl pointer-events-none"></div>
+
+                    <!-- Top RozgarHub.in Brand Badge -->
+                    <div class="flex justify-between items-center gap-2 z-10">
+                        <span class="bg-white/15 backdrop-blur border border-white/20 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide flex items-center gap-1">
+                            <span>RozgarHub</span><span class="text-yellow-400">.in</span>
+                        </span>
+                        <span class="bg-yellow-400 text-gray-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">✓ Verified</span>
+                    </div>
+
+                    <!-- Center Job Title & Company -->
+                    <div class="z-10 my-auto py-1 space-y-0.5">
+                        <p class="text-[10px] font-bold text-blue-200 truncate">🏢 ${safeCompany}</p>
                         <p class="text-base md:text-lg font-black leading-snug line-clamp-2 drop-shadow">${safeTitle}</p>
                     </div>
-                    <div class="flex justify-between items-center text-[10px] font-bold z-10 bg-black/25 backdrop-blur px-2.5 py-1.5 rounded-xl">
+
+                    <!-- Bottom Location & Salary Strip -->
+                    <div class="flex justify-between items-center text-[10px] font-bold z-10 bg-black/35 backdrop-blur px-2.5 py-1.5 rounded-xl border border-white/10">
                         <span class="truncate">📍 ${safeCity}</span>
-                        <span class="text-amber-300 font-black shrink-0 ml-2">💰 ${safeSalary}</span>
+                        <span class="text-yellow-300 font-black shrink-0 ml-2">💰 ${safeSalary}</span>
                     </div>
                 </div>
             `;
