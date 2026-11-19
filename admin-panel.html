@@ -29,6 +29,7 @@
     <style>
         .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); }
         .dark .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
+        .glass-modal { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
@@ -68,7 +69,7 @@
         <div class="flex flex-wrap justify-between items-center gap-3">
             <div>
                 <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट डैशबोर्ड</h1>
-                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स और आवेदनों की लाइव रिपोर्ट</p>
+                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स और आवेदनों की लाइव रिपोर्ट व WhatsApp Channel पोस्टिंग</p>
             </div>
             <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
         </div>
@@ -103,7 +104,7 @@
 
         <!-- REPORT 1: JOBS -->
         <div id="repSectionJobs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 class="font-black text-base uppercase border-b pb-3">📋 सभी पोस्ट की गई जॉब्स (Moderation & Delete)</h3>
+            <h3 class="font-black text-base uppercase border-b pb-3">📋 सभी पोस्ट की गई जॉब्स (Channel Post / Moderation & Delete)</h3>
             <div id="adminJobsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-8">रिपोर्ट लोड हो रही है...</p></div>
         </div>
 
@@ -126,11 +127,40 @@
         </div>
     </main>
 
+    <!-- ONE-CLICK WHATSAPP CHANNEL BROADCAST MODAL -->
+    <div id="waChannelModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
+            <div class="bg-[#25D366] text-white p-5 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
+                    <h3 class="font-black text-base">WhatsApp Channel में पोस्ट करें</h3>
+                </div>
+                <button type="button" onclick="closeWaChannelModal()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 font-black text-xs">✕</button>
+            </div>
+            <div class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">आपका WhatsApp Channel लिंक (सेव रहेगा)</label>
+                    <input type="url" id="waChannelLinkInput" placeholder="https://whatsapp.com/channel/..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Channel मैसेज प्रीव्यू</label>
+                    <textarea id="waChannelMessagePreview" rows="8" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-900 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="copyWaChannelText()" class="flex-1 py-3 px-4 rounded-2xl bg-gray-200 dark:bg-gray-700 font-black">📋 कॉपी करें</button>
+                    <button type="button" onclick="launchWhatsAppChannelShare()" class="flex-1 py-3 px-4 rounded-2xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-black shadow-lg">WhatsApp पर भेजें &rarr;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="glass-card border-t border-slate-200 dark:border-slate-800 text-center py-6 text-xs mt-12 text-slate-500">
         <p>&copy; 2026 RozgarHub.in • Super Admin Panel</p>
     </footer>
 
     <script>
+        let adminJobsMap = {};
+
         function applyDeviceOrSavedTheme() {
             const root = document.getElementById('htmlRoot');
             const savedTheme = localStorage.getItem('rozgarHubTheme');
@@ -200,29 +230,80 @@
             });
         }
 
+        function openWaChannelModal(job) {
+            const savedChannelUrl = localStorage.getItem('rozgarHubWaChannelUrl') || "https://whatsapp.com/channel/";
+            document.getElementById('waChannelLinkInput').value = savedChannelUrl;
+
+            const siteLink = window.location.origin + "/index.html";
+            const msg = `📢 *नई नौकरी अपडेट - RozgarHub.in*\n\n` +
+                        `📌 *पद:* ${job.title}\n` +
+                        `🏢 *कंपनी:* ${job.company}\n` +
+                        `📍 *लोकेशन:* ${job.city}\n` +
+                        `🎓 *योग्यता:* ${job.qual || 'Any'} | *अनुभव:* ${job.exp || 'Fresher'}\n` +
+                        `💰 *वेतन:* ${job.salary}\n` +
+                        `👥 *पद:* ${job.openings || 1} | *अंतिम तिथि:* ${job.deadline || 'Open'}\n\n` +
+                        `आवेदन करने के लिए यहाँ क्लिक करें:\n${siteLink}`;
+
+            document.getElementById('waChannelMessagePreview').value = msg;
+            document.getElementById('waChannelModal').classList.remove('hidden');
+        }
+
+        function openAdminChannelPost(docId) {
+            const j = adminJobsMap[docId];
+            if (j) openWaChannelModal(j);
+        }
+
+        function closeWaChannelModal() {
+            document.getElementById('waChannelModal').classList.add('hidden');
+        }
+
+        function copyWaChannelText() {
+            const txt = document.getElementById('waChannelMessagePreview');
+            txt.select();
+            navigator.clipboard.writeText(txt.value);
+            alert("Channel मैसेज कॉपी हो गया है!");
+        }
+
+        function launchWhatsAppChannelShare() {
+            const channelUrl = document.getElementById('waChannelLinkInput').value.trim();
+            if (channelUrl) localStorage.setItem('rozgarHubWaChannelUrl', channelUrl);
+            const fullText = document.getElementById('waChannelMessagePreview').value + (channelUrl ? `\n\n📢 *हमारा WhatsApp Channel जॉइन करें:* ${channelUrl}` : "");
+            window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
+        }
+
         async function loadAllAdminReports() {
             if (!window.db) return;
 
+            const [jobsSnap, hrSnap, appsSnap, followsSnap] = await Promise.all([
+                window.getDocs(window.collection(window.db, "jobs")),
+                window.getDocs(window.collection(window.db, "hrProfiles")),
+                window.getDocs(window.collection(window.db, "applications")),
+                window.getDocs(window.collection(window.db, "follows"))
+            ]);
+
             // 1. Jobs
-            const jobsSnap = await window.getDocs(window.collection(window.db, "jobs"));
             let jobsHtml = "", jobCount = 0;
+            adminJobsMap = {};
             jobsSnap.forEach(docSnap => {
                 jobCount++;
                 const j = docSnap.data();
+                adminJobsMap[docSnap.id] = j;
                 jobsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-3">
                     <div>
                         <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 text-blue-800">${j.status || 'Active'}</span>
                         <h4 class="font-black text-sm mt-1">${j.title}</h4>
                         <p class="text-slate-500">🏢 ${j.company} • 📍 ${j.city} • 💰 ${j.salary} • HR: ${j.hrName || 'N/A'}</p>
                     </div>
-                    <button type="button" onclick="adminDeleteJob('${docSnap.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl font-bold">🗑️ डिलीट करें</button>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="openAdminChannelPost('${docSnap.id}')" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white px-3.5 py-2 rounded-xl font-bold transition">📢 Channel Post</button>
+                        <button type="button" onclick="adminDeleteJob('${docSnap.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl font-bold">🗑️ डिलीट करें</button>
+                    </div>
                 </div>`;
             });
             document.getElementById('repTotalJobs').innerText = jobCount;
             document.getElementById('adminJobsContainer').innerHTML = jobsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई जॉब नहीं मिली।</p>`;
 
-            // 2. Registered HRs (from registeredHRs + hrProfiles)
-            const hrSnap = await window.getDocs(window.collection(window.db, "hrProfiles"));
+            // 2. Registered HRs
             let hrsHtml = "", hrCount = 0;
             hrSnap.forEach(d => {
                 hrCount++;
@@ -238,9 +319,7 @@
             document.getElementById('repTotalHRs').innerText = hrCount;
             document.getElementById('adminHrsContainer').innerHTML = hrsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई HR प्रोफाइल नहीं मिली।</p>`;
 
-            // 3. Candidates (from follows + applications unique emails)
-            const appsSnap = await window.getDocs(window.collection(window.db, "applications"));
-            const followsSnap = await window.getDocs(window.collection(window.db, "follows"));
+            // 3. Candidates & Applications
             let candMap = {};
             let appsHtml = "", appCount = 0;
 
