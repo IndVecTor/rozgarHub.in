@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="hi" id="htmlRoot">
+<html lang="hi" id="htmlRoot" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Career Hub - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class', }</script>
+    <script>
+        tailwind.config = { darkMode: 'class', }
+    </script>
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        const app = initializeApp({
+
+        const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
             authDomain: "rozgarhub-aa22b.firebaseapp.com",
             projectId: "rozgarhub-aa22b",
             storageBucket: "rozgarhub-aa22b.firebasestorage.app",
             messagingSenderId: "979487527584",
             appId: "1:979487527584:web:43b1f8eeb07c6631f42fc5"
-        });
+        };
+        const app = initializeApp(firebaseConfig);
         window.db = getFirestore(app);
         window.collection = collection;
         window.getDocs = getDocs;
@@ -24,103 +29,426 @@
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        .dark ::-webkit-scrollbar-thumb { background: #4f46e5; }
         .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); }
         .dark .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
+
+    <!-- Top Navbar -->
     <header class="glass-card shadow-lg sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black text-indigo-600">RozgarHub<span class="text-amber-500">.in</span> | Candidate Hub</a>
-            <div class="flex items-center space-x-3 text-sm font-bold">
-                <button onclick="document.getElementById('htmlRoot').classList.toggle('dark')" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900">🌙</button>
-                <a href="index.html" class="px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-900">🏠 होम</a>
-                <button id="logoutBtn" onclick="localStorage.removeItem('rozgarHubCandidateUser'); location.reload();" class="hidden px-4 py-2 rounded-2xl bg-red-600 text-white">लॉग आउट</button>
+            <a href="index.html" class="text-2xl font-black tracking-wide bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">RozgarHub<span class="text-amber-500">.in</span> <span class="text-xs text-slate-400 font-bold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/50 rounded-full border border-indigo-200 dark:border-indigo-800">Candidate Hub</span></a>
+            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
+                <button onclick="toggleDarkMode()" id="themeToggleBtn" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 hover:scale-105 transition shadow-sm border border-slate-200 dark:border-slate-800"><span id="themeIcon">🌙</span></button>
+                <a href="index.html" class="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-slate-800">🏠 होम पेज</a>
+                <button id="logoutBtn" onclick="handleLogout()" class="hidden px-4 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white hover:opacity-90 transition shadow-lg shadow-rose-600/20">लॉग आउट</button>
             </div>
         </div>
     </header>
 
+    <!-- AUTH SECTION -->
     <main id="authView" class="container mx-auto px-4 py-16 flex-grow flex justify-center items-center max-w-md">
-        <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl border w-full space-y-6 text-center">
-            <h1 class="text-2xl font-black">कैंडिडेट करियर पोर्टल</h1>
-            <form onsubmit="localStorage.setItem('rozgarHubCandidateUser', JSON.stringify({name: 'अमन कुमार', email: document.getElementById('lEmail').value})); alert('लॉगिन सफल!'); location.reload();" class="space-y-4 text-xs text-left">
-                <div><label class="font-bold">ईमेल</label><input type="email" id="lEmail" required class="w-full border p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold"></div>
-                <div><label class="font-bold">पासवर्ड</label><input type="password" required class="w-full border p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold"></div>
-                <button type="submit" class="w-full py-4 rounded-2xl bg-indigo-600 text-white font-black">लॉगिन करें ⚡</button>
+        <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl border border-slate-200/80 dark:border-slate-800/80 w-full space-y-6 relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-pink-500/10 dark:bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="text-center space-y-2 relative z-10">
+                <div class="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-indigo-600 to-pink-600 flex items-center justify-center text-3xl shadow-xl shadow-indigo-600/30 text-white font-black">🚀</div>
+                <h1 class="text-2xl font-black tracking-tight">कैंडिडेट करियर पोर्टल</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">लॉगिन करें या नया खाता बनाकर जॉब के लिए आवेदन करें</p>
+            </div>
+
+            <div class="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl text-xs font-bold text-center border border-slate-200 dark:border-slate-800 relative z-10">
+                <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-3 rounded-xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-md transition-all">लॉगिन</button>
+                <button onclick="switchAuthTab('signup')" id="tabSignup" class="flex-1 py-3 rounded-xl text-slate-500 dark:text-slate-400 transition-all">नया खाता बनाएँ</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs relative z-10">
+                <div class="space-y-1">
+                    <label class="block font-bold text-slate-600 dark:text-slate-300">ईमेल आईडी (Email)</label>
+                    <input type="email" id="loginEmail" placeholder="yourname@gmail.com" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition">
+                </div>
+                <div class="space-y-1">
+                    <label class="block font-bold text-slate-600 dark:text-slate-300">पासवर्ड (Password)</label>
+                    <input type="password" id="loginPass" placeholder="••••••••" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition">
+                </div>
+                <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-pink-600 text-white font-black text-sm shadow-xl shadow-indigo-600/30 hover:opacity-95 transition active:scale-[0.99]">लॉगिन करें ⚡</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-4 text-xs hidden relative z-10">
+                <div class="space-y-1">
+                    <label class="block font-bold text-slate-600 dark:text-slate-300">पूरा नाम (Full Name)</label>
+                    <input type="text" id="signupName" placeholder="अपना पूरा नाम लिखें" required class="w-full border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition">
+                </div>
+                <div class="space-y-1">
+                    <label class="block font-bold text-slate-600 dark:text-slate-300">ईमेल आईडी</label>
+                    <input type="email" id="signupEmail" placeholder="yourname@gmail.com" required class="w-full border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition">
+                </div>
+                <div class="space-y-1">
+                    <label class="block font-bold text-slate-600 dark:text-slate-300">योग्यता (Highest Qualification)</label>
+                    <select id="signupQual" class="w-full border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition">
+                        <option value="10th">10वीं पास</option>
+                        <option value="12th">12वीं पास</option>
+                        <option value="Graduate" selected>स्नातक (Graduate)</option>
+                        <option value="ITI">ITI / डिप्लोमा</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="block font-bold text-slate-600 dark:text-slate-300">नया पासवर्ड</label>
+                    <input type="password" id="signupPass" placeholder="••••••••" required class="w-full border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition">
+                </div>
+                <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-sm shadow-xl shadow-emerald-600/30 hover:opacity-95 transition active:scale-[0.99]">रजिस्टर करें ✨</button>
             </form>
         </div>
     </main>
 
+    <!-- DASHBOARD VIEW -->
     <main id="dashboardView" class="container mx-auto px-4 py-10 max-w-5xl flex-grow hidden space-y-8">
-        <div class="rounded-[2.5rem] bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-8 shadow-2xl flex justify-between items-center">
-            <div>
-                <h1 id="userWelcomeName" class="text-2xl font-black">नमस्ते, अमन कुमार!</h1>
-                <p class="text-xs text-indigo-200">Azamgarh, UP</p>
+        
+        <!-- Welcome Hero Banner -->
+        <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 text-white p-8 md:p-10 shadow-2xl border border-indigo-500/20">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-gradient-to-br from-pink-500/20 to-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 flex flex-wrap justify-between items-center gap-6">
+                <div class="flex items-center space-x-5">
+                    <div class="relative">
+                        <img id="userWelcomePhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar" class="w-20 h-20 md:w-24 md:h-24 rounded-3xl object-cover border-4 border-amber-400 shadow-2xl transform hover:rotate-2 transition duration-300">
+                        <span class="absolute -bottom-2 -right-2 bg-emerald-500 w-6 h-6 rounded-full border-4 border-slate-900 flex items-center justify-center text-[10px]">🟢</span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow">Verified Candidate</span>
+                        <h1 id="userWelcomeName" class="text-2xl md:text-3xl font-black tracking-tight">नमस्ते!</h1>
+                        <p id="userWelcomeMeta" class="text-xs text-indigo-200 font-medium">योग्यता: स्नातक (Graduate)</p>
+                    </div>
+                </div>
+
+                <div class="glass-card bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl p-5 rounded-3xl border border-white/20 text-center flex items-center gap-4 shadow-xl">
+                    <div class="text-4xl font-black text-amber-300">98%</div>
+                    <div class="text-left text-xs">
+                        <p class="font-bold tracking-wide">AI Match Score</p>
+                        <p class="text-indigo-200">Profile Active</p>
+                    </div>
+                </div>
             </div>
-            <div class="glass-card p-4 rounded-3xl text-center text-slate-900 dark:text-white font-black text-xl">98% AI Match</div>
         </div>
 
-        <div class="flex gap-3 border-b pb-4 text-xs font-bold">
-            <button onclick="switchTab('applied')" id="t1" class="px-5 py-3 rounded-2xl bg-indigo-600 text-white shadow">📥 अप्लाइड जॉब्स</button>
-            <button onclick="switchTab('jobs')" id="t2" class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border">🎯 इंस्टेंट अप्लाई</button>
+        <!-- Modern Pill Navigation Tabs -->
+        <div class="flex flex-wrap gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-bold">
+            <button onclick="switchDashTab('applied')" id="dTabApplied" class="px-5 py-3 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all font-black flex items-center gap-2"><span>📥</span> अप्लाइड जॉब्स</button>
+            <button onclick="switchDashTab('jobs')" id="dTabJobs" class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2"><span>🎯</span> इंस्टेंट अप्लाई</button>
+            <button onclick="switchDashTab('profile')" id="dTabProfile" class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2"><span>👤</span> प्रोफाइल एडिट</button>
+            <button onclick="switchDashTab('vault')" id="dTabVault" class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all flex items-center gap-2"><span>📁</span> डॉक्यूमेंट वॉल्ट</button>
         </div>
 
-        <div id="cApplied" class="space-y-4">
-            <h3 class="font-black text-sm uppercase">📋 आपके आवेदन</h3>
-            <div id="appliedList" class="space-y-3"></div>
+        <!-- TAB 1: APPLIED JOBS -->
+        <div id="contentApplied" class="space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-sm uppercase text-slate-500 dark:text-slate-400 tracking-wider">📋 आपके आवेदन और लाइव प्रोग्रेस</h3>
+            </div>
+            <div id="appliedJobsListContainer" class="space-y-4"></div>
         </div>
 
-        <div id="cJobs" class="space-y-4 hidden">
-            <h3 class="font-black text-sm uppercase">🎯 लाइव कॉर्पोरेट जॉब्स</h3>
-            <div id="instantList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <!-- TAB 2: INSTANT APPLY -->
+        <div id="contentJobs" class="space-y-4 hidden">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-sm uppercase text-slate-500 dark:text-slate-400 tracking-wider">🎯 आपके लिए लाइव कॉर्पोरेट जॉब्स (1-Click Instant Apply)</h3>
+            </div>
+            <div id="instantJobsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <p class="text-xs text-slate-400 col-span-2 text-center py-8">लाइव जॉब्स लोड हो रही हैं...</p>
+            </div>
         </div>
+
+        <!-- TAB 3: PROFILE EDIT -->
+        <div id="contentProfile" class="space-y-4 hidden">
+            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">👤 प्रोफाइल और फोटो अपडेट</h3>
+                    <span class="text-xs px-3 py-1 bg-indigo-50 dark:bg-indigo-950 rounded-full font-bold">ID: #RH-2026</span>
+                </div>
+
+                <form onsubmit="saveProfileDetails(event)" class="space-y-4 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block font-bold">पूरा नाम</label>
+                            <input type="text" id="editName" required class="w-full p-4 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block font-bold">ईमेल आईडी</label>
+                            <input type="email" id="editEmail" required class="w-full p-4 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block font-bold">योग्यता</label>
+                            <select id="editQual" class="w-full p-4 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-indigo-600 outline-none">
+                                <option value="10th">10वीं पास</option>
+                                <option value="12th">12वीं पास</option>
+                                <option value="Graduate">स्नातक (Graduate)</option>
+                                <option value="ITI">ITI / डिप्लोमा</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block font-bold">प्रोफाइल फोटो अपलोड करें</label>
+                            <input type="file" id="editPhotoFile" accept="image/*" class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white/50 dark:bg-slate-900/50 text-xs font-bold file:mr-4 file:py-1 file:px-3 file:rounded-xl file:border-0 file:bg-indigo-600 file:text-white">
+                        </div>
+                    </div>
+                    <button type="submit" class="py-4 px-8 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs shadow-lg shadow-indigo-600/30 transition">प्रोफाइल सेव करें 💾</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 4: DOCUMENT VAULT -->
+        <div id="contentVault" class="space-y-4 hidden">
+            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+                <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">📁 डिजिटल डॉक्यूमेंट लॉकर (Secure Vault)</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">अपने जरूरी कागजात सीधे डिवाइस से अपलोड करके सुरक्षित रखें।</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <div class="p-6 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 bg-white/50 dark:bg-slate-900/50">
+                        <p class="font-bold flex items-center gap-2"><span>🪪</span> पहचान पत्र / ID दस्तावेज</p>
+                        <input type="file" id="vaultIdDoc" accept=".pdf,image/*" class="w-full text-xs">
+                        <p id="statusIdDoc" class="text-[10px] text-emerald-600 font-bold hidden">✅ फाइल सुरक्षित है</p>
+                    </div>
+                    <div class="p-6 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 bg-white/50 dark:bg-slate-900/50">
+                        <p class="font-bold flex items-center gap-2"><span>🎓</span> मार्कशीट / प्रमाणपत्र</p>
+                        <input type="file" id="vaultMarksheet" accept=".pdf,image/*" class="w-full text-xs">
+                        <p id="statusMarksheet" class="text-[10px] text-emerald-600 font-bold hidden">✅ फाइल सुरक्षित है</p>
+                    </div>
+                </div>
+                <button onclick="saveVaultFiles()" class="py-4 px-8 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition">दस्तावेज सेव करें 💾</button>
+            </div>
+        </div>
+
     </main>
 
+    <!-- Footer -->
+    <footer class="glass-card border-t border-slate-200 dark:border-slate-800 text-center py-6 text-xs mt-12 space-y-1 text-slate-500">
+        <p>&copy; 2026 RozgarHub.in • Next-Gen Candidate Career Hub</p>
+    </footer>
+
+    <!-- Script Logic -->
     <script>
-        window.onload = () => {
-            let u = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
-            if(u) {
+        function initTheme() {
+            const savedTheme = localStorage.getItem('rozgarHubTheme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.getElementById('htmlRoot').classList.add('dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+            } else {
+                document.getElementById('htmlRoot').classList.remove('dark');
+                document.getElementById('themeIcon').innerText = '🌙';
+            }
+        }
+        function toggleDarkMode() {
+            const root = document.getElementById('htmlRoot');
+            if (root.classList.contains('dark')) { root.classList.remove('dark'); localStorage.setItem('rozgarHubTheme', 'light'); document.getElementById('themeIcon').innerText = '🌙'; }
+            else { root.classList.add('dark'); localStorage.setItem('rozgarHubTheme', 'dark'); document.getElementById('themeIcon').innerText = '☀️'; }
+        }
+        initTheme();
+
+        function switchAuthTab(tab) {
+            if(tab === 'login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('signupForm').classList.add('hidden');
+                document.getElementById('tabLogin').className = "flex-1 py-3 rounded-xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-md transition-all";
+                document.getElementById('tabSignup').className = "flex-1 py-3 rounded-xl text-slate-500 dark:text-slate-400 transition-all";
+            } else {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('signupForm').classList.remove('hidden');
+                document.getElementById('tabSignup').className = "flex-1 py-3 rounded-xl bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-md transition-all";
+                document.getElementById('tabLogin').className = "flex-1 py-3 rounded-xl text-slate-500 dark:text-slate-400 transition-all";
+            }
+        }
+
+        function handleSignupSubmit(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const qual = document.getElementById('signupQual').value;
+            const user = {
+                name: fullName,
+                email: email,
+                qual: qual,
+                photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+            };
+            localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+            alert("खाता सफलतापूर्वक बन गया है!");
+            checkAuthAndLoadDashboard();
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            if (!user || user.email !== email) {
+                const derivedName = email.split('@')[0] || "Candidate";
+                user = {
+                    name: derivedName,
+                    email: email,
+                    qual: "Graduate",
+                    photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+                };
+                localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+            }
+            alert("लॉगिन सफल!");
+            checkAuthAndLoadDashboard();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('rozgarHubCandidateUser');
+            location.reload();
+        }
+
+        window.onload = function() {
+            checkAuthAndLoadDashboard();
+        };
+
+        function checkAuthAndLoadDashboard() {
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            if (user && user.email) {
                 document.getElementById('authView').classList.add('hidden');
                 document.getElementById('dashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                renderApplied();
+                document.getElementById('userWelcomeName').innerText = `नमस्ते, ${user.name}!`;
+                document.getElementById('userWelcomeMeta').innerText = `योग्यता: ${user.qual || 'Graduate'} • ${user.email}`;
+                if (user.photo) document.getElementById('userWelcomePhoto').src = user.photo;
+                document.getElementById('editName').value = user.name || "";
+                document.getElementById('editEmail').value = user.email || "";
+                document.getElementById('editQual').value = user.qual || "Graduate";
+                renderAppliedJobsWithTimeline();
+            } else {
+                document.getElementById('authView').classList.remove('hidden');
+                document.getElementById('dashboardView').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
             }
-        };
-        function switchTab(t) {
-            document.getElementById('cApplied').classList.toggle('hidden', t !== 'applied');
-            document.getElementById('cJobs').classList.toggle('hidden', t !== 'jobs');
-            document.getElementById('t1').className = t === 'applied' ? "px-5 py-3 rounded-2xl bg-indigo-600 text-white font-black" : "px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border font-bold";
-            document.getElementById('t2').className = t === 'jobs' ? "px-5 py-3 rounded-2xl bg-indigo-600 text-white font-black" : "px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border font-bold";
-            if(t === 'jobs') loadInstantJobs();
         }
-        function renderApplied() {
-            let list = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [{title: "Computer Operator", org: "Tech Solutions", status: "Shortlisted"}];
-            let html = "";
-            list.forEach(j => { html += `<div class="glass-card p-5 rounded-2xl border flex justify-between text-xs"><div><b>${j.title}</b> • ${j.org}</div><span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold">Status: ${j.status}</span></div>`; });
-            document.getElementById('appliedList').innerHTML = html;
+
+        function saveProfileDetails(e) {
+            e.preventDefault();
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser')) || {};
+            user.name = document.getElementById('editName').value.trim();
+            user.email = document.getElementById('editEmail').value.trim();
+            user.qual = document.getElementById('editQual').value;
+            const photoFile = document.getElementById('editPhotoFile').files[0];
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    user.photo = uploadEvent.target.result;
+                    localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+                    alert("प्रोफाइल और फोटो अपडेट हो गई है!");
+                    checkAuthAndLoadDashboard();
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                localStorage.setItem('rozgarHubCandidateUser', JSON.stringify(user));
+                alert("प्रोफाइल अपडेट हो गई है!");
+                checkAuthAndLoadDashboard();
+            }
         }
-        window.addEventListener('firebase-ready', () => {});
-        async function loadInstantJobs() {
-            let snap = await window.getDocs(window.collection(window.db, "jobs"));
-            let html = "";
-            snap.forEach(d => {
-                let j = d.data();
-                html += `<div class="glass-card p-5 rounded-2xl border space-y-3 text-xs">
-                    <h4 class="font-black text-sm">${j.title}</h4>
-                    <p class="text-slate-500">${j.company} • ${j.city} • 💰 ${j.salary}</p>
-                    <button onclick="applyJob('${j.title}', '${j.company}')" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold">1-क्लिक अप्लाई ⚡</button>
-                </div>`;
+
+        function saveVaultFiles() {
+            let vault = JSON.parse(localStorage.getItem('rozgarHubDocumentVault')) || {};
+            const processFile = (fileInputId, statusId, keyName) => {
+                const file = document.getElementById(fileInputId).files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        vault[keyName] = e.target.result;
+                        localStorage.setItem('rozgarHubDocumentVault', JSON.stringify(vault));
+                        document.getElementById(statusId).classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            processFile('vaultIdDoc', 'statusIdDoc', 'idDoc');
+            processFile('vaultMarksheet', 'statusMarksheet', 'marksheet');
+            setTimeout(() => { alert("दस्तावेज डिजिटल लॉकर में सेव हो गए हैं!"); }, 500);
+        }
+
+        function switchDashTab(tab) {
+            ['applied', 'jobs', 'profile', 'vault'].forEach(t => {
+                let el = document.getElementById('content' + capitalize(t));
+                let btn = document.getElementById('dTab' + capitalize(t));
+                if (el) el.classList.add('hidden');
+                if (btn) btn.className = "px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all font-bold flex items-center gap-2";
             });
-            document.getElementById('instantList').innerHTML = html || "<p class='text-xs text-slate-400'>कोई जॉब नहीं है।</p>";
+            document.getElementById('content' + capitalize(tab)).classList.remove('hidden');
+            let activeBtn = document.getElementById('dTab' + capitalize(tab));
+            activeBtn.className = "px-5 py-3 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all font-black flex items-center gap-2";
+            if (tab === 'jobs') loadInstantApplyJobsFromFirebase();
         }
-        function applyJob(title, org) {
-            let list = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [];
-            if(list.some(j => j.title === title)) { alert("पहले ही आवेदन कर चुके हैं!"); return; }
-            list.unshift({title, org, status: "Submitted"});
-            localStorage.setItem('rozgarHubAppliedJobs', JSON.stringify(list));
-            alert("सफलतापूर्वक आवेदन हो गया!");
-            renderApplied();
-            switchTab('applied');
+
+        function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+        function renderAppliedJobsWithTimeline() {
+            let applied = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [];
+            let container = document.getElementById('appliedJobsListContainer');
+            if (applied.length === 0) {
+                container.innerHTML = `<div class="glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 text-xs text-slate-500 text-center">आपने अभी तक किसी जॉब के लिए आवेदन नहीं किया है। "इंस्टेंट अप्लाई" टैब से आवेदन करें।</div>`;
+                return;
+            }
+            let html = "";
+            applied.forEach(job => {
+                html += `
+                    <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex flex-wrap justify-between items-center text-xs gap-4">
+                        <div class="space-y-1">
+                            <h4 class="font-black text-sm text-slate-900 dark:text-white">${job.title}</h4>
+                            <p class="text-slate-500">🏢 ${job.org} • आवेदन तिथि: ${job.date}</p>
+                        </div>
+                        <span class="px-4 py-1.5 rounded-full font-black uppercase text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shadow-sm">Status: ${job.status}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        window.addEventListener('firebase-ready', () => {
+            // Firebase ready
+        });
+
+        async function loadInstantApplyJobsFromFirebase() {
+            const container = document.getElementById('instantJobsListContainer');
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
+                let html = "";
+                querySnapshot.forEach((docSnap) => {
+                    let job = docSnap.data();
+                    if (job.status !== 'Closed') {
+                        html += `
+                            <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-4 text-xs">
+                                <div class="space-y-2">
+                                    <span class="px-3 py-1 bg-pink-100 dark:bg-pink-950 text-pink-700 dark:text-pink-300 rounded-full font-bold text-[10px] border border-pink-200 dark:border-pink-800">⚡ Instant Apply</span>
+                                    <h4 class="font-black text-base text-slate-900 dark:text-white">${job.title}</h4>
+                                    <p class="text-slate-500 font-medium">${job.company} • 📍 ${job.city}</p>
+                                    <p class="font-black text-emerald-600 dark:text-emerald-400 text-sm">💰 ${job.salary}</p>
+                                </div>
+                                <button onclick="instantApply('${job.title}', '${job.company}')" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-pink-600 text-white font-black shadow-lg shadow-indigo-600/30 hover:opacity-95 transition">1-क्लिक अप्लाई करें 🚀</button>
+                            </div>
+                        `;
+                    }
+                });
+                container.innerHTML = html || `<p class="text-xs text-slate-400 col-span-2 text-center py-8">फिलहाल कोई लाइव जॉब उपलब्ध नहीं है।</p>`;
+            } catch (e) {
+                container.innerHTML = `<p class="text-xs text-rose-500 col-span-2 text-center py-8">जॉब्स लोड करने में समस्या आई।</p>`;
+            }
+        }
+
+        function instantApply(title, org) {
+            let applied = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [];
+            if (applied.some(j => j.title === title)) {
+                alert("आप इस जॉब के लिए पहले ही आवेदन कर चुके हैं!");
+                return;
+            }
+            applied.unshift({ title, org, date: "आज", status: "Submitted" });
+            localStorage.setItem('rozgarHubAppliedJobs', JSON.stringify(applied));
+            alert("सफलतापूर्वक 1-क्लिक आवेदन हो गया है!");
+            renderAppliedJobsWithTimeline();
+            switchDashTab('applied');
         }
     </script>
 </body>
