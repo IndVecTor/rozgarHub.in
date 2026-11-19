@@ -6,7 +6,6 @@
     <title>RozgarHub.in - India's #1 Private Job Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class', }</script>
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -40,7 +39,6 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Top Navbar -->
     <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40 transition-colors duration-300">
         <div class="container mx-auto flex justify-between items-center p-4">
             <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| Private Jobs</span></a>
@@ -52,7 +50,6 @@
         </div>
     </header>
 
-    <!-- HERO SECTION -->
     <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-14 px-4 text-center space-y-4 shadow-xl relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="container mx-auto max-w-3xl space-y-3 relative z-10">
@@ -62,7 +59,6 @@
         </div>
     </section>
 
-    <!-- JOB FEED GRID -->
     <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-8">
         <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
             <h2 class="text-base md:text-lg font-black uppercase text-gray-800 dark:text-gray-200">🔥 ताज़ा कॉर्पोरेट वैकेंसी (Live Openings)</h2>
@@ -74,7 +70,6 @@
         </div>
     </main>
 
-    <!-- FULL JOB DETAIL MODAL (With HR Profile + Follower Count + Follow Button at Bottom) -->
     <div id="jobDetailModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
             <div class="flex justify-between items-center p-5 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
@@ -87,7 +82,7 @@
 
             <div class="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
                 <div id="modalPosterContainer" class="w-full rounded-2xl overflow-hidden border dark:border-gray-700 bg-gray-100 dark:bg-gray-900 hidden">
-                    <img id="modalPosterImg" src="" alt="Full Job Poster" class="w-full max-h-72 object-contain mx-auto">
+                    <img id="modalPosterImg" src="" alt="Full Job Poster" loading="lazy" class="w-full max-h-72 object-contain mx-auto">
                 </div>
 
                 <div class="space-y-1">
@@ -150,11 +145,10 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM HR PROFILE CARD INSIDE JOB DETAIL MODAL -->
                 <div class="p-5 rounded-3xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-slate-900 dark:to-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <div class="flex items-center gap-3.5">
-                            <img id="bottomHrAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="HR Avatar" class="w-14 h-14 rounded-2xl object-cover object-top border-2 border-indigo-500 shadow">
+                            <img id="bottomHrAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="HR Avatar" loading="lazy" class="w-14 h-14 rounded-2xl object-cover object-top border-2 border-indigo-500 shadow">
                             <div>
                                 <span class="text-[10px] font-black uppercase text-indigo-600 dark:text-indigo-400">🏢 Posted By Employer / HR</span>
                                 <h4 id="bottomHrCompanyName" class="font-black text-base text-gray-900 dark:text-white">Company Name</h4>
@@ -281,21 +275,36 @@
             }
         }
 
+        // Parallel fast fetch on Firebase ready
         window.addEventListener('firebase-ready', async () => {
             try {
-                const profSnap = await window.getDocs(window.collection(window.db, "hrProfiles"));
+                const [profSnap, followsSnap, jobsSnap] = await Promise.all([
+                    window.getDocs(window.collection(window.db, "hrProfiles")),
+                    window.getDocs(window.collection(window.db, "follows")),
+                    window.getDocs(window.collection(window.db, "jobs"))
+                ]);
+
+                hrProfilesMap = {};
                 profSnap.forEach(d => {
                     const p = d.data();
                     if (p.company) hrProfilesMap[p.company.trim().toLowerCase()] = p;
                 });
 
-                await refreshFollowerCounts();
+                followerCountsMap = {};
+                followsSnap.forEach(d => {
+                    const cKey = (d.data().company || "").trim().toLowerCase();
+                    if (cKey) followerCountsMap[cKey] = (followerCountsMap[cKey] || 0) + 1;
+                });
 
-                const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
                 let jobs = [];
-                querySnapshot.forEach((docSnap) => { jobs.push({ id: docSnap.id, ...docSnap.data() }); });
-                jobs.sort((a, b) => b.createdAt - a.createdAt);
-                allLoadedJobs = jobs.filter(j => (j.status || "Active") === "Active");
+                jobsSnap.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if ((data.status || "Active") === "Active") {
+                        jobs.push({ id: docSnap.id, ...data });
+                    }
+                });
+                jobs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                allLoadedJobs = jobs;
                 renderJobs(allLoadedJobs);
             } catch(e) {
                 document.getElementById('publicJobsContainer').innerHTML = `<p class="text-xs text-red-500 text-center col-span-full">डेटा लोड करने में समस्या आई।</p>`;
@@ -312,48 +321,54 @@
             }
 
             const followed = getFollowedCompanies();
-            let html = "";
+            const fragment = document.createDocumentFragment();
+
             jobs.forEach((job, index) => {
                 const isFollowing = followed.includes(job.company);
-                html += `
-                    <div onclick="openJobDetail(${index})" class="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 flex flex-col justify-between space-y-4 hover:shadow-2xl hover:-translate-y-1 transition duration-300 group">
-                        <div class="space-y-3">
-                            <div class="aspect-video w-full bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border dark:border-gray-600 flex items-center justify-center relative">
-                                ${job.posterUrl ? `<img src="${job.posterUrl}" alt="Job Poster" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">` : `<span class="text-5xl text-gray-300 dark:text-gray-600">📷</span>`}
-                                <span class="absolute bottom-2 right-2 bg-black/75 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold">पूरी डिटेल देखें ↗</span>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.category || 'Corporate'}</span>
-                                <span class="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.qual || 'Any'}</span>
-                                <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.exp || 'Fresher'}</span>
-                            </div>
-                            <h3 class="font-black text-lg text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${job.title}</h3>
-                            
-                            <div class="flex justify-between items-center gap-2" onclick="event.stopPropagation()">
-                                <span class="font-bold text-blue-600 dark:text-blue-400 text-xs truncate">🏢 ${job.company} • 📍 ${job.city}</span>
-                                <button onclick="toggleFollowCompany('${job.company.replace(/'/g, "\\'")}')" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition ${isFollowing ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white dark:bg-blue-950 dark:text-blue-300'}">
-                                    ${isFollowing ? '✓ Following' : '+ Follow'}
-                                </button>
-                            </div>
+                const card = document.createElement('div');
+                card.className = "cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 flex flex-col justify-between space-y-4 hover:shadow-2xl hover:-translate-y-1 transition duration-300 group";
+                card.onclick = () => openJobDetail(index);
 
-                            <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">${job.desc}</p>
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="aspect-video w-full bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border dark:border-gray-600 flex items-center justify-center relative">
+                            ${job.posterUrl ? `<img src="${job.posterUrl}" alt="Job Poster" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">` : `<span class="text-5xl text-gray-300 dark:text-gray-600">📷</span>`}
+                            <span class="absolute bottom-2 right-2 bg-black/75 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold">पूरी डिटेल देखें ↗</span>
                         </div>
-                        <div class="pt-4 border-t dark:border-gray-700 flex justify-between items-center gap-2">
-                            <div>
-                                <p class="text-[10px] text-gray-400 font-semibold">मासिक वेतन</p>
-                                <span class="font-black text-sm text-green-600 dark:text-green-400">💰 ${job.salary}</span>
-                            </div>
-                            <div class="flex items-center gap-2" onclick="event.stopPropagation()">
-                                <button onclick="shareOnWhatsApp(${index})" title="WhatsApp पर शेयर करें" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white p-2.5 rounded-2xl transition shadow-sm flex items-center justify-center">
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
-                                </button>
-                                <button onclick="openJobDetail(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">डिटेल देखें</button>
-                            </div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.category || 'Corporate'}</span>
+                            <span class="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.qual || 'Any'}</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.exp || 'Fresher'}</span>
+                        </div>
+                        <h3 class="font-black text-lg text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${job.title}</h3>
+                        
+                        <div class="flex justify-between items-center gap-2" onclick="event.stopPropagation()">
+                            <span class="font-bold text-blue-600 dark:text-blue-400 text-xs truncate">🏢 ${job.company} • 📍 ${job.city}</span>
+                            <button onclick="toggleFollowCompany('${job.company.replace(/'/g, "\\'")}')" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition ${isFollowing ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white dark:bg-blue-950 dark:text-blue-300'}">
+                                ${isFollowing ? '✓ Following' : '+ Follow'}
+                            </button>
+                        </div>
+
+                        <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">${job.desc}</p>
+                    </div>
+                    <div class="pt-4 border-t dark:border-gray-700 flex justify-between items-center gap-2">
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-semibold">मासिक वेतन</p>
+                            <span class="font-black text-sm text-green-600 dark:text-green-400">💰 ${job.salary}</span>
+                        </div>
+                        <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+                            <button onclick="shareOnWhatsApp(${index})" title="WhatsApp पर शेयर करें" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white p-2.5 rounded-2xl transition shadow-sm flex items-center justify-center">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
+                            </button>
+                            <button onclick="openJobDetail(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">डिटेल देखें</button>
                         </div>
                     </div>
                 `;
+                fragment.appendChild(card);
             });
-            container.innerHTML = html;
+
+            container.innerHTML = "";
+            container.appendChild(fragment);
         }
 
         function openJobDetail(index) {
@@ -376,7 +391,6 @@
             document.getElementById('modalSkills').innerText = job.skills || 'Basic Computer & Communication';
             document.getElementById('modalFullDesc').innerText = job.desc || 'विवरण उपलब्ध नहीं है।';
 
-            // Populate Bottom HR Profile Card inside Job Detail Modal
             const cKey = (job.company || "").trim().toLowerCase();
             const prof = hrProfilesMap[cKey] || {};
             const followers = followerCountsMap[cKey] || 0;
