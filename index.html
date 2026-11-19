@@ -52,13 +52,42 @@
         </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-14 px-4 text-center space-y-4 shadow-xl relative overflow-hidden">
+    <!-- HERO SECTION WITH SEARCH & FILTER BAR -->
+    <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-12 px-4 text-center space-y-6 shadow-xl relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="container mx-auto max-w-3xl space-y-3 relative z-10">
+        <div class="container mx-auto max-w-4xl space-y-3 relative z-10">
             <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 Verified Corporate Jobs</span>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की प्राइवेट नौकरी खोजें</h1>
-            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">जॉब कार्ड या नीचे दिए बटन पर क्लिक करके पूरी डिटेल देखें, कंपनी/HR को फॉलो करें या WhatsApp पर शेयर करें।</p>
+            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">जॉब टाइटल, कंपनी, शहर या कैटेगरी के अनुसार तुरंत नौकरी खोजें।</p>
+        </div>
+
+        <!-- Search & City/Category Filter Box -->
+        <div class="container mx-auto max-w-4xl relative z-10 pt-2">
+            <div class="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 text-xs text-gray-800 dark:text-gray-100">
+                <div class="md:col-span-5 relative">
+                    <input type="text" id="jobSearchInput" oninput="applyJobFilters()" placeholder="🔍 जॉब टाइटल, कंपनी या स्किल खोजें..." class="w-full p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 font-bold focus:ring-2 focus:ring-blue-600 outline-none">
+                </div>
+                <div class="md:col-span-3">
+                    <select id="cityFilterSelect" onchange="applyJobFilters()" class="w-full p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 font-bold focus:ring-2 focus:ring-blue-600 outline-none">
+                        <option value="">📍 सभी शहर (All Cities)</option>
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <select id="categoryFilterSelect" onchange="applyJobFilters()" class="w-full p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 font-bold focus:ring-2 focus:ring-blue-600 outline-none">
+                        <option value="">🏷️ सभी कैटेगरी</option>
+                        <option value="IT & Software">IT & Software</option>
+                        <option value="Back Office / Data Entry">Back Office / Data Entry</option>
+                        <option value="BPO / Call Center">BPO / Call Center</option>
+                        <option value="Sales & Retail">Sales & Retail</option>
+                        <option value="Accounts & Finance">Accounts & Finance</option>
+                        <option value="Delivery & Logistics">Delivery & Logistics</option>
+                        <option value="Other Corporate">Other Corporate</option>
+                    </select>
+                </div>
+                <div class="md:col-span-1 flex">
+                    <button type="button" onclick="resetJobFilters()" title="फिल्टर रीसेट करें" class="w-full py-3.5 px-3 rounded-2xl bg-gray-200 dark:bg-gray-700 hover:bg-red-500 hover:text-white font-black transition">↺</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -185,6 +214,7 @@
 
     <script>
         let allLoadedJobs = [];
+        let filteredJobs = [];
         let hrProfilesMap = {};
         let followerCountsMap = {};
 
@@ -254,6 +284,51 @@
             if (!localStorage.getItem('rozgarHubTheme')) applyDeviceOrSavedTheme();
         });
 
+        function populateCityOptions(jobs) {
+            const select = document.getElementById('cityFilterSelect');
+            const currentVal = select.value;
+            const citySet = new Set();
+            jobs.forEach(j => {
+                if (j.city && j.city.trim()) citySet.add(j.city.trim());
+            });
+            let opts = `<option value="">📍 सभी शहर (All Cities)</option>`;
+            Array.from(citySet).sort().forEach(city => {
+                opts += `<option value="${city.replace(/"/g, '&quot;')}">${city}</option>`;
+            });
+            select.innerHTML = opts;
+            if (Array.from(citySet).includes(currentVal)) select.value = currentVal;
+        }
+
+        function applyJobFilters() {
+            const query = (document.getElementById('jobSearchInput').value || "").trim().toLowerCase();
+            const city = (document.getElementById('cityFilterSelect').value || "").trim().toLowerCase();
+            const category = (document.getElementById('categoryFilterSelect').value || "").trim().toLowerCase();
+
+            filteredJobs = allLoadedJobs.filter(job => {
+                const matchesQuery = !query ||
+                    (job.title || "").toLowerCase().includes(query) ||
+                    (job.company || "").toLowerCase().includes(query) ||
+                    (job.city || "").toLowerCase().includes(query) ||
+                    (job.skills || "").toLowerCase().includes(query) ||
+                    (job.desc || "").toLowerCase().includes(query);
+
+                const matchesCity = !city || (job.city || "").trim().toLowerCase() === city;
+                const matchesCategory = !category || (job.category || "").trim().toLowerCase() === category;
+
+                return matchesQuery && matchesCity && matchesCategory;
+            });
+
+            renderJobs(filteredJobs);
+        }
+
+        function resetJobFilters() {
+            document.getElementById('jobSearchInput').value = "";
+            document.getElementById('cityFilterSelect').value = "";
+            document.getElementById('categoryFilterSelect').value = "";
+            filteredJobs = [...allLoadedJobs];
+            renderJobs(filteredJobs);
+        }
+
         function getFollowedCompanies() {
             return JSON.parse(localStorage.getItem('rozgarHubFollowedCompanies')) || [];
         }
@@ -302,7 +377,7 @@
 
             localStorage.setItem('rozgarHubFollowedCompanies', JSON.stringify(followed));
             await refreshFollowerCounts();
-            renderJobs(allLoadedJobs);
+            renderJobs(filteredJobs);
             updateFollowButtonUI(document.getElementById('bottomHrFollowBtn'), companyName);
             const count = followerCountsMap[cKey] || 0;
             const fSpan = document.getElementById('bottomHrFollowers');
@@ -350,7 +425,9 @@
                 });
                 jobs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 allLoadedJobs = jobs;
-                renderJobs(allLoadedJobs);
+                filteredJobs = [...allLoadedJobs];
+                populateCityOptions(allLoadedJobs);
+                renderJobs(filteredJobs);
             } catch(e) {
                 document.getElementById('publicJobsContainer').innerHTML = `<p class="text-xs text-red-500 text-center col-span-full">डेटा लोड करने में समस्या आई।</p>`;
             }
@@ -420,7 +497,7 @@
         }
 
         function openJobDetail(index) {
-            const job = allLoadedJobs[index];
+            const job = filteredJobs[index];
             if (!job) return;
 
             document.getElementById('modalCategoryBadge').innerText = job.category || 'Corporate';
@@ -472,7 +549,7 @@
         }
 
         function shareOnWhatsApp(index) {
-            const job = allLoadedJobs[index];
+            const job = filteredJobs[index];
             if (!job) return;
             const siteUrl = window.location.origin + window.location.pathname;
             const shareText = `🔥 *नौकरी का अवसर - RozgarHub.in*\n\n` +
