@@ -58,7 +58,7 @@
         <div class="container mx-auto max-w-3xl space-y-3 relative z-10">
             <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 Verified Corporate Jobs</span>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की प्राइवेट नौकरी खोजें</h1>
-            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">जॉब कार्ड पर क्लिक करके पूरी डिटेल देखें, कंपनी/HR को फॉलो करें या WhatsApp पर शेयर करें।</p>
+            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">जॉब कार्ड या नीचे दिए बटन पर क्लिक करके पूरी डिटेल देखें, कंपनी/HR को फॉलो करें या WhatsApp पर शेयर करें।</p>
         </div>
     </section>
 
@@ -204,13 +204,11 @@
 
             return `
                 <div class="w-full h-full bg-gradient-to-br ${grad} text-white p-4 flex flex-col justify-between relative overflow-hidden">
-                    <!-- RozgarHub.in Watermark -->
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10">
                         <span class="text-2xl md:text-3xl font-black tracking-wider -rotate-12">RozgarHub.in</span>
                     </div>
                     <div class="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-yellow-400/10 blur-xl pointer-events-none"></div>
 
-                    <!-- Top RozgarHub.in Brand Badge -->
                     <div class="flex justify-between items-center gap-2 z-10">
                         <span class="bg-white/15 backdrop-blur border border-white/20 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide flex items-center gap-1">
                             <span>RozgarHub</span><span class="text-yellow-400">.in</span>
@@ -218,13 +216,11 @@
                         <span class="bg-yellow-400 text-gray-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">✓ Verified</span>
                     </div>
 
-                    <!-- Center Job Title & Company -->
                     <div class="z-10 my-auto py-1 space-y-0.5">
                         <p class="text-[10px] font-bold text-blue-200 truncate">🏢 ${safeCompany}</p>
                         <p class="text-base md:text-lg font-black leading-snug line-clamp-2 drop-shadow">${safeTitle}</p>
                     </div>
 
-                    <!-- Bottom Location & Salary Strip -->
                     <div class="flex justify-between items-center text-[10px] font-bold z-10 bg-black/35 backdrop-blur px-2.5 py-1.5 rounded-xl border border-white/10">
                         <span class="truncate">📍 ${safeCity}</span>
                         <span class="text-yellow-300 font-black shrink-0 ml-2">💰 ${safeSalary}</span>
@@ -386,7 +382,6 @@
                     <div class="space-y-3">
                         <div class="aspect-video w-full bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border dark:border-gray-600 flex items-center justify-center relative">
                             ${mediaHtml}
-                            <span class="absolute bottom-2 right-2 bg-black/75 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold z-20">पूरी डिटेल देखें ↗</span>
                         </div>
                         <div class="flex flex-wrap gap-1.5">
                             <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.category || 'Corporate'}</span>
@@ -413,7 +408,7 @@
                             <button onclick="shareOnWhatsApp(${index})" title="WhatsApp पर शेयर करें" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white p-2.5 rounded-2xl transition shadow-sm flex items-center justify-center">
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
                             </button>
-                            <button onclick="openJobDetail(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">डिटेल देखें</button>
+                            <button onclick="openJobDetail(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">पूरी डिटेल देखें</button>
                         </div>
                     </div>
                 `;
