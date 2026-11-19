@@ -74,7 +74,7 @@
         </div>
     </main>
 
-    <!-- FULL JOB DETAIL MODAL -->
+    <!-- FULL JOB DETAIL MODAL (With HR Profile + Follower Count + Follow Button at Bottom) -->
     <div id="jobDetailModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
             <div class="flex justify-between items-center p-5 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
@@ -90,14 +90,9 @@
                     <img id="modalPosterImg" src="" alt="Full Job Poster" class="w-full max-h-72 object-contain mx-auto">
                 </div>
 
-                <div class="flex flex-wrap justify-between items-start gap-3">
-                    <div class="space-y-1">
-                        <h2 id="modalJobTitle" class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-snug">Job Title</h2>
-                        <button id="modalCompanyProfileBtn" onclick="" class="font-black text-blue-600 dark:text-blue-400 text-sm hover:underline flex items-center gap-1.5">
-                            <span>🏢</span> <span id="modalCompany">Company Name</span> <span class="text-[10px] bg-blue-100 dark:bg-blue-900/60 px-2 py-0.5 rounded-full">प्रोफाइल देखें ↗</span>
-                        </button>
-                    </div>
-                    <button id="modalFollowBtn" onclick="" class="px-4 py-2 rounded-2xl text-xs font-black border transition shadow-sm">+ Follow</button>
+                <div class="space-y-1">
+                    <h2 id="modalJobTitle" class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-snug">Job Title</h2>
+                    <p id="modalCompany" class="font-black text-blue-600 dark:text-blue-400 text-sm">🏢 Company Name</p>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
@@ -154,6 +149,22 @@
                         Description goes here...
                     </div>
                 </div>
+
+                <!-- BOTTOM HR PROFILE CARD INSIDE JOB DETAIL MODAL -->
+                <div class="p-5 rounded-3xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-slate-900 dark:to-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5">
+                            <img id="bottomHrAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="HR Avatar" class="w-14 h-14 rounded-2xl object-cover object-top border-2 border-indigo-500 shadow">
+                            <div>
+                                <span class="text-[10px] font-black uppercase text-indigo-600 dark:text-indigo-400">🏢 Posted By Employer / HR</span>
+                                <h4 id="bottomHrCompanyName" class="font-black text-base text-gray-900 dark:text-white">Company Name</h4>
+                                <p id="bottomHrMeta" class="text-xs text-gray-600 dark:text-gray-300 font-semibold">HR: Verified • <span id="bottomHrFollowers" class="text-pink-600 dark:text-pink-400 font-black">0 Followers</span></p>
+                            </div>
+                        </div>
+                        <button id="bottomHrFollowBtn" onclick="" class="px-5 py-2.5 rounded-2xl text-xs font-black shadow transition">+ Follow</button>
+                    </div>
+                    <p id="bottomHrBio" class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed"></p>
+                </div>
             </div>
 
             <div class="p-5 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-wrap justify-between items-center gap-3">
@@ -168,40 +179,6 @@
         </div>
     </div>
 
-    <!-- PUBLIC HR / COMPANY PROFILE MODAL -->
-    <div id="hrPublicProfileModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
-            <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 flex justify-between items-start">
-                <div class="flex items-center gap-4">
-                    <img id="pubHrAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="Logo" class="w-14 h-14 rounded-2xl object-cover border-2 border-white/30 bg-white/10">
-                    <div>
-                        <span class="bg-emerald-500/30 text-emerald-200 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase">Verified Employer</span>
-                        <h3 id="pubHrCompany" class="text-xl font-black mt-1">Company Name</h3>
-                        <p id="pubHrPerson" class="text-xs text-blue-200">HR: Verified Recruiter</p>
-                    </div>
-                </div>
-                <button onclick="closeHrProfileModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-red-500 flex items-center justify-center font-black text-xs">✕</button>
-            </div>
-
-            <div class="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
-                <p id="pubHrBioText" class="text-xs text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 p-3.5 rounded-2xl border dark:border-gray-700"></p>
-
-                <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-900/60 p-4 rounded-2xl border dark:border-gray-700">
-                    <div class="text-xs">
-                        <p class="font-bold text-gray-500">कुल सक्रिय वैकेंसी</p>
-                        <p id="pubHrJobCount" class="text-lg font-black text-blue-600 dark:text-blue-400">0 Jobs</p>
-                    </div>
-                    <button id="pubHrFollowBtn" onclick="" class="px-5 py-2.5 rounded-2xl font-black text-xs shadow transition">+ Follow</button>
-                </div>
-
-                <div class="space-y-3">
-                    <h4 class="text-xs font-black uppercase text-gray-400">📌 इस कंपनी / HR की सभी लाइव जॉब्स</h4>
-                    <div id="pubHrJobsList" class="space-y-2.5"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <footer class="bg-gray-900 text-white text-center py-8 text-xs space-y-2 border-t border-gray-800">
         <p>&copy; 2026 RozgarHub.in • India's Premier Private Job Marketplace</p>
         <p class="text-gray-400">कंपनियों और नौकरी चाहने वालों का भरोसेमंद डिजिटल प्लेटफॉर्म।</p>
@@ -210,16 +187,15 @@
     <script>
         let allLoadedJobs = [];
         let hrProfilesMap = {};
+        let followerCountsMap = {};
 
         function applyDeviceOrSavedTheme() {
             const root = document.getElementById('htmlRoot');
             const savedTheme = localStorage.getItem('rozgarHubTheme');
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
-
             if (isDark) root.classList.add('dark');
             else root.classList.remove('dark');
-
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = isDark ? '☀️' : '🌙';
         }
@@ -229,19 +205,27 @@
             const willBeDark = !root.classList.contains('dark');
             root.classList.toggle('dark', willBeDark);
             localStorage.setItem('rozgarHubTheme', willBeDark ? 'dark' : 'light');
-
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = willBeDark ? '☀️' : '🌙';
         }
 
         applyDeviceOrSavedTheme();
-
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
             if (!localStorage.getItem('rozgarHubTheme')) applyDeviceOrSavedTheme();
         });
 
         function getFollowedCompanies() {
             return JSON.parse(localStorage.getItem('rozgarHubFollowedCompanies')) || [];
+        }
+
+        async function refreshFollowerCounts() {
+            if (!window.db) return;
+            followerCountsMap = {};
+            const snap = await window.getDocs(window.collection(window.db, "follows"));
+            snap.forEach(d => {
+                const cKey = (d.data().company || "").trim().toLowerCase();
+                if (cKey) followerCountsMap[cKey] = (followerCountsMap[cKey] || 0) + 1;
+            });
         }
 
         async function toggleFollowCompany(companyName) {
@@ -252,7 +236,8 @@
                 return;
             }
             let followed = getFollowedCompanies();
-            const safeCompKey = encodeURIComponent(companyName.trim().toLowerCase());
+            const cKey = companyName.trim().toLowerCase();
+            const safeCompKey = encodeURIComponent(cKey);
             const safeCandKey = encodeURIComponent(candidate.email.trim().toLowerCase());
             const followDocId = `${safeCompKey}__${safeCandKey}`;
 
@@ -261,7 +246,6 @@
                 if (window.db) {
                     try { await window.deleteDoc(window.doc(window.db, "follows", followDocId)); } catch(e) {}
                 }
-                alert(`आपने ${companyName} को Unfollow कर दिया है।`);
             } else {
                 followed.push(companyName);
                 if (window.db) {
@@ -274,12 +258,15 @@
                         });
                     } catch(e) {}
                 }
-                alert(`अब आप ${companyName} को Follow कर रहे हैं! इनकी सभी नई पोस्ट आपके कैंडिडेट पोर्टल के 'Following' सेक्शन में दिखेंगी।`);
             }
+
             localStorage.setItem('rozgarHubFollowedCompanies', JSON.stringify(followed));
+            await refreshFollowerCounts();
             renderJobs(allLoadedJobs);
-            updateFollowButtonUI(document.getElementById('modalFollowBtn'), companyName);
-            updateFollowButtonUI(document.getElementById('pubHrFollowBtn'), companyName);
+            updateFollowButtonUI(document.getElementById('bottomHrFollowBtn'), companyName);
+            const count = followerCountsMap[cKey] || 0;
+            const fSpan = document.getElementById('bottomHrFollowers');
+            if (fSpan) fSpan.innerText = `${count} Followers`;
         }
 
         function updateFollowButtonUI(btn, companyName) {
@@ -287,10 +274,10 @@
             const isFollowing = getFollowedCompanies().includes(companyName);
             if (isFollowing) {
                 btn.innerText = "✓ Following";
-                btn.className = "px-4 py-2 rounded-2xl text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 transition";
+                btn.className = "px-5 py-2.5 rounded-2xl text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 transition";
             } else {
                 btn.innerText = "+ Follow";
-                btn.className = "px-4 py-2 rounded-2xl text-xs font-black bg-blue-600 hover:bg-blue-700 text-white transition shadow";
+                btn.className = "px-5 py-2.5 rounded-2xl text-xs font-black bg-blue-600 hover:bg-blue-700 text-white transition shadow";
             }
         }
 
@@ -301,6 +288,8 @@
                     const p = d.data();
                     if (p.company) hrProfilesMap[p.company.trim().toLowerCase()] = p;
                 });
+
+                await refreshFollowerCounts();
 
                 const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
                 let jobs = [];
@@ -341,9 +330,7 @@
                             <h3 class="font-black text-lg text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${job.title}</h3>
                             
                             <div class="flex justify-between items-center gap-2" onclick="event.stopPropagation()">
-                                <button onclick="openHrPublicProfile('${job.company.replace(/'/g, "\\'")}', '${(job.hrName || 'Verified HR').replace(/'/g, "\\'")}')" class="font-bold text-blue-600 dark:text-blue-400 text-xs hover:underline text-left truncate">
-                                    🏢 ${job.company} • 📍 ${job.city}
-                                </button>
+                                <span class="font-bold text-blue-600 dark:text-blue-400 text-xs truncate">🏢 ${job.company} • 📍 ${job.city}</span>
                                 <button onclick="toggleFollowCompany('${job.company.replace(/'/g, "\\'")}')" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition ${isFollowing ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white dark:bg-blue-950 dark:text-blue-300'}">
                                     ${isFollowing ? '✓ Following' : '+ Follow'}
                                 </button>
@@ -376,7 +363,7 @@
             document.getElementById('modalCategoryBadge').innerText = job.category || 'Corporate';
             document.getElementById('modalJobTypeBadge').innerText = job.jobType || 'Full-Time';
             document.getElementById('modalJobTitle').innerText = job.title;
-            document.getElementById('modalCompany').innerText = job.company;
+            document.getElementById('modalCompany').innerText = `🏢 ${job.company}`;
             document.getElementById('modalSalary').innerText = job.salary || '-';
             document.getElementById('modalCity').innerText = job.city || '-';
             document.getElementById('modalQual').innerText = job.qual || 'Any';
@@ -389,12 +376,17 @@
             document.getElementById('modalSkills').innerText = job.skills || 'Basic Computer & Communication';
             document.getElementById('modalFullDesc').innerText = job.desc || 'विवरण उपलब्ध नहीं है।';
 
-            document.getElementById('modalCompanyProfileBtn').onclick = () => {
-                closeJobModal();
-                openHrPublicProfile(job.company, job.hrName || 'Verified HR');
-            };
+            // Populate Bottom HR Profile Card inside Job Detail Modal
+            const cKey = (job.company || "").trim().toLowerCase();
+            const prof = hrProfilesMap[cKey] || {};
+            const followers = followerCountsMap[cKey] || 0;
 
-            const followBtn = document.getElementById('modalFollowBtn');
+            document.getElementById('bottomHrCompanyName').innerText = job.company;
+            document.getElementById('bottomHrMeta').innerHTML = `HR: ${prof.hrName || job.hrName || 'Verified HR'} • <span id="bottomHrFollowers" class="text-pink-600 dark:text-pink-400 font-black">${followers} Followers</span>`;
+            document.getElementById('bottomHrBio').innerText = prof.bio || `${job.company} — Verified hiring partner on RozgarHub.in.`;
+            if (prof.avatar) document.getElementById('bottomHrAvatar').src = prof.avatar;
+
+            const followBtn = document.getElementById('bottomHrFollowBtn');
             followBtn.onclick = () => toggleFollowCompany(job.company);
             updateFollowButtonUI(followBtn, job.company);
 
@@ -417,44 +409,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        function openHrPublicProfile(companyName, hrName) {
-            const prof = hrProfilesMap[companyName.trim().toLowerCase()] || {};
-            document.getElementById('pubHrCompany').innerText = companyName;
-            document.getElementById('pubHrPerson').innerText = `HR: ${prof.hrName || hrName} • 📍 ${prof.city || "India"} (संपर्क गोपनीय)`;
-            document.getElementById('pubHrBioText').innerText = prof.bio || `${companyName} — Verified employer on RozgarHub.in.`;
-            if (prof.avatar) document.getElementById('pubHrAvatar').src = prof.avatar;
-
-            const companyJobs = allLoadedJobs.filter(j => j.company === companyName);
-            document.getElementById('pubHrJobCount').innerText = `${companyJobs.length} Active Jobs`;
-
-            const followBtn = document.getElementById('pubHrFollowBtn');
-            followBtn.onclick = () => toggleFollowCompany(companyName);
-            updateFollowButtonUI(followBtn, companyName);
-
-            let listHtml = "";
-            companyJobs.forEach(j => {
-                const globalIndex = allLoadedJobs.indexOf(j);
-                listHtml += `
-                    <div onclick="closeHrProfileModal(); openJobDetail(${globalIndex});" class="cursor-pointer p-4 rounded-2xl border dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:border-blue-500 transition flex justify-between items-center text-xs">
-                        <div>
-                            <h5 class="font-black text-sm text-gray-900 dark:text-white">${j.title}</h5>
-                            <p class="text-gray-500 mt-0.5">📍 ${j.city} • 💰 ${j.salary}</p>
-                        </div>
-                        <span class="text-blue-600 dark:text-blue-400 font-bold">देखें &rarr;</span>
-                    </div>
-                `;
-            });
-            document.getElementById('pubHrJobsList').innerHTML = listHtml || `<p class="text-xs text-gray-400">कोई सक्रिय जॉब उपलब्ध नहीं है।</p>`;
-
-            document.getElementById('hrPublicProfileModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeHrProfileModal() {
-            document.getElementById('hrPublicProfileModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
         function shareOnWhatsApp(index) {
             const job = allLoadedJobs[index];
             if (!job) return;
@@ -472,9 +426,6 @@
 
         document.getElementById('jobDetailModal').addEventListener('click', function(e) {
             if (e.target === this) closeJobModal();
-        });
-        document.getElementById('hrPublicProfileModal').addEventListener('click', function(e) {
-            if (e.target === this) closeHrProfileModal();
         });
     </script>
 </body>

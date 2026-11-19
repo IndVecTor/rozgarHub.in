@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin Panel - RozgarHub.in</title>
+    <title>Super Admin Panel & Complete Report - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', }
-    </script>
-    <!-- Firebase SDKs (Firestore only) -->
+    <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -30,25 +27,19 @@
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-track { background: #0f172a; }
-        .dark ::-webkit-scrollbar-thumb { background: #ef4444; }
         .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); }
         .dark .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Top Navbar -->
     <header class="glass-card shadow-lg sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
         <div class="container mx-auto flex justify-between items-center p-4">
             <a href="index.html" class="text-2xl font-black tracking-wide bg-gradient-to-r from-red-600 to-amber-600 bg-clip-text text-transparent">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-white font-bold px-2.5 py-1 bg-red-600 rounded-full shadow">👑 Super Admin</span></a>
             <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
-                <button onclick="toggleDarkMode()" id="themeToggleBtn" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm"><span id="themeIcon">🌙</span></button>
+                <button type="button" onclick="toggleDarkMode()" id="themeToggleBtn" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm"><span id="themeIcon">🌙</span></button>
                 <a href="index.html" class="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-slate-800">🏠 होम पेज</a>
-                <button id="logoutBtn" onclick="handleAdminLogout()" class="hidden px-4 py-2.5 rounded-2xl bg-red-600 text-white hover:bg-red-700 transition shadow">लॉग आउट</button>
+                <button type="button" id="logoutBtn" onclick="handleAdminLogout()" class="hidden px-4 py-2.5 rounded-2xl bg-red-600 text-white hover:bg-red-700 transition shadow">लॉग आउट</button>
             </div>
         </div>
     </header>
@@ -61,7 +52,6 @@
                 <h1 class="text-2xl font-black tracking-tight">सुपर एडमिन लॉगिन</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">पासवर्ड दर्ज करें (पासवर्ड: 2026)</p>
             </div>
-
             <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs text-left">
                 <div class="space-y-1">
                     <label class="block font-bold">एडमिन पासवर्ड</label>
@@ -72,66 +62,82 @@
         </div>
     </main>
 
-    <!-- ADMIN DASHBOARD VIEW -->
+    <!-- ADMIN DASHBOARD & COMPLETE REPORT VIEW -->
     <main id="adminDashboardView" class="container mx-auto px-4 py-10 max-w-6xl flex-grow hidden space-y-8">
         
-        <!-- Stats Bar -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-500 font-bold uppercase">Total Live Jobs</p>
-                    <h3 id="statTotalJobs" class="text-3xl font-black text-red-600 mt-1">0</h3>
-                </div>
-                <span class="text-4xl">📢</span>
+        <div class="flex flex-wrap justify-between items-center gap-3">
+            <div>
+                <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट डैशबोर्ड</h1>
+                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स और आवेदनों की लाइव रिपोर्ट</p>
             </div>
-            <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-500 font-bold uppercase">System Status</p>
-                    <h3 class="text-3xl font-black text-emerald-600 mt-1">Secure 🟢</h3>
-                </div>
-                <span class="text-4xl">🛡️</span>
+            <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
+        </div>
+
+        <!-- 4 Summary Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Total Jobs Posted</p>
+                <h3 id="repTotalJobs" class="text-3xl font-black text-red-600 mt-1">0</h3>
             </div>
-            <div class="glass-card p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-500 font-bold uppercase">Database</p>
-                    <h3 class="text-3xl font-black text-indigo-600 mt-1">Firestore</h3>
-                </div>
-                <span class="text-4xl">⚡</span>
+            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Registered HRs</p>
+                <h3 id="repTotalHRs" class="text-3xl font-black text-indigo-600 mt-1">0</h3>
+            </div>
+            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Registered Candidates</p>
+                <h3 id="repTotalCandidates" class="text-3xl font-black text-emerald-600 mt-1">0</h3>
+            </div>
+            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Total Applications</p>
+                <h3 id="repTotalApps" class="text-3xl font-black text-amber-600 mt-1">0</h3>
             </div>
         </div>
 
-        <!-- Job Moderation Section -->
-        <div class="glass-card p-6 md:p-8 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
-                <h3 class="font-black text-base uppercase text-slate-900 dark:text-white">📋 सभी जॉब्स का मॉडरेशन (Job Moderation & Delete)</h3>
-                <button onclick="loadAdminJobs()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-xs font-bold hover:bg-slate-200 transition">🔄 रिफ्रेश करें</button>
-            </div>
+        <!-- Report Tabs -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
+            <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-red-600 text-white font-black">📢 Jobs Report</button>
+            <button type="button" onclick="switchReportTab('hrs')" id="rTabHrs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏢 Registered HRs</button>
+            <button type="button" onclick="switchReportTab('candidates')" id="rTabCandidates" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">👤 Candidates Report</button>
+            <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications Report</button>
+        </div>
 
-            <div id="adminJobsContainer" class="space-y-4">
-                <p class="text-xs text-slate-400 text-center py-8">जॉब्स लोड हो रही हैं...</p>
-            </div>
+        <!-- REPORT 1: JOBS -->
+        <div id="repSectionJobs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+            <h3 class="font-black text-base uppercase border-b pb-3">📋 सभी पोस्ट की गई जॉब्स (Moderation & Delete)</h3>
+            <div id="adminJobsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-8">रिपोर्ट लोड हो रही है...</p></div>
+        </div>
+
+        <!-- REPORT 2: REGISTERED HRs -->
+        <div id="repSectionHrs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
+            <h3 class="font-black text-base uppercase border-b pb-3">🏢 रजिस्टर्ड HR / कंपनियाँ</h3>
+            <div id="adminHrsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-6">लोड हो रहा है...</p></div>
+        </div>
+
+        <!-- REPORT 3: REGISTERED CANDIDATES -->
+        <div id="repSectionCandidates" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
+            <h3 class="font-black text-base uppercase border-b pb-3">👤 रजिस्टर्ड कैंडिडेट्स</h3>
+            <div id="adminCandidatesContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-6">लोड हो रहा है...</p></div>
+        </div>
+
+        <!-- REPORT 4: APPLICATIONS -->
+        <div id="repSectionApps" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
+            <h3 class="font-black text-base uppercase border-b pb-3">📥 सभी आवेदनों की रिपोर्ट</h3>
+            <div id="adminAppsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-6">लोड हो रहा है...</p></div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="glass-card border-t border-slate-200 dark:border-slate-800 text-center py-6 text-xs mt-12 space-y-1 text-slate-500">
+    <footer class="glass-card border-t border-slate-200 dark:border-slate-800 text-center py-6 text-xs mt-12 text-slate-500">
         <p>&copy; 2026 RozgarHub.in • Super Admin Panel</p>
     </footer>
 
-    <!-- Script Logic -->
     <script>
         function applyDeviceOrSavedTheme() {
             const root = document.getElementById('htmlRoot');
             const savedTheme = localStorage.getItem('rozgarHubTheme');
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
-
-            if (isDark) {
-                root.classList.add('dark');
-            } else {
-                root.classList.remove('dark');
-            }
-
+            if (isDark) root.classList.add('dark');
+            else root.classList.remove('dark');
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = isDark ? '☀️' : '🌙';
         }
@@ -141,28 +147,23 @@
             const willBeDark = !root.classList.contains('dark');
             root.classList.toggle('dark', willBeDark);
             localStorage.setItem('rozgarHubTheme', willBeDark ? 'dark' : 'light');
-
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = willBeDark ? '☀️' : '🌙';
         }
 
         applyDeviceOrSavedTheme();
-
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('rozgarHubTheme')) {
-                applyDeviceOrSavedTheme();
-            }
+            if (!localStorage.getItem('rozgarHubTheme')) applyDeviceOrSavedTheme();
         });
 
         function handleAdminLogin(e) {
             e.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === "2026") {
+            if (document.getElementById('adminPassInput').value === "2026") {
                 localStorage.setItem('rozgarHubAdminLoggedIn', 'true');
                 alert("एडमिन लॉगिन सफल!");
                 checkAdminAuth();
             } else {
-                alert("गलत पासवर्ड! कृपया सही पासवर्ड (2026) दर्ज करें।");
+                alert("गलत पासवर्ड! (पासवर्ड 2026 है)");
             }
         }
 
@@ -171,15 +172,14 @@
             location.reload();
         }
 
-        window.onload = function() { checkAdminAuth(); };
+        window.onload = checkAdminAuth;
 
         function checkAdminAuth() {
-            const isLoggedIn = localStorage.getItem('rozgarHubAdminLoggedIn');
-            if (isLoggedIn === 'true') {
+            if (localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') {
                 document.getElementById('adminAuthView').classList.add('hidden');
                 document.getElementById('adminDashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                if (window.db) loadAdminJobs();
+                if (window.db) loadAllAdminReports();
             } else {
                 document.getElementById('adminAuthView').classList.remove('hidden');
                 document.getElementById('adminDashboardView').classList.add('hidden');
@@ -188,51 +188,109 @@
         }
 
         window.addEventListener('firebase-ready', () => {
-            if (localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') {
-                loadAdminJobs();
-            }
+            if (localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') loadAllAdminReports();
         });
 
-        async function loadAdminJobs() {
-            const container = document.getElementById('adminJobsContainer');
-            container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">डेटा लोड हो रहा है...</p>`;
-            try {
-                const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
-                let html = "";
-                let count = 0;
-                querySnapshot.forEach((docSnap) => {
-                    count++;
-                    let job = docSnap.data();
-                    html += `
-                        <div class="p-4 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/50 dark:bg-slate-900/50 gap-3">
-                            <div class="flex items-center gap-3">
-                                ${job.posterUrl ? `<img src="${job.posterUrl}" class="w-12 h-12 rounded-xl object-cover border">` : `<div class="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-lg">🏢</div>`}
-                                <div class="space-y-1">
-                                    <span class="px-2 py-0.5 rounded font-bold uppercase text-[10px] bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">HR: ${job.hrEmail || 'N/A'}</span>
-                                    <h4 class="font-black text-sm text-slate-900 dark:text-white mt-1">${job.title}</h4>
-                                    <p class="text-slate-500">${job.company} • 📍 ${job.city} • वेतन: ${job.salary}</p>
-                                </div>
-                            </div>
-                            <button onclick="adminDeleteJob('${docSnap.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2.5 rounded-xl font-bold transition shadow-sm">🗑️ हमेशा के लिए डिलीट करें</button>
-                        </div>
-                    `;
-                });
-                document.getElementById('statTotalJobs').innerText = count;
-                container.innerHTML = html || `<p class="text-xs text-slate-400 text-center py-8">कोई जॉब पोस्ट उपलब्ध नहीं है।</p>`;
-            } catch(e) {
-                container.innerHTML = `<p class="text-xs text-red-500 text-center py-8">डेटा लोड करने में एरर आई: ${e.message}</p>`;
-            }
+        function switchReportTab(tab) {
+            const map = { jobs: 'repSectionJobs', hrs: 'repSectionHrs', candidates: 'repSectionCandidates', apps: 'repSectionApps' };
+            const btnMap = { jobs: 'rTabJobs', hrs: 'rTabHrs', candidates: 'rTabCandidates', apps: 'rTabApps' };
+            Object.keys(map).forEach(k => {
+                document.getElementById(map[k]).classList.toggle('hidden', k !== tab);
+                document.getElementById(btnMap[k]).className = (k === tab) ? "px-4 py-2.5 rounded-2xl bg-red-600 text-white font-black" : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
+            });
+        }
+
+        async function loadAllAdminReports() {
+            if (!window.db) return;
+
+            // 1. Jobs
+            const jobsSnap = await window.getDocs(window.collection(window.db, "jobs"));
+            let jobsHtml = "", jobCount = 0;
+            jobsSnap.forEach(docSnap => {
+                jobCount++;
+                const j = docSnap.data();
+                jobsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-3">
+                    <div>
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 text-blue-800">${j.status || 'Active'}</span>
+                        <h4 class="font-black text-sm mt-1">${j.title}</h4>
+                        <p class="text-slate-500">🏢 ${j.company} • 📍 ${j.city} • 💰 ${j.salary} • HR: ${j.hrName || 'N/A'}</p>
+                    </div>
+                    <button type="button" onclick="adminDeleteJob('${docSnap.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl font-bold">🗑️ डिलीट करें</button>
+                </div>`;
+            });
+            document.getElementById('repTotalJobs').innerText = jobCount;
+            document.getElementById('adminJobsContainer').innerHTML = jobsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई जॉब नहीं मिली।</p>`;
+
+            // 2. Registered HRs (from registeredHRs + hrProfiles)
+            const hrSnap = await window.getDocs(window.collection(window.db, "hrProfiles"));
+            let hrsHtml = "", hrCount = 0;
+            hrSnap.forEach(d => {
+                hrCount++;
+                const h = d.data();
+                hrsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
+                    <div>
+                        <div class="font-black text-sm">🏢 ${h.company || "Company"}</div>
+                        <div class="text-slate-500">HR: ${h.hrName || "-"} • 📍 ${h.city || "India"} • 🏷️ ${h.industry || "-"}</div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-bold text-[10px]">Verified HR</span>
+                </div>`;
+            });
+            document.getElementById('repTotalHRs').innerText = hrCount;
+            document.getElementById('adminHrsContainer').innerHTML = hrsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई HR प्रोफाइल नहीं मिली।</p>`;
+
+            // 3. Candidates (from follows + applications unique emails)
+            const appsSnap = await window.getDocs(window.collection(window.db, "applications"));
+            const followsSnap = await window.getDocs(window.collection(window.db, "follows"));
+            let candMap = {};
+            let appsHtml = "", appCount = 0;
+
+            appsSnap.forEach(d => {
+                appCount++;
+                const a = d.data();
+                const emailKey = (a.candidateEmail || a.candidateName || d.id).toLowerCase();
+                if (!candMap[emailKey]) {
+                    candMap[emailKey] = { name: a.candidateName || "Candidate", email: a.candidateEmail || "N/A", qual: a.candidateQual || "Graduate" };
+                }
+                appsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
+                    <div>
+                        <div class="font-black text-sm">${a.candidateName || "Candidate"} &rarr; <span class="text-indigo-600">${a.jobTitle}</span></div>
+                        <div class="text-slate-500">🏢 ${a.company} • 📧 ${a.candidateEmail || "N/A"} • 🎓 ${a.candidateQual || "Graduate"}</div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">${a.status || 'Submitted'}</span>
+                </div>`;
+            });
+
+            followsSnap.forEach(d => {
+                const f = d.data();
+                const emailKey = (f.candidateEmail || f.candidateName || d.id).toLowerCase();
+                if (!candMap[emailKey]) {
+                    candMap[emailKey] = { name: f.candidateName || "Candidate", email: f.candidateEmail || "N/A", qual: "Active Member" };
+                }
+            });
+
+            const candList = Object.values(candMap);
+            document.getElementById('repTotalCandidates').innerText = candList.length;
+            document.getElementById('repTotalApps').innerText = appCount;
+            document.getElementById('adminAppsContainer').innerHTML = appsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई आवेदन नहीं मिला।</p>`;
+
+            let candHtml = "";
+            candList.forEach(c => {
+                candHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
+                    <div>
+                        <div class="font-black text-sm">👤 ${c.name}</div>
+                        <div class="text-slate-500">📧 ${c.email} • 🎓 ${c.qual}</div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Active Candidate</span>
+                </div>`;
+            });
+            document.getElementById('adminCandidatesContainer').innerHTML = candHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई कैंडिडेट डेटा नहीं मिला।</p>`;
         }
 
         async function adminDeleteJob(docId) {
-            if (confirm("चेतावनी: क्या आप वाकई इस जॉब को डेटाबेस से हमेशा के लिए डिलीट करना चाहते हैं?")) {
-                try {
-                    await window.deleteDoc(window.doc(window.db, "jobs", docId));
-                    alert("जॉब सफलतापर्वक डिलीट कर दी गई है!");
-                    loadAdminJobs();
-                } catch(e) {
-                    alert("डिलिट करने में एरर आई: " + e.message);
-                }
+            if (confirm("चेतावनी: क्या आप वाकई इस जॉब को हमेशा के लिए डिलीट करना चाहते हैं?")) {
+                await window.deleteDoc(window.doc(window.db, "jobs", docId));
+                alert("जॉब डिलीट हो गई है!");
+                loadAllAdminReports();
             }
         }
     </script>

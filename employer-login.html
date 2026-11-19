@@ -8,7 +8,7 @@
     <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -29,7 +29,6 @@
         window.doc = doc;
         window.updateDoc = updateDoc;
         window.setDoc = setDoc;
-        window.getDoc = getDoc;
         window.ref = ref;
         window.uploadBytes = uploadBytes;
         window.getDownloadURL = getDownloadURL;
@@ -37,6 +36,18 @@
     </script>
     <style>
         .glass-modal { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); }
+        .border-ring {
+            background: linear-gradient(45deg, #f59e0b, #ec4899, #6366f1);
+            padding: 4px;
+        }
+        .border-neon {
+            box-shadow: 0 0 0 3px #22d3ee, 0 0 18px rgba(34, 211, 238, 0.7);
+            padding: 3px;
+        }
+        .border-royal {
+            border: 4px solid #eab308;
+            padding: 2px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
@@ -66,14 +77,14 @@
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
                 <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="loginEmail" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
                 <div><label class="block font-bold mb-1">पासवर्ड</label><input type="password" id="loginPass" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3.5 rounded-2xl font-black text-sm">लॉगिन करें 🚀</button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-black text-sm transition">लॉगिन करें 🚀</button>
             </form>
             <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-4 text-xs hidden">
                 <div><label class="block font-bold mb-1">कंपनी का नाम</label><input type="text" id="regCompany" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
                 <div><label class="block font-bold mb-1">एचआर (HR) का नाम</label><input type="text" id="regName" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
                 <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="regEmail" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
                 <div><label class="block font-bold mb-1">पासवर्ड</label><input type="password" id="regPass" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
-                <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3.5 rounded-2xl font-black text-sm">रजिस्टर करें ✨</button>
+                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 py-3.5 rounded-2xl font-black text-sm transition">रजिस्टर करें ✨</button>
             </form>
         </div>
     </main>
@@ -81,40 +92,42 @@
     <!-- DASHBOARD VIEW -->
     <main id="dashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-8">
         
-        <!-- INSTAGRAM-STYLE HR PROFILE HEADER -->
+        <!-- INSTAGRAM-STYLE HR PROFILE HEADER (No Clipped Image + 3 Border Styles) -->
         <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
-            <!-- Cover Banner -->
-            <div class="h-28 md:h-36 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 relative">
+            <div class="h-24 md:h-28 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 relative">
                 <span class="absolute top-3 right-3 bg-black/40 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-full">🔒 HR Contact Protected</span>
             </div>
 
-            <!-- Profile Content -->
-            <div class="px-6 pb-6">
-                <div class="flex flex-col md:flex-row md:items-end justify-between -mt-12 md:-mt-14 gap-4 mb-4">
-                    <!-- Avatar + Company Name -->
-                    <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-                        <div class="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-white dark:bg-gray-900 p-1.5 shadow-2xl border-2 border-white dark:border-gray-800 shrink-0">
-                            <img id="hrProfileAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="Company Logo" class="w-full h-full object-cover rounded-2xl">
+            <div class="px-6 pb-6 pt-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+                        <!-- Avatar Frame with 3 Selectable Borders -->
+                        <div id="hrAvatarFrame" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl border-ring shrink-0 transition-all">
+                            <img id="hrProfileAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="Company Logo" class="w-full h-full object-cover object-top rounded-[20px] bg-white dark:bg-gray-900">
                         </div>
-                        <div class="space-y-1 pt-1">
+                        <div class="space-y-1">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <h1 id="hrCompanyTitle" class="text-xl md:text-2xl font-black text-gray-900 dark:text-white">Company Name</h1>
                                 <span class="bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300 text-[10px] font-black px-2.5 py-0.5 rounded-full">✓ Verified Employer</span>
                             </div>
                             <p id="hrHandleSub" class="text-xs font-bold text-gray-500 dark:text-gray-400">HR Manager • 📍 Location • 🏷️ Industry</p>
+                            <div class="flex items-center gap-1.5 pt-1 text-[10px] font-bold">
+                                <span class="text-gray-400">Border:</span>
+                                <button type="button" onclick="setBorderStyle('ring')" class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300">Ring</button>
+                                <button type="button" onclick="setBorderStyle('neon')" class="px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300">Neon</button>
+                                <button type="button" onclick="setBorderStyle('royal')" class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300">Royal</button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Action Buttons (Instagram Style) -->
                     <div class="flex items-center gap-2 text-xs font-bold">
-                        <button onclick="openEditProfileModal()" class="px-4 py-2.5 rounded-2xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border dark:border-gray-600 transition">✏️ Edit Profile</button>
-                        <button onclick="resetFormForNewPost(); switchHrTab('post')" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white shadow transition">+ New Job</button>
+                        <button type="button" onclick="openEditProfileModal()" class="px-4 py-2.5 rounded-2xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border dark:border-gray-600 transition">✏️ Edit Profile</button>
+                        <button type="button" onclick="resetFormForNewPost(); switchHrTab('post')" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white shadow transition">+ New Job</button>
                     </div>
                 </div>
 
-                <!-- Bio -->
                 <p id="hrProfileBio" class="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl mb-6">
-                    कंपनी का परिचय (Bio) यहाँ दिखेगा। अपनी कंपनी की प्रोफाइल एडिट करके बायो, शहर और इंडस्ट्री अपडेट करें।
+                    कंपनी का परिचय (Bio) यहाँ दिखेगा। अपनी कंपनी की प्रोफाइल एडिट करके बायो, शहर, बॉर्डर और फोटो अपडेट करें।
                 </p>
 
                 <!-- Instagram-Style Stats Counter Bar -->
@@ -141,9 +154,9 @@
 
         <!-- NAVIGATION TABS -->
         <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
-            <button onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">📋 मेरी पोस्ट्स (Edit / Status)</button>
-            <button onclick="resetFormForNewPost(); switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">➕ नई जॉब पब्लिश करें</button>
-            <button onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">👥 उम्मीदवार आवेदन (Live ATS)</button>
+            <button type="button" onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">📋 मेरी पोस्ट्स (Edit / Status)</button>
+            <button type="button" onclick="resetFormForNewPost(); switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">➕ नई जॉब पब्लिश करें</button>
+            <button type="button" onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">👥 उम्मीदवार आवेदन (Live ATS)</button>
         </div>
 
         <!-- TAB 1: MY JOBS & EDIT / STATUS CONTROL -->
@@ -297,11 +310,11 @@
             </form>
         </div>
 
-        <!-- TAB 3: ATS APPLICANTS (LIVE FROM FIRESTORE) -->
+        <!-- TAB 3: ATS APPLICANTS -->
         <div id="contentApplicants" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4 hidden">
             <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2">
                 <h3 class="font-black uppercase">👥 उम्मीदवार आवेदन (Live Firebase ATS)</h3>
-                <button onclick="loadHrApplicants()" class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-xl font-bold">🔄 रिफ्रेश करें</button>
+                <button type="button" onclick="loadHrApplicants()" class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-xl font-bold">🔄 रिफ्रेश करें</button>
             </div>
             <div id="hrApplicantsContainer" class="space-y-3"><p class="text-xs text-gray-400">आवेदन लोड हो रहे हैं...</p></div>
         </div>
@@ -312,7 +325,7 @@
         <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
             <div class="flex justify-between items-center p-5 border-b dark:border-gray-700">
                 <h3 class="font-black text-base">✏️ HR / कंपनी प्रोफाइल एडिट करें</h3>
-                <button onclick="closeEditProfileModal()" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 font-black text-xs">✕</button>
+                <button type="button" onclick="closeEditProfileModal()" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 font-black text-xs">✕</button>
             </div>
             <form onsubmit="saveHrProfile(event)" class="p-6 space-y-4 text-xs">
                 <div>
@@ -329,17 +342,28 @@
                         <input type="text" id="profCity" placeholder="जैसे: Azamgarh, UP" class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                     </div>
                 </div>
-                <div>
-                    <label class="block font-bold mb-1">इंडस्ट्री / सेक्टर</label>
-                    <input type="text" id="profIndustry" placeholder="जैसे: IT, Retail & Corporate Hiring" class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold mb-1">इंडस्ट्री / सेक्टर</label>
+                        <input type="text" id="profIndustry" placeholder="जैसे: IT & Corporate Hiring" class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">प्रोफाइल फोटो बॉर्डर स्टाइल</label>
+                        <select id="profBorder" class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                            <option value="ring">1. Classic Ring (Instagram)</option>
+                            <option value="neon">2. Neon Glow (Cyan)</option>
+                            <option value="royal">3. Royal Gold</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
                     <label class="block font-bold mb-1">कंपनी Bio (परिचय)</label>
-                    <textarea id="profBio" rows="3" placeholder="अपनी कंपनी और हायरिंग के बारे में 2-3 लाइन लिखें..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></textarea>
+                    <textarea id="profBio" rows="3" placeholder="अपनी कंपनी और हायरिंग के बारे में लिखें..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></textarea>
                 </div>
                 <div>
-                    <label class="block font-bold mb-1">कंपनी लोगो / प्रोफाइल फोटो</label>
+                    <label class="block font-bold mb-1">कंपनी लोगो / प्रोफाइल फोटो बदलें</label>
                     <input type="file" id="profAvatarFile" accept="image/*" class="w-full text-xs">
+                    <p id="profSaveStatus" class="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold mt-1 hidden">प्रोफाइल सेव हो रही है...</p>
                 </div>
                 <button type="submit" id="saveProfBtn" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-lg">प्रोफाइल सेव करें 💾</button>
             </form>
@@ -356,10 +380,8 @@
             const savedTheme = localStorage.getItem('rozgarHubTheme');
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
-
             if (isDark) root.classList.add('dark');
             else root.classList.remove('dark');
-
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = isDark ? '☀️' : '🌙';
         }
@@ -369,16 +391,31 @@
             const willBeDark = !root.classList.contains('dark');
             root.classList.toggle('dark', willBeDark);
             localStorage.setItem('rozgarHubTheme', willBeDark ? 'dark' : 'light');
-
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = willBeDark ? '☀️' : '🌙';
         }
 
         applyDeviceOrSavedTheme();
-
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
             if (!localStorage.getItem('rozgarHubTheme')) applyDeviceOrSavedTheme();
         });
+
+        function applyBorderClass(styleName) {
+            const frame = document.getElementById('hrAvatarFrame');
+            if (!frame) return;
+            frame.classList.remove('border-ring', 'border-neon', 'border-royal');
+            if (styleName === 'neon') frame.classList.add('border-neon');
+            else if (styleName === 'royal') frame.classList.add('border-royal');
+            else frame.classList.add('border-ring');
+        }
+
+        function setBorderStyle(styleName) {
+            let u = JSON.parse(localStorage.getItem('rozgarHubHrUser')) || {};
+            u.borderStyle = styleName;
+            localStorage.setItem('rozgarHubHrUser', JSON.stringify(u));
+            applyBorderClass(styleName);
+            syncHrProfileToFirestore(u);
+        }
 
         function switchAuthTab(t) {
             if(t==='login') {
@@ -394,7 +431,7 @@
             }
         }
 
-        function handleSignupSubmit(e) {
+        async function handleSignupSubmit(e) {
             e.preventDefault();
             const company = document.getElementById('regCompany').value.trim();
             const name = document.getElementById('regName').value.trim();
@@ -405,15 +442,23 @@
                 email,
                 city: "India",
                 industry: "Corporate Hiring",
+                borderStyle: "ring",
                 bio: `${company} — Verified hiring partner on RozgarHub.in.`,
                 avatar: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200"
             };
             localStorage.setItem('rozgarHubHrUser', JSON.stringify(userData));
-            syncHrProfileToFirestore(userData);
+            await syncHrProfileToFirestore(userData);
+            if (window.db) {
+                try {
+                    await window.setDoc(window.doc(window.db, "registeredHRs", encodeURIComponent(email.toLowerCase())), {
+                        company, hrName: name, email, registeredAt: Date.now()
+                    }, { merge: true });
+                } catch(err) {}
+            }
             checkAuthAndLoad();
         }
 
-        function handleLoginSubmit(e) {
+        async function handleLoginSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             let existing = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
@@ -425,10 +470,19 @@
                     email,
                     city: "India",
                     industry: "Corporate Hiring",
+                    borderStyle: "ring",
                     bio: `${companyName} — Verified hiring partner on RozgarHub.in.`,
                     avatar: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200"
                 };
                 localStorage.setItem('rozgarHubHrUser', JSON.stringify(existing));
+            }
+            await syncHrProfileToFirestore(existing);
+            if (window.db) {
+                try {
+                    await window.setDoc(window.doc(window.db, "registeredHRs", encodeURIComponent(email.toLowerCase())), {
+                        company: existing.company, hrName: existing.name, email, lastLogin: Date.now()
+                    }, { merge: true });
+                } catch(err) {}
             }
             checkAuthAndLoad();
         }
@@ -442,6 +496,7 @@
                     hrName: profileObj.name || "Verified HR",
                     city: profileObj.city || "India",
                     industry: profileObj.industry || "Corporate",
+                    borderStyle: profileObj.borderStyle || "ring",
                     bio: profileObj.bio || "",
                     avatar: profileObj.avatar || "",
                     updatedAt: Date.now()
@@ -484,6 +539,7 @@
             document.getElementById('hrHandleSub').innerText = `${u.name || "HR Manager"} • 📍 ${u.city || "India"} • 🏷️ ${u.industry || "Corporate"}`;
             document.getElementById('hrProfileBio').innerText = u.bio || `${u.company} — Verified hiring partner on RozgarHub.in.`;
             if (u.avatar) document.getElementById('hrProfileAvatar').src = u.avatar;
+            applyBorderClass(u.borderStyle || "ring");
         }
 
         function openEditProfileModal() {
@@ -492,7 +548,9 @@
             document.getElementById('profHrName').value = u.name || "";
             document.getElementById('profCity').value = u.city || "";
             document.getElementById('profIndustry').value = u.industry || "";
+            document.getElementById('profBorder').value = u.borderStyle || "ring";
             document.getElementById('profBio').value = u.bio || "";
+            document.getElementById('profAvatarFile').value = "";
             document.getElementById('editProfileModal').classList.remove('hidden');
         }
 
@@ -500,31 +558,61 @@
             document.getElementById('editProfileModal').classList.add('hidden');
         }
 
+        function readFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function saveHrProfile(e) {
             e.preventDefault();
             const btn = document.getElementById('saveProfBtn');
+            const statusEl = document.getElementById('profSaveStatus');
             btn.disabled = true;
+            statusEl.classList.remove('hidden');
+
             let u = JSON.parse(localStorage.getItem('rozgarHubHrUser')) || {};
             u.company = document.getElementById('profCompany').value.trim();
             u.name = document.getElementById('profHrName').value.trim();
             u.city = document.getElementById('profCity').value.trim();
             u.industry = document.getElementById('profIndustry').value.trim();
+            u.borderStyle = document.getElementById('profBorder').value;
             u.bio = document.getElementById('profBio').value.trim();
 
             const file = document.getElementById('profAvatarFile').files[0];
-            if (file && window.storage) {
-                const fileRef = window.ref(window.storage, `hr_avatars/${Date.now()}_${file.name}`);
-                const snap = await window.uploadBytes(fileRef, file);
-                u.avatar = await window.getDownloadURL(snap.ref);
+            if (file) {
+                let uploadedUrl = "";
+                if (window.storage) {
+                    try {
+                        const fileRef = window.ref(window.storage, `hr_avatars/${Date.now()}_${file.name}`);
+                        const snap = await window.uploadBytes(fileRef, file);
+                        uploadedUrl = await window.getDownloadURL(snap.ref);
+                    } catch (err) {}
+                }
+                if (!uploadedUrl && file.size < 900000) {
+                    uploadedUrl = await readFileAsDataUrl(file);
+                }
+                if (uploadedUrl) {
+                    u.avatar = uploadedUrl;
+                }
             }
 
-            localStorage.setItem('rozgarHubHrUser', JSON.stringify(u));
+            try {
+                localStorage.setItem('rozgarHubHrUser', JSON.stringify(u));
+            } catch (storageErr) {
+                // If base64 exceeds localStorage quota, still update UI & Firestore
+            }
+
             await syncHrProfileToFirestore(u);
             renderHrProfileHeader(u);
             loadHrFollowersCount(u.company);
             closeEditProfileModal();
-            alert("HR प्रोफाइल सफलतापूर्वक अपडेट हो गई है!");
+            statusEl.classList.add('hidden');
             btn.disabled = false;
+            alert("HR प्रोफाइल और फोटो सफलतापूर्वक अपडेट हो गई है!");
         }
 
         function switchHrTab(tab) {
