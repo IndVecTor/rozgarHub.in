@@ -55,9 +55,9 @@
         <div class="container mx-auto flex justify-between items-center p-4">
             <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| HR Hub</span></a>
             <div class="flex items-center space-x-3 md:space-x-4 text-xs md:text-sm font-bold">
-                <button onclick="toggleDarkMode()" class="bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-xl"><span id="themeIcon">🌙</span></button>
+                <button type="button" onclick="toggleDarkMode()" class="bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-xl"><span id="themeIcon">🌙</span></button>
                 <a href="index.html" class="bg-gray-100 dark:bg-gray-700 px-4 py-2.5 rounded-xl">&larr; होम पेज</a>
-                <button id="logoutBtn" onclick="handleLogout()" class="hidden bg-red-600 text-white px-4 py-2.5 rounded-xl">लॉग आउट</button>
+                <button type="button" id="logoutBtn" onclick="handleLogout()" class="hidden bg-red-600 text-white px-4 py-2.5 rounded-xl">लॉग आउट</button>
             </div>
         </div>
     </header>
@@ -71,8 +71,8 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400">लॉगिन करें या अपनी कंपनी रजिस्टर करें</p>
             </div>
             <div class="flex bg-gray-100 dark:bg-gray-700 p-1.5 rounded-2xl text-xs font-bold text-center">
-                <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-blue-700 shadow">लॉगिन</button>
-                <button onclick="switchAuthTab('signup')" id="tabSignup" class="flex-1 py-2.5 rounded-xl">रजिस्टर</button>
+                <button type="button" onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-blue-700 shadow">लॉगिन</button>
+                <button type="button" onclick="switchAuthTab('signup')" id="tabSignup" class="flex-1 py-2.5 rounded-xl">रजिस्टर</button>
             </div>
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
                 <div><label class="block font-bold mb-1">ईमेल</label><input type="email" id="loginEmail" required class="w-full border dark:border-gray-600 p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></div>
@@ -92,7 +92,7 @@
     <!-- DASHBOARD VIEW -->
     <main id="dashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-8">
         
-        <!-- INSTAGRAM-STYLE HR PROFILE HEADER (No Clipped Image + 3 Border Styles) -->
+        <!-- INSTAGRAM-STYLE HR PROFILE HEADER -->
         <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
             <div class="h-24 md:h-28 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 relative">
                 <span class="absolute top-3 right-3 bg-black/40 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-full">🔒 HR Contact Protected</span>
@@ -101,7 +101,6 @@
             <div class="px-6 pb-6 pt-4">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-4">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-                        <!-- Avatar Frame with 3 Selectable Borders -->
                         <div id="hrAvatarFrame" class="w-24 h-24 md:w-28 md:h-28 rounded-3xl border-ring shrink-0 transition-all">
                             <img id="hrProfileAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="Company Logo" class="w-full h-full object-cover object-top rounded-[20px] bg-white dark:bg-gray-900">
                         </div>
@@ -130,7 +129,6 @@
                     कंपनी का परिचय (Bio) यहाँ दिखेगा। अपनी कंपनी की प्रोफाइल एडिट करके बायो, शहर, बॉर्डर और फोटो अपडेट करें।
                 </p>
 
-                <!-- Instagram-Style Stats Counter Bar -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t dark:border-gray-700 text-center">
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
                         <div id="statTotalPosts" class="text-xl md:text-2xl font-black text-indigo-600 dark:text-indigo-400">0</div>
@@ -154,18 +152,18 @@
 
         <!-- NAVIGATION TABS -->
         <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
-            <button type="button" onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">📋 मेरी पोस्ट्स (Edit / Status)</button>
+            <button type="button" onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">📋 मेरी पोस्ट्स (Edit / Channel / Status)</button>
             <button type="button" onclick="resetFormForNewPost(); switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">➕ नई जॉब पब्लिश करें</button>
             <button type="button" onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">👥 उम्मीदवार आवेदन (Live ATS)</button>
         </div>
 
-        <!-- TAB 1: MY JOBS & EDIT / STATUS CONTROL -->
+        <!-- TAB 1: MY JOBS -->
         <div id="contentJobs" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4">
-            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">📋 मेरी पोस्ट की गई जॉब्स (Edit / Status / Delete)</h3>
+            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">📋 मेरी पोस्ट की गई जॉब्स</h3>
             <div id="hrJobsContainer" class="space-y-3"></div>
         </div>
 
-        <!-- TAB 2: PROFESSIONAL JOB POST / EDIT FORM -->
+        <!-- TAB 2: JOB POST / EDIT FORM -->
         <div id="contentPost" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border dark:border-gray-700 space-y-6 hidden">
             <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
                 <h2 id="formHeadingTitle" class="font-black text-base uppercase text-blue-700 dark:text-blue-400">📢 नई प्राइवेट जॉब पब्लिश करें (Full Details)</h2>
@@ -370,6 +368,33 @@
         </div>
     </div>
 
+    <!-- WHATSAPP CHANNEL BROADCAST MODAL -->
+    <div id="waChannelModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
+            <div class="bg-[#25D366] text-white p-5 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
+                    <h3 class="font-black text-base">WhatsApp Channel में पोस्ट करें</h3>
+                </div>
+                <button type="button" onclick="closeWaChannelModal()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 font-black text-xs">✕</button>
+            </div>
+            <div class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">आपका WhatsApp Channel लिंक (सेव रहेगा)</label>
+                    <input type="url" id="waChannelLinkInput" placeholder="https://whatsapp.com/channel/..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Channel मैसेज प्रीव्यू</label>
+                    <textarea id="waChannelMessagePreview" rows="8" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-900 font-medium leading-relaxed"></textarea>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="copyWaChannelText()" class="flex-1 py-3 px-4 rounded-2xl bg-gray-200 dark:bg-gray-700 font-black">📋 कॉपी करें</button>
+                    <button type="button" onclick="launchWhatsAppChannelShare()" class="flex-1 py-3 px-4 rounded-2xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-black shadow-lg">WhatsApp पर भेजें &rarr;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12"><p>&copy; 2026 RozgarHub.in • HR Hub</p></footer>
 
     <script>
@@ -477,13 +502,6 @@
                 localStorage.setItem('rozgarHubHrUser', JSON.stringify(existing));
             }
             await syncHrProfileToFirestore(existing);
-            if (window.db) {
-                try {
-                    await window.setDoc(window.doc(window.db, "registeredHRs", encodeURIComponent(email.toLowerCase())), {
-                        company: existing.company, hrName: existing.name, email, lastLogin: Date.now()
-                    }, { merge: true });
-                } catch(err) {}
-            }
             checkAuthAndLoad();
         }
 
@@ -595,17 +613,10 @@
                 if (!uploadedUrl && file.size < 900000) {
                     uploadedUrl = await readFileAsDataUrl(file);
                 }
-                if (uploadedUrl) {
-                    u.avatar = uploadedUrl;
-                }
+                if (uploadedUrl) u.avatar = uploadedUrl;
             }
 
-            try {
-                localStorage.setItem('rozgarHubHrUser', JSON.stringify(u));
-            } catch (storageErr) {
-                // If base64 exceeds localStorage quota, still update UI & Firestore
-            }
-
+            try { localStorage.setItem('rozgarHubHrUser', JSON.stringify(u)); } catch (storageErr) {}
             await syncHrProfileToFirestore(u);
             renderHrProfileHeader(u);
             loadHrFollowersCount(u.company);
@@ -783,17 +794,61 @@
             if (editId) {
                 await window.updateDoc(window.doc(window.db, "jobs", editId), payload);
                 alert("जॉब पोस्ट सफलतापूर्वक अपडेट हो गई है!");
+                resetFormForNewPost();
+                loadHrJobs();
+                switchHrTab('jobs');
             } else {
                 payload.status = "Active";
                 payload.createdAt = Date.now();
                 await window.addDoc(window.collection(window.db, "jobs"), payload);
-                alert("प्रोफेशनल जॉब पोस्ट सफलतापूर्वक लाइव हो गई है!");
+                resetFormForNewPost();
+                loadHrJobs();
+                switchHrTab('jobs');
+                openWaChannelModal(payload);
             }
 
-            resetFormForNewPost();
-            loadHrJobs();
-            switchHrTab('jobs');
             btn.disabled = false; stat.classList.add('hidden');
+        }
+
+        function openWaChannelModal(job) {
+            const savedChannelUrl = localStorage.getItem('rozgarHubWaChannelUrl') || "https://whatsapp.com/channel/";
+            document.getElementById('waChannelLinkInput').value = savedChannelUrl;
+
+            const siteLink = window.location.origin + "/index.html";
+            const msg = `📢 *नई नौकरी अपडेट - RozgarHub.in*\n\n` +
+                        `📌 *पद:* ${job.title}\n` +
+                        `🏢 *कंपनी:* ${job.company}\n` +
+                        `📍 *लोकेशन:* ${job.city}\n` +
+                        `🎓 *योग्यता:* ${job.qual || 'Any'} | *अनुभव:* ${job.exp || 'Fresher'}\n` +
+                        `💰 *वेतन:* ${job.salary}\n` +
+                        `👥 *पद:* ${job.openings || 1} | *अंतिम तिथि:* ${job.deadline || 'Open'}\n\n` +
+                        `आवेदन करने के लिए यहाँ क्लिक करें:\n${siteLink}`;
+
+            document.getElementById('waChannelMessagePreview').value = msg;
+            document.getElementById('waChannelModal').classList.remove('hidden');
+        }
+
+        function openChannelShareForExistingJob(docId) {
+            const j = hrJobsMap[docId];
+            if (j) openWaChannelModal(j);
+        }
+
+        function closeWaChannelModal() {
+            document.getElementById('waChannelModal').classList.add('hidden');
+        }
+
+        function copyWaChannelText() {
+            const txt = document.getElementById('waChannelMessagePreview');
+            txt.select();
+            navigator.clipboard.writeText(txt.value);
+            alert("Channel मैसेज कॉपी हो गया है!");
+        }
+
+        function launchWhatsAppChannelShare() {
+            const channelUrl = document.getElementById('waChannelLinkInput').value.trim();
+            if (channelUrl) localStorage.setItem('rozgarHubWaChannelUrl', channelUrl);
+            const fullText = document.getElementById('waChannelMessagePreview').value + (channelUrl ? `\n\n📢 *हमारा WhatsApp Channel जॉइन करें:* ${channelUrl}` : "");
+            window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
         }
 
         async function updateJobStatus(docId, newStatus) {
@@ -817,13 +872,14 @@
                         <div class="text-gray-500">📍 ${j.city} • 💰 ${j.salary} • HR: ${j.hrName || 'N/A'}</div>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="startEditJob('${d.id}')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-xl font-bold">✏️ Edit</button>
+                        <button type="button" onclick="openChannelShareForExistingJob('${d.id}')" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white px-3 py-2 rounded-xl font-bold transition">📢 Channel Post</button>
+                        <button type="button" onclick="startEditJob('${d.id}')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-xl font-bold">✏️ Edit</button>
                         <select onchange="updateJobStatus('${d.id}', this.value)" class="p-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 font-bold text-xs">
                             <option value="Active" ${(j.status || 'Active') === 'Active' ? 'selected' : ''}>🟢 Active</option>
                             <option value="Paused" ${j.status === 'Paused' ? 'selected' : ''}>🟡 Paused</option>
                             <option value="Closed" ${j.status === 'Closed' ? 'selected' : ''}>🔴 Closed</option>
                         </select>
-                        <button onclick="if(confirm('जॉब डिलीट करें?')) window.deleteDoc(window.doc(window.db, 'jobs', '${d.id}')).then(() => loadHrJobs());" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-xl font-bold">डिलीट</button>
+                        <button type="button" onclick="if(confirm('जॉब डिलीट करें?')) window.deleteDoc(window.doc(window.db, 'jobs', '${d.id}')).then(() => loadHrJobs());" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-xl font-bold">डिलीट</button>
                     </div>
                 </div>`;
             });
