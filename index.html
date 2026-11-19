@@ -9,7 +9,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -23,6 +23,9 @@
         window.db = getFirestore(app);
         window.collection = collection;
         window.getDocs = getDocs;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.deleteDoc = deleteDoc;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
@@ -94,7 +97,7 @@
                             <span>🏢</span> <span id="modalCompany">Company Name</span> <span class="text-[10px] bg-blue-100 dark:bg-blue-900/60 px-2 py-0.5 rounded-full">प्रोफाइल देखें ↗</span>
                         </button>
                     </div>
-                    <button id="modalFollowBtn" onclick="" class="px-4 py-2 rounded-2xl text-xs font-black border transition shadow-sm">+ Follow कंपनी</button>
+                    <button id="modalFollowBtn" onclick="" class="px-4 py-2 rounded-2xl text-xs font-black border transition shadow-sm">+ Follow</button>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
@@ -153,7 +156,6 @@
                 </div>
             </div>
 
-            <!-- Modal Footer with Real WhatsApp SVG Logo -->
             <div class="p-5 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-wrap justify-between items-center gap-3">
                 <button id="modalWhatsappBtn" onclick="" class="flex-1 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-3.5 px-5 rounded-2xl font-black text-xs shadow-lg transition flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
@@ -171,7 +173,7 @@
         <div class="bg-white dark:bg-gray-800 w-full max-w-xl rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
             <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 flex justify-between items-start">
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl font-black">🏢</div>
+                    <img id="pubHrAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="Logo" class="w-14 h-14 rounded-2xl object-cover border-2 border-white/30 bg-white/10">
                     <div>
                         <span class="bg-emerald-500/30 text-emerald-200 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase">Verified Employer</span>
                         <h3 id="pubHrCompany" class="text-xl font-black mt-1">Company Name</h3>
@@ -182,12 +184,14 @@
             </div>
 
             <div class="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+                <p id="pubHrBioText" class="text-xs text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 p-3.5 rounded-2xl border dark:border-gray-700"></p>
+
                 <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-900/60 p-4 rounded-2xl border dark:border-gray-700">
                     <div class="text-xs">
                         <p class="font-bold text-gray-500">कुल सक्रिय वैकेंसी</p>
                         <p id="pubHrJobCount" class="text-lg font-black text-blue-600 dark:text-blue-400">0 Jobs</p>
                     </div>
-                    <button id="pubHrFollowBtn" onclick="" class="px-5 py-2.5 rounded-2xl font-black text-xs shadow transition">+ Follow कंपनी</button>
+                    <button id="pubHrFollowBtn" onclick="" class="px-5 py-2.5 rounded-2xl font-black text-xs shadow transition">+ Follow</button>
                 </div>
 
                 <div class="space-y-3">
@@ -198,15 +202,14 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-gray-900 text-white text-center py-8 text-xs space-y-2 border-t border-gray-800">
         <p>&copy; 2026 RozgarHub.in • India's Premier Private Job Marketplace</p>
         <p class="text-gray-400">कंपनियों और नौकरी चाहने वालों का भरोसेमंद डिजिटल प्लेटफॉर्म।</p>
     </footer>
 
-    <!-- Script Logic -->
     <script>
         let allLoadedJobs = [];
+        let hrProfilesMap = {};
 
         function applyDeviceOrSavedTheme() {
             const root = document.getElementById('htmlRoot');
@@ -241,7 +244,7 @@
             return JSON.parse(localStorage.getItem('rozgarHubFollowedCompanies')) || [];
         }
 
-        function toggleFollowCompany(companyName) {
+        async function toggleFollowCompany(companyName) {
             let candidate = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
             if (!candidate || !candidate.email) {
                 alert("किसी कंपनी या HR को Follow करने के लिए कृपया पहले कैंडिडेट पोर्टल में लॉगिन/रजिस्टर करें!");
@@ -249,11 +252,28 @@
                 return;
             }
             let followed = getFollowedCompanies();
+            const safeCompKey = encodeURIComponent(companyName.trim().toLowerCase());
+            const safeCandKey = encodeURIComponent(candidate.email.trim().toLowerCase());
+            const followDocId = `${safeCompKey}__${safeCandKey}`;
+
             if (followed.includes(companyName)) {
                 followed = followed.filter(c => c !== companyName);
+                if (window.db) {
+                    try { await window.deleteDoc(window.doc(window.db, "follows", followDocId)); } catch(e) {}
+                }
                 alert(`आपने ${companyName} को Unfollow कर दिया है।`);
             } else {
                 followed.push(companyName);
+                if (window.db) {
+                    try {
+                        await window.setDoc(window.doc(window.db, "follows", followDocId), {
+                            company: companyName.trim(),
+                            candidateEmail: candidate.email.trim(),
+                            candidateName: candidate.name || "Candidate",
+                            followedAt: Date.now()
+                        });
+                    } catch(e) {}
+                }
                 alert(`अब आप ${companyName} को Follow कर रहे हैं! इनकी सभी नई पोस्ट आपके कैंडिडेट पोर्टल के 'Following' सेक्शन में दिखेंगी।`);
             }
             localStorage.setItem('rozgarHubFollowedCompanies', JSON.stringify(followed));
@@ -276,9 +296,15 @@
 
         window.addEventListener('firebase-ready', async () => {
             try {
+                const profSnap = await window.getDocs(window.collection(window.db, "hrProfiles"));
+                profSnap.forEach(d => {
+                    const p = d.data();
+                    if (p.company) hrProfilesMap[p.company.trim().toLowerCase()] = p;
+                });
+
                 const querySnapshot = await window.getDocs(window.collection(window.db, "jobs"));
                 let jobs = [];
-                querySnapshot.forEach((doc) => { jobs.push({ id: doc.id, ...doc.data() }); });
+                querySnapshot.forEach((docSnap) => { jobs.push({ id: docSnap.id, ...docSnap.data() }); });
                 jobs.sort((a, b) => b.createdAt - a.createdAt);
                 allLoadedJobs = jobs.filter(j => (j.status || "Active") === "Active");
                 renderJobs(allLoadedJobs);
@@ -314,7 +340,6 @@
                             </div>
                             <h3 class="font-black text-lg text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${job.title}</h3>
                             
-                            <!-- Clickable HR / Company Profile Header -->
                             <div class="flex justify-between items-center gap-2" onclick="event.stopPropagation()">
                                 <button onclick="openHrPublicProfile('${job.company.replace(/'/g, "\\'")}', '${(job.hrName || 'Verified HR').replace(/'/g, "\\'")}')" class="font-bold text-blue-600 dark:text-blue-400 text-xs hover:underline text-left truncate">
                                     🏢 ${job.company} • 📍 ${job.city}
@@ -332,7 +357,6 @@
                                 <span class="font-black text-sm text-green-600 dark:text-green-400">💰 ${job.salary}</span>
                             </div>
                             <div class="flex items-center gap-2" onclick="event.stopPropagation()">
-                                <!-- Real WhatsApp SVG Icon -->
                                 <button onclick="shareOnWhatsApp(${index})" title="WhatsApp पर शेयर करें" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white p-2.5 rounded-2xl transition shadow-sm flex items-center justify-center">
                                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
                                 </button>
@@ -394,8 +418,11 @@
         }
 
         function openHrPublicProfile(companyName, hrName) {
+            const prof = hrProfilesMap[companyName.trim().toLowerCase()] || {};
             document.getElementById('pubHrCompany').innerText = companyName;
-            document.getElementById('pubHrPerson').innerText = `Recruiter / HR: ${hrName} (संपर्क गोपनीय)`;
+            document.getElementById('pubHrPerson').innerText = `HR: ${prof.hrName || hrName} • 📍 ${prof.city || "India"} (संपर्क गोपनीय)`;
+            document.getElementById('pubHrBioText').innerText = prof.bio || `${companyName} — Verified employer on RozgarHub.in.`;
+            if (prof.avatar) document.getElementById('pubHrAvatar').src = prof.avatar;
 
             const companyJobs = allLoadedJobs.filter(j => j.company === companyName);
             document.getElementById('pubHrJobCount').innerText = `${companyJobs.length} Active Jobs`;

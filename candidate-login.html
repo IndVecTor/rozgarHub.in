@@ -128,7 +128,6 @@
             </div>
         </div>
 
-        <!-- Navigation Tabs (Includes New Following Tab) -->
         <div class="flex flex-wrap gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-bold">
             <button onclick="switchDashTab('applied')" id="dTabApplied" class="px-5 py-3 rounded-2xl bg-indigo-600 text-white shadow-lg transition-all font-black flex items-center gap-2"><span>📥</span> अप्लाइड जॉब्स</button>
             <button onclick="switchDashTab('following')" id="dTabFollowing" class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all flex items-center gap-2"><span>⭐</span> Following कंपनियों की पोस्ट</button>
@@ -137,13 +136,11 @@
             <button onclick="switchDashTab('vault')" id="dTabVault" class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all flex items-center gap-2"><span>📁</span> डॉक्यूमेंट वॉल्ट</button>
         </div>
 
-        <!-- TAB 1: APPLIED JOBS -->
         <div id="contentApplied" class="space-y-4">
             <h3 class="font-black text-sm uppercase text-slate-500 dark:text-slate-400 tracking-wider">📋 आपके आवेदन और लाइव प्रोग्रेस</h3>
             <div id="appliedJobsListContainer" class="space-y-4"></div>
         </div>
 
-        <!-- TAB 2: FOLLOWING COMPANIES FEED -->
         <div id="contentFollowing" class="space-y-4 hidden">
             <div class="flex flex-wrap justify-between items-center gap-2">
                 <h3 class="font-black text-sm uppercase text-slate-500 dark:text-slate-400 tracking-wider">⭐ आपकी फॉलो की गई कंपनियों / HR की लाइव पोस्ट</h3>
@@ -154,7 +151,6 @@
             </div>
         </div>
 
-        <!-- TAB 3: INSTANT APPLY -->
         <div id="contentJobs" class="space-y-4 hidden">
             <h3 class="font-black text-sm uppercase text-slate-500 dark:text-slate-400 tracking-wider">🎯 सभी लाइव कॉर्पोरेट जॉब्स (1-Click Instant Apply)</h3>
             <div id="instantJobsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -162,7 +158,6 @@
             </div>
         </div>
 
-        <!-- TAB 4: PROFILE EDIT -->
         <div id="contentProfile" class="space-y-4 hidden">
             <div class="glass-card p-8 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
                 <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400 border-b pb-4">👤 प्रोफाइल और फोटो अपडेट</h3>
@@ -178,7 +173,6 @@
             </div>
         </div>
 
-        <!-- TAB 5: DOCUMENT VAULT -->
         <div id="contentVault" class="space-y-4 hidden">
             <div class="glass-card p-8 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
                 <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">📁 डिजिटल डॉक्यूमेंट लॉकर (Secure Vault)</h3>
@@ -379,7 +373,22 @@
             container.innerHTML = html;
         }
 
-        window.addEventListener('firebase-ready', () => {});
+        window.addEventListener('firebase-ready', async () => {
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            if (user && user.email && window.db) {
+                try {
+                    const fSnap = await window.getDocs(window.collection(window.db, "follows"));
+                    let followedList = JSON.parse(localStorage.getItem('rozgarHubFollowedCompanies')) || [];
+                    fSnap.forEach(d => {
+                        const data = d.data();
+                        if ((data.candidateEmail || "").toLowerCase() === user.email.trim().toLowerCase() && data.company) {
+                            if (!followedList.includes(data.company)) followedList.push(data.company);
+                        }
+                    });
+                    localStorage.setItem('rozgarHubFollowedCompanies', JSON.stringify(followedList));
+                } catch(e) {}
+            }
+        });
 
         async function loadInstantApplyJobsFromFirebase(onlyFollowing = false) {
             const container = document.getElementById(onlyFollowing ? 'followingJobsListContainer' : 'instantJobsListContainer');
@@ -422,15 +431,31 @@
             }
         }
 
-        function instantApply(title, org) {
+        async function instantApply(title, org) {
             let applied = JSON.parse(localStorage.getItem('rozgarHubAppliedJobs')) || [];
-            if (applied.some(j => j.title === title)) {
+            if (applied.some(j => j.title === title && j.org === org)) {
                 alert("आप इस जॉब के लिए पहले ही आवेदन कर चुके हैं!");
                 return;
             }
+            let user = JSON.parse(localStorage.getItem('rozgarHubCandidateUser')) || {};
             applied.unshift({ title, org, date: "आज", status: "Submitted" });
             localStorage.setItem('rozgarHubAppliedJobs', JSON.stringify(applied));
-            alert("सफलतापूर्वक 1-क्लिक आवेदन हो गया है!");
+
+            if (window.db) {
+                try {
+                    await window.addDoc(window.collection(window.db, "applications"), {
+                        jobTitle: title,
+                        company: org,
+                        candidateName: user.name || "Candidate",
+                        candidateEmail: user.email || "",
+                        candidateQual: user.qual || "Graduate",
+                        status: "Submitted",
+                        appliedAt: Date.now()
+                    });
+                } catch (e) {}
+            }
+
+            alert("सफलतापूर्वक 1-क्लिक आवेदन हो गया है और HR के ATS में भेज दिया गया है!");
             renderAppliedJobsWithTimeline();
             switchDashTab('applied');
         }

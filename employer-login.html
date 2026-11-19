@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="hi" id="htmlRoot">
+<html lang="hi" id="htmlRoot" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate HR & ATS Hub - RozgarHub.in</title>
+    <title>Instagram-Style HR & ATS Hub - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -28,16 +28,21 @@
         window.deleteDoc = deleteDoc;
         window.doc = doc;
         window.updateDoc = updateDoc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
         window.ref = ref;
         window.uploadBytes = uploadBytes;
         window.getDownloadURL = getDownloadURL;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
+    <style>
+        .glass-modal { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); }
+    </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
-    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> | HR Hub</a>
+            <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| HR Hub</span></a>
             <div class="flex items-center space-x-3 md:space-x-4 text-xs md:text-sm font-bold">
                 <button onclick="toggleDarkMode()" class="bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-xl"><span id="themeIcon">🌙</span></button>
                 <a href="index.html" class="bg-gray-100 dark:bg-gray-700 px-4 py-2.5 rounded-xl">&larr; होम पेज</a>
@@ -74,26 +79,81 @@
     </main>
 
     <!-- DASHBOARD VIEW -->
-    <main id="dashboardView" class="container mx-auto px-4 py-10 max-w-5xl flex-grow hidden space-y-8">
-        <div class="bg-gradient-to-r from-yellow-500 to-amber-600 text-gray-900 p-6 md:p-8 rounded-3xl shadow-xl flex justify-between items-center">
-            <div>
-                <h1 id="hrWelcomeName" class="text-xl md:text-2xl font-black">नमस्ते!</h1>
-                <p id="hrSubInfo" class="text-xs font-bold">प्रोफेशनल जॉब पोस्टिंग और ATS सिस्टम</p>
+    <main id="dashboardView" class="container mx-auto px-4 py-8 max-w-5xl flex-grow hidden space-y-8">
+        
+        <!-- INSTAGRAM-STYLE HR PROFILE HEADER -->
+        <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
+            <!-- Cover Banner -->
+            <div class="h-28 md:h-36 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 relative">
+                <span class="absolute top-3 right-3 bg-black/40 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-full">🔒 HR Contact Protected</span>
             </div>
-            <div class="bg-white/25 backdrop-blur p-4 rounded-2xl text-center">
-                <div id="activeJobsCount" class="text-xl font-black">0</div>
-                <div class="text-[10px] font-bold">Live Jobs</div>
-            </div>
-        </div>
 
+            <!-- Profile Content -->
+            <div class="px-6 pb-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between -mt-12 md:-mt-14 gap-4 mb-4">
+                    <!-- Avatar + Company Name -->
+                    <div class="flex flex-col sm:flex-row sm:items-end gap-4">
+                        <div class="w-24 h-24 md:w-28 md:h-28 rounded-3xl bg-white dark:bg-gray-900 p-1.5 shadow-2xl border-2 border-white dark:border-gray-800 shrink-0">
+                            <img id="hrProfileAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="Company Logo" class="w-full h-full object-cover rounded-2xl">
+                        </div>
+                        <div class="space-y-1 pt-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h1 id="hrCompanyTitle" class="text-xl md:text-2xl font-black text-gray-900 dark:text-white">Company Name</h1>
+                                <span class="bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300 text-[10px] font-black px-2.5 py-0.5 rounded-full">✓ Verified Employer</span>
+                            </div>
+                            <p id="hrHandleSub" class="text-xs font-bold text-gray-500 dark:text-gray-400">HR Manager • 📍 Location • 🏷️ Industry</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons (Instagram Style) -->
+                    <div class="flex items-center gap-2 text-xs font-bold">
+                        <button onclick="openEditProfileModal()" class="px-4 py-2.5 rounded-2xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border dark:border-gray-600 transition">✏️ Edit Profile</button>
+                        <button onclick="resetFormForNewPost(); switchHrTab('post')" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white shadow transition">+ New Job</button>
+                    </div>
+                </div>
+
+                <!-- Bio -->
+                <p id="hrProfileBio" class="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl mb-6">
+                    कंपनी का परिचय (Bio) यहाँ दिखेगा। अपनी कंपनी की प्रोफाइल एडिट करके बायो, शहर और इंडस्ट्री अपडेट करें।
+                </p>
+
+                <!-- Instagram-Style Stats Counter Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t dark:border-gray-700 text-center">
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <div id="statTotalPosts" class="text-xl md:text-2xl font-black text-indigo-600 dark:text-indigo-400">0</div>
+                        <div class="text-[11px] font-bold text-gray-500">Posts</div>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <div id="statFollowersCount" class="text-xl md:text-2xl font-black text-pink-600 dark:text-pink-400">0</div>
+                        <div class="text-[11px] font-bold text-gray-500">Followers</div>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <div id="activeJobsCount" class="text-xl md:text-2xl font-black text-emerald-600 dark:text-emerald-400">0</div>
+                        <div class="text-[11px] font-bold text-gray-500">Active Jobs</div>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
+                        <div id="statTotalApplicants" class="text-xl md:text-2xl font-black text-amber-600 dark:text-amber-400">0</div>
+                        <div class="text-[11px] font-bold text-gray-500">Applicants</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAVIGATION TABS -->
         <div class="flex flex-wrap gap-2 border-b dark:border-gray-700 pb-3 text-xs font-bold">
-            <button onclick="resetFormForNewPost(); switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">➕ नई जॉब पब्लिश करें</button>
-            <button onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">📋 मेरी जॉब्स (Edit / Status)</button>
-            <button onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">👥 उम्मीदवार (ATS)</button>
+            <button onclick="switchHrTab('jobs')" id="hrTabJobs" class="px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black">📋 मेरी पोस्ट्स (Edit / Status)</button>
+            <button onclick="resetFormForNewPost(); switchHrTab('post')" id="hrTabPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">➕ नई जॉब पब्लिश करें</button>
+            <button onclick="switchHrTab('applicants')" id="hrTabApplicants" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700">👥 उम्मीदवार आवेदन (Live ATS)</button>
         </div>
 
-        <!-- TAB 1: PROFESSIONAL JOB POST / EDIT FORM -->
-        <div id="contentPost" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border dark:border-gray-700 space-y-6">
+        <!-- TAB 1: MY JOBS & EDIT / STATUS CONTROL -->
+        <div id="contentJobs" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4">
+            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">📋 मेरी पोस्ट की गई जॉब्स (Edit / Status / Delete)</h3>
+            <div id="hrJobsContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- TAB 2: PROFESSIONAL JOB POST / EDIT FORM -->
+        <div id="contentPost" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border dark:border-gray-700 space-y-6 hidden">
             <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
                 <h2 id="formHeadingTitle" class="font-black text-base uppercase text-blue-700 dark:text-blue-400">📢 नई प्राइवेट जॉब पब्लिश करें (Full Details)</h2>
                 <button type="button" id="cancelEditBtn" onclick="resetFormForNewPost()" class="hidden text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded-xl font-bold">✕ Edit रद्द करें</button>
@@ -103,7 +163,6 @@
                 <input type="hidden" id="editJobDocId" value="">
                 <input type="hidden" id="existingPosterUrl" value="">
 
-                <!-- Section 1: Core Info -->
                 <div class="space-y-3">
                     <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">1. मुख्य जॉब विवरण</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,7 +193,6 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Salary & Work Schedule -->
                 <div class="space-y-3 border-t dark:border-gray-700 pt-4">
                     <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">2. वेतन और कार्यशैली</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -166,7 +224,6 @@
                     </div>
                 </div>
 
-                <!-- Section 3: Requirements & Vacancies -->
                 <div class="space-y-3 border-t dark:border-gray-700 pt-4">
                     <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">3. योग्यता, अनुभव और रिक्तियां</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -212,7 +269,6 @@
                     </div>
                 </div>
 
-                <!-- Section 4: Private HR Contact & Description -->
                 <div class="space-y-3 border-t dark:border-gray-700 pt-4">
                     <h3 class="font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider text-[11px]">4. HR विवरण और विस्तृत जानकारी</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -231,7 +287,6 @@
                     </div>
                 </div>
 
-                <!-- Poster Upload -->
                 <div class="p-4 bg-blue-50 dark:bg-gray-700/60 border border-blue-200 dark:border-gray-600 rounded-2xl space-y-2">
                     <label class="block font-bold text-xs">🖥️ जॉब पोस्टर / बैनर अपलोड करें (Optional)</label>
                     <input type="file" id="jPosterFile" accept="image/*" class="w-full text-xs">
@@ -242,18 +297,54 @@
             </form>
         </div>
 
-        <!-- TAB 2: MY JOBS & EDIT / STATUS CONTROL -->
-        <div id="contentJobs" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4 hidden">
-            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">📋 मेरी पोस्ट की गई जॉब्स (Edit / Status / Delete)</h3>
-            <div id="hrJobsContainer" class="space-y-3"></div>
-        </div>
-
-        <!-- TAB 3: ATS APPLICANTS -->
+        <!-- TAB 3: ATS APPLICANTS (LIVE FROM FIRESTORE) -->
         <div id="contentApplicants" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 space-y-4 hidden">
-            <h3 class="font-black uppercase border-b dark:border-gray-700 pb-2">👥 उम्मीदवार आवेदन (ATS)</h3>
-            <div id="hrApplicantsContainer" class="space-y-3"><p class="text-xs text-gray-400">अभी कोई नया आवेदन नहीं आया है।</p></div>
+            <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2">
+                <h3 class="font-black uppercase">👥 उम्मीदवार आवेदन (Live Firebase ATS)</h3>
+                <button onclick="loadHrApplicants()" class="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-xl font-bold">🔄 रिफ्रेश करें</button>
+            </div>
+            <div id="hrApplicantsContainer" class="space-y-3"><p class="text-xs text-gray-400">आवेदन लोड हो रहे हैं...</p></div>
         </div>
     </main>
+
+    <!-- EDIT HR PROFILE MODAL -->
+    <div id="editProfileModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
+            <div class="flex justify-between items-center p-5 border-b dark:border-gray-700">
+                <h3 class="font-black text-base">✏️ HR / कंपनी प्रोफाइल एडिट करें</h3>
+                <button onclick="closeEditProfileModal()" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 font-black text-xs">✕</button>
+            </div>
+            <form onsubmit="saveHrProfile(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">कंपनी का नाम *</label>
+                    <input type="text" id="profCompany" required class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold mb-1">HR का नाम / पद *</label>
+                        <input type="text" id="profHrName" required class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">शहर / लोकेशन</label>
+                        <input type="text" id="profCity" placeholder="जैसे: Azamgarh, UP" class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">इंडस्ट्री / सेक्टर</label>
+                    <input type="text" id="profIndustry" placeholder="जैसे: IT, Retail & Corporate Hiring" class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">कंपनी Bio (परिचय)</label>
+                    <textarea id="profBio" rows="3" placeholder="अपनी कंपनी और हायरिंग के बारे में 2-3 लाइन लिखें..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></textarea>
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">कंपनी लोगो / प्रोफाइल फोटो</label>
+                    <input type="file" id="profAvatarFile" accept="image/*" class="w-full text-xs">
+                </div>
+                <button type="submit" id="saveProfBtn" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-lg">प्रोफाइल सेव करें 💾</button>
+            </form>
+        </div>
+    </div>
 
     <footer class="bg-gray-900 text-white text-center py-6 text-xs mt-12"><p>&copy; 2026 RozgarHub.in • HR Hub</p></footer>
 
@@ -302,57 +393,220 @@
                 document.getElementById('tabLogin').className = "flex-1 py-2.5 rounded-xl";
             }
         }
+
         function handleSignupSubmit(e) {
             e.preventDefault();
             const company = document.getElementById('regCompany').value.trim();
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
-            localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company, name, email }));
+            const userData = {
+                company,
+                name,
+                email,
+                city: "India",
+                industry: "Corporate Hiring",
+                bio: `${company} — Verified hiring partner on RozgarHub.in.`,
+                avatar: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200"
+            };
+            localStorage.setItem('rozgarHubHrUser', JSON.stringify(userData));
+            syncHrProfileToFirestore(userData);
             checkAuthAndLoad();
         }
+
         function handleLoginSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             let existing = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
             if (!existing || existing.email !== email) {
                 const companyName = email.split('@')[0] || "Employer";
-                localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company: companyName, name: companyName, email }));
+                existing = {
+                    company: companyName,
+                    name: companyName,
+                    email,
+                    city: "India",
+                    industry: "Corporate Hiring",
+                    bio: `${companyName} — Verified hiring partner on RozgarHub.in.`,
+                    avatar: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200"
+                };
+                localStorage.setItem('rozgarHubHrUser', JSON.stringify(existing));
             }
             checkAuthAndLoad();
         }
+
+        async function syncHrProfileToFirestore(profileObj) {
+            if (!window.db || !profileObj.company) return;
+            try {
+                const safeId = encodeURIComponent(profileObj.company.trim().toLowerCase());
+                await window.setDoc(window.doc(window.db, "hrProfiles", safeId), {
+                    company: profileObj.company,
+                    hrName: profileObj.name || "Verified HR",
+                    city: profileObj.city || "India",
+                    industry: profileObj.industry || "Corporate",
+                    bio: profileObj.bio || "",
+                    avatar: profileObj.avatar || "",
+                    updatedAt: Date.now()
+                }, { merge: true });
+            } catch (e) {}
+        }
+
         function handleLogout() {
             localStorage.removeItem('rozgarHubHrUser');
             location.reload();
         }
+
         window.onload = checkAuthAndLoad;
+
         function checkAuthAndLoad() {
             let u = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
             if (u && u.email) {
                 document.getElementById('authView').classList.add('hidden');
                 document.getElementById('dashboardView').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('hrWelcomeName').innerText = `नमस्ते, ${u.company}!`;
-                document.getElementById('jCompany').value = u.company;
+
+                renderHrProfileHeader(u);
+                document.getElementById('jCompany').value = u.company || "";
                 if (u.name) document.getElementById('jHrName').value = u.name;
-                if (window.db) loadHrJobs();
+
+                if (window.db) {
+                    loadHrJobs();
+                    loadHrFollowersCount(u.company);
+                    loadHrApplicants();
+                }
             } else {
                 document.getElementById('authView').classList.remove('hidden');
                 document.getElementById('dashboardView').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
             }
         }
+
+        function renderHrProfileHeader(u) {
+            document.getElementById('hrCompanyTitle').innerText = u.company || "Company Name";
+            document.getElementById('hrHandleSub').innerText = `${u.name || "HR Manager"} • 📍 ${u.city || "India"} • 🏷️ ${u.industry || "Corporate"}`;
+            document.getElementById('hrProfileBio').innerText = u.bio || `${u.company} — Verified hiring partner on RozgarHub.in.`;
+            if (u.avatar) document.getElementById('hrProfileAvatar').src = u.avatar;
+        }
+
+        function openEditProfileModal() {
+            let u = JSON.parse(localStorage.getItem('rozgarHubHrUser')) || {};
+            document.getElementById('profCompany').value = u.company || "";
+            document.getElementById('profHrName').value = u.name || "";
+            document.getElementById('profCity').value = u.city || "";
+            document.getElementById('profIndustry').value = u.industry || "";
+            document.getElementById('profBio').value = u.bio || "";
+            document.getElementById('editProfileModal').classList.remove('hidden');
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').classList.add('hidden');
+        }
+
+        async function saveHrProfile(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveProfBtn');
+            btn.disabled = true;
+            let u = JSON.parse(localStorage.getItem('rozgarHubHrUser')) || {};
+            u.company = document.getElementById('profCompany').value.trim();
+            u.name = document.getElementById('profHrName').value.trim();
+            u.city = document.getElementById('profCity').value.trim();
+            u.industry = document.getElementById('profIndustry').value.trim();
+            u.bio = document.getElementById('profBio').value.trim();
+
+            const file = document.getElementById('profAvatarFile').files[0];
+            if (file && window.storage) {
+                const fileRef = window.ref(window.storage, `hr_avatars/${Date.now()}_${file.name}`);
+                const snap = await window.uploadBytes(fileRef, file);
+                u.avatar = await window.getDownloadURL(snap.ref);
+            }
+
+            localStorage.setItem('rozgarHubHrUser', JSON.stringify(u));
+            await syncHrProfileToFirestore(u);
+            renderHrProfileHeader(u);
+            loadHrFollowersCount(u.company);
+            closeEditProfileModal();
+            alert("HR प्रोफाइल सफलतापूर्वक अपडेट हो गई है!");
+            btn.disabled = false;
+        }
+
         function switchHrTab(tab) {
             ['post', 'jobs', 'applicants'].forEach(t => {
                 document.getElementById('content' + capitalize(t)).classList.toggle('hidden', t !== tab);
                 let btn = document.getElementById('hrTab' + capitalize(t));
                 btn.className = (t === tab) ? "px-4 py-2.5 rounded-2xl bg-yellow-500 text-gray-900 shadow font-black" : "px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700";
             });
+            if (tab === 'applicants') loadHrApplicants();
         }
+
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
         window.addEventListener('firebase-ready', () => {
             let u = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
-            if (u && u.email) loadHrJobs();
+            if (u && u.email) {
+                syncHrProfileToFirestore(u);
+                loadHrJobs();
+                loadHrFollowersCount(u.company);
+                loadHrApplicants();
+            }
         });
+
+        async function loadHrFollowersCount(companyName) {
+            if (!window.db || !companyName) return;
+            try {
+                const snap = await window.getDocs(window.collection(window.db, "follows"));
+                let followerCount = 0;
+                snap.forEach(d => {
+                    const data = d.data();
+                    if ((data.company || "").toLowerCase() === companyName.trim().toLowerCase()) {
+                        followerCount++;
+                    }
+                });
+                document.getElementById('statFollowersCount').innerText = followerCount;
+            } catch (e) {}
+        }
+
+        async function loadHrApplicants() {
+            const container = document.getElementById('hrApplicantsContainer');
+            if (!window.db) return;
+            let u = JSON.parse(localStorage.getItem('rozgarHubHrUser')) || {};
+            try {
+                const snap = await window.getDocs(window.collection(window.db, "applications"));
+                let apps = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    if (!u.company || (data.company || "").toLowerCase() === u.company.trim().toLowerCase()) {
+                        apps.push({ id: d.id, ...data });
+                    }
+                });
+                document.getElementById('statTotalApplicants').innerText = apps.length;
+                if (apps.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-gray-400 py-4">अभी तक कोई आवेदन नहीं आया है।</p>`;
+                    return;
+                }
+                let html = "";
+                apps.forEach(appItem => {
+                    html += `<div class="p-4 border dark:border-gray-700 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-gray-50 dark:bg-gray-700/40 gap-3">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm">${appItem.candidateName || "Candidate"} • <span class="text-indigo-600 dark:text-indigo-400">${appItem.jobTitle}</span></div>
+                            <div class="text-gray-500">📧 ${appItem.candidateEmail || "N/A"} • 🎓 ${appItem.candidateQual || "Graduate"}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <select onchange="updateAppStatus('${appItem.id}', this.value)" class="p-2 rounded-xl border dark:border-gray-600 bg-white dark:bg-gray-800 font-bold text-xs">
+                                <option value="Submitted" ${appItem.status === 'Submitted' ? 'selected' : ''}>📩 Submitted</option>
+                                <option value="Shortlisted" ${appItem.status === 'Shortlisted' ? 'selected' : ''}>⭐ Shortlisted</option>
+                                <option value="Rejected" ${appItem.status === 'Rejected' ? 'selected' : ''}>✕ Rejected</option>
+                            </select>
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = `<p class="text-xs text-red-500">आवेदन लोड करने में समस्या आई।</p>`;
+            }
+        }
+
+        async function updateAppStatus(appId, newStatus) {
+            await window.updateDoc(window.doc(window.db, "applications", appId), { status: newStatus });
+            alert(`आवेदन का स्टेटस "${newStatus}" अपडेट हो गया है!`);
+        }
 
         function startEditJob(docId) {
             const j = hrJobsMap[docId];
@@ -461,12 +715,13 @@
 
         async function loadHrJobs() {
             let snap = await window.getDocs(window.collection(window.db, "jobs"));
-            let html = "", count = 0;
+            let html = "", activeCount = 0, totalPosts = 0;
             hrJobsMap = {};
             snap.forEach(d => {
                 let j = d.data();
                 hrJobsMap[d.id] = j;
-                if ((j.status || "Active") === "Active") count++;
+                totalPosts++;
+                if ((j.status || "Active") === "Active") activeCount++;
                 html += `<div class="p-4 border dark:border-gray-700 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-gray-50 dark:bg-gray-700/40 gap-3">
                     <div class="space-y-1">
                         <span class="px-2 py-0.5 rounded font-bold text-[10px] ${j.status === 'Closed' ? 'bg-red-100 text-red-700' : (j.status === 'Paused' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700')}">${j.status || 'Active'}</span>
@@ -484,7 +739,8 @@
                     </div>
                 </div>`;
             });
-            document.getElementById('activeJobsCount').innerText = count;
+            document.getElementById('statTotalPosts').innerText = totalPosts;
+            document.getElementById('activeJobsCount').innerText = activeCount;
             document.getElementById('hrJobsContainer').innerHTML = html || "<p class='text-xs text-gray-400'>कोई जॉब पोस्ट नहीं की गई है।</p>";
         }
     </script>
