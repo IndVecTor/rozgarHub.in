@@ -51,6 +51,7 @@
             <div class="text-center space-y-2">
                 <span class="text-4xl">🏢</span>
                 <h1 class="text-xl font-black">HR एप्लॉयर पोर्टल</h1>
+                <p class="text-xs text-gray-500 dark:text-gray-400">लॉगिन करें या अपनी कंपनी रजिस्टर करें</p>
             </div>
             <div class="flex bg-gray-100 dark:bg-gray-700 p-1.5 rounded-2xl text-xs font-bold text-center">
                 <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-blue-700 shadow">लॉगिन</button>
@@ -124,22 +125,64 @@
     <script>
         function toggleDarkMode() { document.getElementById('htmlRoot').classList.toggle('dark'); }
         function switchAuthTab(t) {
-            if(t==='login') { document.getElementById('loginForm').classList.remove('hidden'); document.getElementById('signupForm').classList.add('hidden'); }
-            else { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('signupForm').classList.remove('hidden'); }
+            if(t==='login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('signupForm').classList.add('hidden');
+                document.getElementById('tabLogin').className = "flex-1 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-blue-700 shadow";
+                document.getElementById('tabSignup').className = "flex-1 py-2.5 rounded-xl";
+            } else {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('signupForm').classList.remove('hidden');
+                document.getElementById('tabSignup').className = "flex-1 py-2.5 rounded-xl bg-white dark:bg-gray-800 text-blue-700 shadow";
+                document.getElementById('tabLogin').className = "flex-1 py-2.5 rounded-xl";
+            }
         }
-        function handleSignupSubmit(e) { e.preventDefault(); localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company: document.getElementById('regCompany').value, name: document.getElementById('regName').value, email: document.getElementById('regEmail').value })); checkAuthAndLoad(); }
-        function handleLoginSubmit(e) { e.preventDefault(); localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company: "Tech Solutions", email: document.getElementById('loginEmail').value })); checkAuthAndLoad(); }
-        function handleLogout() { localStorage.removeItem('rozgarHubHrUser'); location.reload(); }
+        function handleSignupSubmit(e) {
+            e.preventDefault();
+            const company = document.getElementById('regCompany').value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company, name, email }));
+            checkAuthAndLoad();
+        }
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            let existing = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
+            if (!existing || existing.email !== email) {
+                const companyName = email.split('@')[0] || "Employer";
+                localStorage.setItem('rozgarHubHrUser', JSON.stringify({ company: companyName, email }));
+            }
+            checkAuthAndLoad();
+        }
+        function handleLogout() {
+            localStorage.removeItem('rozgarHubHrUser');
+            location.reload();
+        }
         window.onload = checkAuthAndLoad;
         function checkAuthAndLoad() {
             let u = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
-            if(u) { document.getElementById('authView').classList.add('hidden'); document.getElementById('dashboardView').classList.remove('hidden'); document.getElementById('logoutBtn').classList.remove('hidden'); document.getElementById('hrWelcomeName').innerText = `नमस्ते, ${u.company}!`; document.getElementById('jCompany').value = u.company; }
+            if (u && u.email) {
+                document.getElementById('authView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('hrWelcomeName').innerText = `नमस्ते, ${u.company}!`;
+                document.getElementById('jCompany').value = u.company;
+                if (window.db) loadHrJobs();
+            } else {
+                document.getElementById('authView').classList.remove('hidden');
+                document.getElementById('dashboardView').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
+            }
         }
         function switchHrTab(tab) {
             ['post', 'jobs', 'applicants'].forEach(t => { document.getElementById('content' + capitalize(t)).classList.toggle('hidden', t !== tab); });
         }
         function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-        window.addEventListener('firebase-ready', loadHrJobs);
+        window.addEventListener('firebase-ready', () => {
+            let u = JSON.parse(localStorage.getItem('rozgarHubHrUser'));
+            if (u && u.email) loadHrJobs();
+        });
 
         async function publishJob(e) {
             e.preventDefault();
@@ -148,9 +191,9 @@
             btn.disabled = true; stat.classList.remove('hidden');
             let posterUrl = "";
             let file = document.getElementById('jPosterFile').files[0];
-            if(file) {
-                let ref = window.ref(window.storage, `job_posters/${Date.now()}_${file.name}`);
-                let snap = await window.uploadBytes(ref, file);
+            if (file) {
+                let fileRef = window.ref(window.storage, `job_posters/${Date.now()}_${file.name}`);
+                let snap = await window.uploadBytes(fileRef, file);
                 posterUrl = await window.getDownloadURL(snap.ref);
             }
             await window.addDoc(window.collection(window.db, "jobs"), {
@@ -176,7 +219,7 @@
                 let j = d.data(); count++;
                 html += `<div class="p-4 border rounded-2xl flex justify-between items-center text-xs bg-gray-50 dark:bg-gray-700/40">
                     <div><b>${j.title}</b> • ${j.city} • ${j.salary}</div>
-                    <button onclick="window.deleteDoc(window.doc(window.db, 'jobs', '${d.id}')); loadHrJobs();" class="bg-red-100 text-red-700 px-3 py-1.5 rounded-xl font-bold">डिलीट</button>
+                    <button onclick="window.deleteDoc(window.doc(window.db, 'jobs', '${d.id}')).then(() => loadHrJobs());" class="bg-red-100 text-red-700 px-3 py-1.5 rounded-xl font-bold">डिलीट</button>
                 </div>`;
             });
             document.getElementById('activeJobsCount').innerText = count;
