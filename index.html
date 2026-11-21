@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RozgarHub.in - India's #1 Private Job Marketplace</title>
+    <title>RozgarHub.in - India's #1 Private & Govt Job Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class', }</script>
     <!-- Firebase SDK -->
@@ -43,7 +43,7 @@
     <!-- Top Navbar -->
     <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40 transition-colors duration-300">
         <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| Private Jobs</span></a>
+            <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| Jobs & Updates</span></a>
             <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
                 <button onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-2 rounded-xl transition shadow-sm"><span id="themeIcon">🌙</span></button>
                 <a href="candidate-login.html" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-xl transition shadow">👤 कैंडिडेट पोर्टल</a>
@@ -56,12 +56,11 @@
     <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-12 px-4 text-center space-y-6 shadow-xl relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="container mx-auto max-w-4xl space-y-3 relative z-10">
-            <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 Verified Corporate Jobs</span>
-            <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की प्राइवेट नौकरी खोजें</h1>
-            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">जॉब टाइटल, कंपनी, शहर या कैटेगरी के अनुसार तुरंत नौकरी खोजें।</p>
+            <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 Private Jobs & Sewayojan Updates</span>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की नौकरी और अपडेट खोजें</h1>
+            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">प्राइवेट नौकरियां या सेवायोजन/सरकारी अपडेट्स छांटें और पूरी जानकारी देखें।</p>
         </div>
 
-        <!-- Search & City/Category Filter Box -->
         <div class="container mx-auto max-w-4xl relative z-10 pt-2">
             <div class="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 text-xs text-gray-800 dark:text-gray-100">
                 <div class="md:col-span-5 relative">
@@ -75,6 +74,7 @@
                 <div class="md:col-span-3">
                     <select id="categoryFilterSelect" onchange="applyJobFilters()" class="w-full p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 font-bold focus:ring-2 focus:ring-blue-600 outline-none">
                         <option value="">🏷️ सभी कैटेगरी</option>
+                        <option value="Govt / Sewayojan">Govt / Sewayojan</option>
                         <option value="IT & Software">IT & Software</option>
                         <option value="Back Office / Data Entry">Back Office / Data Entry</option>
                         <option value="BPO / Call Center">BPO / Call Center</option>
@@ -91,10 +91,14 @@
         </div>
     </section>
 
-    <!-- JOB FEED GRID -->
-    <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-8">
-        <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3">
-            <h2 class="text-base md:text-lg font-black uppercase text-gray-800 dark:text-gray-200">🔥 ताज़ा कॉर्पोरेट वैकेंसी (Live Openings)</h2>
+    <!-- JOB FEED GRID WITH SEPARATE TABS FOR PRIVATE JOBS & GOVT/SEWAYOJAN UPDATES -->
+    <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-6">
+        <div class="flex flex-wrap justify-between items-center gap-3 border-b dark:border-gray-700 pb-4">
+            <div class="flex flex-wrap gap-2 text-xs font-black">
+                <button type="button" onclick="setJobSourceTab('all')" id="tabSourceAll" class="px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition">🔥 सभी (All)</button>
+                <button type="button" onclick="setJobSourceTab('private')" id="tabSourcePrivate" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏢 Private Jobs</button>
+                <button type="button" onclick="setJobSourceTab('govt')" id="tabSourceGovt" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏛️ Govt / Sewayojan Updates</button>
+            </div>
             <span id="jobCountBadge" class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold">लोड हो रहा है...</span>
         </div>
 
@@ -126,7 +130,7 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
-                        <p class="text-[10px] text-gray-400 font-bold">💰 मासिक वेतन</p>
+                        <p class="text-[10px] text-gray-400 font-bold">💰 वेतन / मानदेय</p>
                         <p id="modalSalary" class="font-black text-emerald-600 dark:text-emerald-400 mt-0.5">-</p>
                     </div>
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
@@ -134,7 +138,7 @@
                         <p id="modalCity" class="font-bold mt-0.5">-</p>
                     </div>
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
-                        <p class="text-[10px] text-gray-400 font-bold">🎓 न्यूनतम योग्यता</p>
+                        <p class="text-[10px] text-gray-400 font-bold">🎓 योग्यता</p>
                         <p id="modalQual" class="font-bold mt-0.5">-</p>
                     </div>
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
@@ -146,7 +150,7 @@
                         <p id="modalWorkMode" class="font-bold mt-0.5">-</p>
                     </div>
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
-                        <p class="text-[10px] text-gray-400 font-bold">⏰ शिफ्ट टाइमिंग</p>
+                        <p class="text-[10px] text-gray-400 font-bold">⏰ शिफ्ट / विवरण</p>
                         <p id="modalShift" class="font-bold mt-0.5">-</p>
                     </div>
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
@@ -158,28 +162,28 @@
                         <p id="modalDeadline" class="font-bold text-red-600 dark:text-red-400 mt-0.5">-</p>
                     </div>
                     <div class="p-3 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700">
-                        <p class="text-[10px] text-gray-400 font-bold">👤 रिक्रूटर / HR</p>
+                        <p class="text-[10px] text-gray-400 font-bold">👤 स्रोत / HR</p>
                         <p id="modalHrName" class="font-bold mt-0.5">-</p>
                     </div>
                 </div>
 
                 <div id="modalSkillsBox" class="space-y-1">
-                    <h4 class="text-[11px] font-black uppercase text-gray-400 tracking-wider">⚡ आवश्यक स्किल्स (Required Skills)</h4>
+                    <h4 class="text-[11px] font-black uppercase text-gray-400 tracking-wider">⚡ आवश्यक स्किल्स / पात्रता</h4>
                     <p id="modalSkills" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/40 px-4 py-2.5 rounded-xl border border-indigo-100 dark:border-indigo-900/50">-</p>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
+                <div id="modalPrivacyNotice" class="p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
                     🔒 सुरक्षा और प्राइवेसी नीति: HR का मोबाइल/WhatsApp नंबर सुरक्षा कारणों से गोपनीय रखा गया है। नौकरी के लिए आवेदन करने हेतु नीचे दिए गए बटन से कैंडिडेट पोर्टल में लॉगिन/रजिस्टर कर 1-क्लिक अप्लाई करें।
                 </div>
 
                 <div class="space-y-2">
-                    <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider">📄 नौकरी का पूरा विवरण (Full Description)</h4>
+                    <h4 class="text-xs font-black uppercase text-gray-400 tracking-wider">📄 पूरा विवरण (Full Description)</h4>
                     <div id="modalFullDesc" class="text-xs md:text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line leading-relaxed bg-gray-50 dark:bg-gray-900/60 p-5 rounded-2xl border dark:border-gray-700">
                         Description goes here...
                     </div>
                 </div>
 
-                <div class="p-5 rounded-3xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-slate-900 dark:to-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
+                <div id="modalBottomHrCard" class="p-5 rounded-3xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-slate-900 dark:to-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <div class="flex items-center gap-3.5">
                             <img id="bottomHrAvatar" src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200" alt="HR Avatar" loading="lazy" class="w-14 h-14 rounded-2xl object-cover object-top border-2 border-indigo-500 shadow">
@@ -200,7 +204,7 @@
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
                     <span>WhatsApp पर शेयर करें</span>
                 </button>
-                <a href="candidate-login.html" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3.5 px-5 rounded-2xl font-black text-xs shadow-lg transition text-center">
+                <a id="modalApplyActionLink" href="candidate-login.html" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3.5 px-5 rounded-2xl font-black text-xs shadow-lg transition text-center">
                     रजिस्टर / अप्लाई करें 🚀
                 </a>
             </div>
@@ -208,13 +212,14 @@
     </div>
 
     <footer class="bg-gray-900 text-white text-center py-8 text-xs space-y-2 border-t border-gray-800">
-        <p>&copy; 2026 RozgarHub.in • India's Premier Private Job Marketplace</p>
-        <p class="text-gray-400">कंपनियों और नौकरी चाहने वालों का भरोसेमंद डिजिटल प्लेटफॉर्म।</p>
+        <p>&copy; 2026 RozgarHub.in • India's Premier Private & Govt Job Portal</p>
+        <p class="text-gray-400">कंपनियों, सेवायोजन अपडेट्स और नौकरी चाहने वालों का भरोसेमंद प्लेटफॉर्म।</p>
     </footer>
 
     <script>
         let allLoadedJobs = [];
         let filteredJobs = [];
+        let activeSourceTab = "all";
         let hrProfilesMap = {};
         let followerCountsMap = {};
 
@@ -231,6 +236,7 @@
             const safeTitle = (job.title || "Hiring Now").replace(/</g, "&lt;");
             const safeCity = (job.city || "India").replace(/</g, "&lt;");
             const safeSalary = (job.salary || "Best in Industry").replace(/</g, "&lt;");
+            const tagLabel = job.isGovtJob ? "🏛️ Govt / Sewayojan" : "✓ Verified";
 
             return `
                 <div class="w-full h-full bg-gradient-to-br ${grad} text-white p-4 flex flex-col justify-between relative overflow-hidden">
@@ -243,7 +249,7 @@
                         <span class="bg-white/15 backdrop-blur border border-white/20 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide flex items-center gap-1">
                             <span>RozgarHub</span><span class="text-yellow-400">.in</span>
                         </span>
-                        <span class="bg-yellow-400 text-gray-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">✓ Verified</span>
+                        <span class="bg-yellow-400 text-gray-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">${tagLabel}</span>
                     </div>
 
                     <div class="z-10 my-auto py-1 space-y-0.5">
@@ -284,6 +290,19 @@
             if (!localStorage.getItem('rozgarHubTheme')) applyDeviceOrSavedTheme();
         });
 
+        function setJobSourceTab(tab) {
+            activeSourceTab = tab;
+            ['all', 'private', 'govt'].forEach(t => {
+                const btn = document.getElementById('tabSource' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (btn) {
+                    btn.className = (t === tab)
+                        ? "px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition"
+                        : "px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition";
+                }
+            });
+            applyJobFilters();
+        }
+
         function populateCityOptions(jobs) {
             const select = document.getElementById('cityFilterSelect');
             const currentVal = select.value;
@@ -305,6 +324,10 @@
             const category = (document.getElementById('categoryFilterSelect').value || "").trim().toLowerCase();
 
             filteredJobs = allLoadedJobs.filter(job => {
+                const isGovt = Boolean(job.isGovtJob);
+                if (activeSourceTab === "govt" && !isGovt) return false;
+                if (activeSourceTab === "private" && isGovt) return false;
+
                 const matchesQuery = !query ||
                     (job.title || "").toLowerCase().includes(query) ||
                     (job.company || "").toLowerCase().includes(query) ||
@@ -322,6 +345,8 @@
         }
 
         function resetJobFilters() {
+            activeSourceTab = "all";
+            setJobSourceTab("all");
             document.getElementById('jobSearchInput').value = "";
             document.getElementById('cityFilterSelect').value = "";
             document.getElementById('categoryFilterSelect').value = "";
@@ -455,30 +480,36 @@
                     ? `<img src="${job.posterUrl}" alt="Job Poster" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">`
                     : getAutoBrandedBanner(job, index);
 
+                const sourceBadge = job.isGovtJob
+                    ? `<span class="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">🏛️ Govt / Sewayojan</span>`
+                    : `<span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.category || 'Corporate'}</span>`;
+
+                const followSectionHtml = job.isGovtJob
+                    ? `<span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Official Portal Link</span>`
+                    : `<button onclick="toggleFollowCompany('${job.company.replace(/'/g, "\\'")}')" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition ${isFollowing ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white dark:bg-blue-950 dark:text-blue-300'}">${isFollowing ? '✓ Following' : '+ Follow'}</button>`;
+
                 card.innerHTML = `
                     <div class="space-y-3">
                         <div class="aspect-video w-full bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border dark:border-gray-600 flex items-center justify-center relative">
                             ${mediaHtml}
                         </div>
                         <div class="flex flex-wrap gap-1.5">
-                            <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.category || 'Corporate'}</span>
+                            ${sourceBadge}
                             <span class="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.qual || 'Any'}</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">${job.exp || 'Fresher'}</span>
+                            ${job.deadline ? `<span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">📅 ${job.deadline}</span>` : ''}
                         </div>
                         <h3 class="font-black text-lg text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${job.title}</h3>
                         
                         <div class="flex justify-between items-center gap-2" onclick="event.stopPropagation()">
                             <span class="font-bold text-blue-600 dark:text-blue-400 text-xs truncate">🏢 ${job.company} • 📍 ${job.city}</span>
-                            <button onclick="toggleFollowCompany('${job.company.replace(/'/g, "\\'")}')" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition ${isFollowing ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white dark:bg-blue-950 dark:text-blue-300'}">
-                                ${isFollowing ? '✓ Following' : '+ Follow'}
-                            </button>
+                            ${followSectionHtml}
                         </div>
 
                         <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">${job.desc}</p>
                     </div>
                     <div class="pt-4 border-t dark:border-gray-700 flex justify-between items-center gap-2">
                         <div>
-                            <p class="text-[10px] text-gray-400 font-semibold">मासिक वेतन</p>
+                            <p class="text-[10px] text-gray-400 font-semibold">वेतन / मानदेय</p>
                             <span class="font-black text-sm text-green-600 dark:text-green-400">💰 ${job.salary}</span>
                         </div>
                         <div class="flex items-center gap-2" onclick="event.stopPropagation()">
@@ -507,27 +538,46 @@
             document.getElementById('modalSalary').innerText = job.salary || '-';
             document.getElementById('modalCity').innerText = job.city || '-';
             document.getElementById('modalQual').innerText = job.qual || 'Any';
-            document.getElementById('modalExp').innerText = job.exp || 'Fresher';
-            document.getElementById('modalWorkMode').innerText = job.workMode || 'Work from Office';
-            document.getElementById('modalShift').innerText = job.shift || 'Day Shift';
-            document.getElementById('modalGenderOpenings').innerText = `${job.gender || 'Any'} (${job.openings || 1} पद)`;
+            document.getElementById('modalExp').innerText = job.exp || (job.isGovtJob ? 'Official Update' : 'Fresher');
+            document.getElementById('modalWorkMode').innerText = job.workMode || (job.isGovtJob ? 'Govt / Portal' : 'Work from Office');
+            document.getElementById('modalShift').innerText = job.shift || 'As per norms';
+            document.getElementById('modalGenderOpenings').innerText = job.openings ? `${job.gender || 'Any'} (${job.openings} पद)` : (job.gender || 'All Eligible');
             document.getElementById('modalDeadline').innerText = job.deadline || 'Open';
             document.getElementById('modalHrName').innerText = job.hrName || 'Verified HR';
-            document.getElementById('modalSkills').innerText = job.skills || 'Basic Computer & Communication';
+            document.getElementById('modalSkills').innerText = job.skills || job.qual || 'As per official notification';
             document.getElementById('modalFullDesc').innerText = job.desc || 'विवरण उपलब्ध नहीं है।';
 
-            const cKey = (job.company || "").trim().toLowerCase();
-            const prof = hrProfilesMap[cKey] || {};
-            const followers = followerCountsMap[cKey] || 0;
+            const applyLinkEl = document.getElementById('modalApplyActionLink');
+            const bottomHrCard = document.getElementById('modalBottomHrCard');
+            const privacyNotice = document.getElementById('modalPrivacyNotice');
 
-            document.getElementById('bottomHrCompanyName').innerText = job.company;
-            document.getElementById('bottomHrMeta').innerHTML = `HR: ${prof.hrName || job.hrName || 'Verified HR'} • <span id="bottomHrFollowers" class="text-pink-600 dark:text-pink-400 font-black">${followers} Followers</span>`;
-            document.getElementById('bottomHrBio').innerText = prof.bio || `${job.company} — Verified hiring partner on RozgarHub.in.`;
-            if (prof.avatar) document.getElementById('bottomHrAvatar').src = prof.avatar;
+            if (job.isGovtJob && job.officialApplyUrl) {
+                applyLinkEl.href = job.officialApplyUrl;
+                applyLinkEl.target = "_blank";
+                applyLinkEl.rel = "noopener noreferrer";
+                applyLinkEl.innerText = "Official Portal पर आवेदन करें ↗";
+                bottomHrCard.classList.add("hidden");
+                privacyNotice.innerText = "🏛️ आधिकारिक पोर्टल सूचना: इस वैकेंसी के लिए आवेदन आधिकारिक वेबसाइट पर होगा। आगे बढ़ने के लिए 'Official Portal पर आवेदन करें' बटन पर क्लिक करें।";
+            } else {
+                applyLinkEl.href = "candidate-login.html";
+                applyLinkEl.removeAttribute("target");
+                applyLinkEl.innerText = "रजिस्टर / अप्लाई करें 🚀";
+                bottomHrCard.classList.remove("hidden");
+                privacyNotice.innerText = "🔒 सुरक्षा और प्राइवेसी नीति: HR का मोबाइल/WhatsApp नंबर सुरक्षा कारणों से गोपनीय रखा गया है। नौकरी के लिए आवेदन करने हेतु नीचे दिए गए बटन से कैंडिडेट पोर्टल में लॉगिन/रजिस्टर कर 1-क्लिक अप्लाई करें।";
 
-            const followBtn = document.getElementById('bottomHrFollowBtn');
-            followBtn.onclick = () => toggleFollowCompany(job.company);
-            updateFollowButtonUI(followBtn, job.company);
+                const cKey = (job.company || "").trim().toLowerCase();
+                const prof = hrProfilesMap[cKey] || {};
+                const followers = followerCountsMap[cKey] || 0;
+
+                document.getElementById('bottomHrCompanyName').innerText = job.company;
+                document.getElementById('bottomHrMeta').innerHTML = `HR: ${prof.hrName || job.hrName || 'Verified HR'} • <span id="bottomHrFollowers" class="text-pink-600 dark:text-pink-400 font-black">${followers} Followers</span>`;
+                document.getElementById('bottomHrBio').innerText = prof.bio || `${job.company} — Verified hiring partner on RozgarHub.in.`;
+                if (prof.avatar) document.getElementById('bottomHrAvatar').src = prof.avatar;
+
+                const followBtn = document.getElementById('bottomHrFollowBtn');
+                followBtn.onclick = () => toggleFollowCompany(job.company);
+                updateFollowButtonUI(followBtn, job.company);
+            }
 
             const posterContainer = document.getElementById('modalPosterContainer');
             const posterImg = document.getElementById('modalPosterImg');
@@ -552,13 +602,14 @@
             const job = filteredJobs[index];
             if (!job) return;
             const siteUrl = window.location.origin + window.location.pathname;
-            const shareText = `🔥 *नौकरी का अवसर - RozgarHub.in*\n\n` +
+            const shareText = `🔥 *${job.isGovtJob ? 'Govt / Sewayojan अपडेट' : 'नौकरी का अवसर'} - RozgarHub.in*\n\n` +
                               `📌 *पद:* ${job.title}\n` +
-                              `🏢 *कंपनी:* ${job.company}\n` +
+                              `🏢 *संस्था/कंपनी:* ${job.company}\n` +
                               `📍 *लोकेशन:* ${job.city}\n` +
-                              `🎓 *योग्यता:* ${job.qual || 'Any'} | *अनुभव:* ${job.exp || 'Fresher'}\n` +
-                              `💰 *वेतन:* ${job.salary}\n\n` +
-                              `पूरी जानकारी देखने और आवेदन करने के लिए लिंक पर क्लिक करें:\n${siteUrl}`;
+                              `🎓 *योग्यता:* ${job.qual || 'Any'}\n` +
+                              `💰 *वेतन:* ${job.salary}\n` +
+                              (job.officialApplyUrl ? `🔗 *Official Link:* ${job.officialApplyUrl}\n\n` : `\n`) +
+                              `पूरी जानकारी यहाँ देखें:\n${siteUrl}`;
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
             window.open(whatsappUrl, '_blank');
         }

@@ -8,7 +8,7 @@
     <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -24,6 +24,7 @@
         window.getDocs = getDocs;
         window.deleteDoc = deleteDoc;
         window.doc = doc;
+        window.addDoc = addDoc;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
@@ -68,8 +69,8 @@
         
         <div class="flex flex-wrap justify-between items-center gap-3">
             <div>
-                <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट डैशबोर्ड</h1>
-                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स और आवेदनों की लाइव रिपोर्ट व WhatsApp Channel पोस्टिंग</p>
+                <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट व Govt/Sewayojan पोस्टिंग</h1>
+                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स, आवेदनों की लाइव रिपोर्ट और Official Link वैकेंसी पोस्टिंग</p>
             </div>
             <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
         </div>
@@ -94,16 +95,66 @@
             </div>
         </div>
 
-        <!-- Report Tabs -->
+        <!-- Report & Govt Post Tabs -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
-            <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-red-600 text-white font-black">📢 Jobs Report</button>
+            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">🏛️ Govt / Sewayojan पोस्ट करें</button>
+            <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📢 Jobs Report</button>
             <button type="button" onclick="switchReportTab('hrs')" id="rTabHrs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏢 Registered HRs</button>
             <button type="button" onclick="switchReportTab('candidates')" id="rTabCandidates" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">👤 Candidates Report</button>
             <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications Report</button>
         </div>
 
+        <!-- TAB 0: GOVT / SEWAYOJAN OFFICIAL LINK JOB FORM -->
+        <div id="repSectionGovtPost" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-5">
+            <div class="border-b pb-3">
+                <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">🏛️ नई Govt / Sewayojan वैकेंसी पब्लिश करें (With Official Apply Link)</h3>
+                <p class="text-xs text-slate-500 mt-1">यह पोस्ट होम पेज के "Govt / Sewayojan Updates" टैब में दिखेगी और इसमें आधिकारिक आवेदन लिंक जुड़ेगा।</p>
+            </div>
+
+            <form id="govtJobPostForm" onsubmit="publishGovtJob(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold mb-1">पद / वैकेंसी का नाम *</label>
+                        <input type="text" id="gTitle" placeholder="जैसे: Data Entry Operator / Rojgar Mela Vacancy" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">विभाग / पोर्टल का नाम *</label>
+                        <input type="text" id="gDepartment" value="UP Sewayojan / Govt Dept" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">लोकेशन / जिला *</label>
+                        <input type="text" id="gCity" placeholder="जैसे: Azamgarh / Varanasi / All UP" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">वेतन / मानदेय *</label>
+                        <input type="text" id="gSalary" placeholder="₹10,000 - ₹15,000 / As per norms" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">योग्यता (Qualification)</label>
+                        <input type="text" id="gQual" value="12th Pass / Graduate" class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">अंतिम तिथि (Last Date)</label>
+                        <input type="date" id="gDeadline" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1 text-emerald-600 dark:text-emerald-400">🔗 Official Apply Link (आधिकारिक आवेदन लिंक - https://...) *</label>
+                    <input type="url" id="gOfficialUrl" placeholder="https://sewayojan.up.nic.in/..." required class="w-full p-3.5 border border-emerald-300 dark:border-emerald-800 rounded-2xl bg-emerald-50/40 dark:bg-slate-900 font-bold">
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">विस्तृत जानकारी / पात्रता शर्तें *</label>
+                    <textarea id="gDesc" rows="3" placeholder="आवेदन प्रक्रिया, आवश्यक दस्तावेज और महत्वपूर्ण जानकारी लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
+                </div>
+
+                <button type="submit" id="gSubmitBtn" class="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow-xl transition">Govt / Sewayojan पोस्ट लाइव करें 🚀</button>
+            </form>
+        </div>
+
         <!-- REPORT 1: JOBS -->
-        <div id="repSectionJobs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+        <div id="repSectionJobs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
             <h3 class="font-black text-base uppercase border-b pb-3">📋 सभी पोस्ट की गई जॉब्स (Channel Post / Moderation & Delete)</h3>
             <div id="adminJobsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-8">रिपोर्ट लोड हो रही है...</p></div>
         </div>
@@ -222,12 +273,46 @@
         });
 
         function switchReportTab(tab) {
-            const map = { jobs: 'repSectionJobs', hrs: 'repSectionHrs', candidates: 'repSectionCandidates', apps: 'repSectionApps' };
-            const btnMap = { jobs: 'rTabJobs', hrs: 'rTabHrs', candidates: 'rTabCandidates', apps: 'rTabApps' };
+            const map = { govtPost: 'repSectionGovtPost', jobs: 'repSectionJobs', hrs: 'repSectionHrs', candidates: 'repSectionCandidates', apps: 'repSectionApps' };
+            const btnMap = { govtPost: 'rTabGovtPost', jobs: 'rTabJobs', hrs: 'rTabHrs', candidates: 'rTabCandidates', apps: 'rTabApps' };
             Object.keys(map).forEach(k => {
                 document.getElementById(map[k]).classList.toggle('hidden', k !== tab);
-                document.getElementById(btnMap[k]).className = (k === tab) ? "px-4 py-2.5 rounded-2xl bg-red-600 text-white font-black" : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
+                document.getElementById(btnMap[k]).className = (k === tab) ? "px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black" : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
             });
+        }
+
+        async function publishGovtJob(e) {
+            e.preventDefault();
+            if (!window.db) return;
+            const btn = document.getElementById('gSubmitBtn');
+            btn.disabled = true;
+
+            const payload = {
+                title: document.getElementById('gTitle').value.trim(),
+                company: document.getElementById('gDepartment').value.trim(),
+                city: document.getElementById('gCity').value.trim(),
+                salary: document.getElementById('gSalary').value.trim(),
+                qual: document.getElementById('gQual').value.trim(),
+                deadline: document.getElementById('gDeadline').value,
+                officialApplyUrl: document.getElementById('gOfficialUrl').value.trim(),
+                desc: document.getElementById('gDesc').value.trim(),
+                category: "Govt / Sewayojan",
+                jobType: "Official Portal",
+                isGovtJob: true,
+                hrName: "Super Admin (Official Update)",
+                status: "Active",
+                createdAt: Date.now()
+            };
+
+            await window.addDoc(window.collection(window.db, "jobs"), payload);
+            document.getElementById('govtJobPostForm').reset();
+            document.getElementById('gDepartment').value = "UP Sewayojan / Govt Dept";
+            document.getElementById('gQual').value = "12th Pass / Graduate";
+            btn.disabled = false;
+            alert("Govt / Sewayojan वैकेंसी सफलतापूर्वक पब्लिश हो गई है!");
+            loadAllAdminReports();
+            switchReportTab('jobs');
+            openWaChannelModal(payload);
         }
 
         function openWaChannelModal(job) {
@@ -235,14 +320,14 @@
             document.getElementById('waChannelLinkInput').value = savedChannelUrl;
 
             const siteLink = window.location.origin + "/index.html";
-            const msg = `📢 *नई नौकरी अपडेट - RozgarHub.in*\n\n` +
+            const msg = `🏛️ *Govt / Sewayojan अपडेट - RozgarHub.in*\n\n` +
                         `📌 *पद:* ${job.title}\n` +
-                        `🏢 *कंपनी:* ${job.company}\n` +
+                        `🏢 *विभाग:* ${job.company}\n` +
                         `📍 *लोकेशन:* ${job.city}\n` +
-                        `🎓 *योग्यता:* ${job.qual || 'Any'} | *अनुभव:* ${job.exp || 'Fresher'}\n` +
+                        `🎓 *योग्यता:* ${job.qual || 'Any'}\n` +
                         `💰 *वेतन:* ${job.salary}\n` +
-                        `👥 *पद:* ${job.openings || 1} | *अंतिम तिथि:* ${job.deadline || 'Open'}\n\n` +
-                        `आवेदन करने के लिए यहाँ क्लिक करें:\n${siteLink}`;
+                        (job.officialApplyUrl ? `🔗 *Official Link:* ${job.officialApplyUrl}\n\n` : `\n`) +
+                        `पूरी जानकारी यहाँ देखें:\n${siteLink}`;
 
             document.getElementById('waChannelMessagePreview').value = msg;
             document.getElementById('waChannelModal').classList.remove('hidden');
@@ -281,18 +366,20 @@
                 window.getDocs(window.collection(window.db, "follows"))
             ]);
 
-            // 1. Jobs
             let jobsHtml = "", jobCount = 0;
             adminJobsMap = {};
             jobsSnap.forEach(docSnap => {
                 jobCount++;
                 const j = docSnap.data();
                 adminJobsMap[docSnap.id] = j;
+                const badge = j.isGovtJob
+                    ? `<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-indigo-100 text-indigo-800">🏛️ Govt / Sewayojan</span>`
+                    : `<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 text-blue-800">🏢 Private</span>`;
                 jobsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-3">
                     <div>
-                        <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 text-blue-800">${j.status || 'Active'}</span>
+                        ${badge} <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-emerald-800">${j.status || 'Active'}</span>
                         <h4 class="font-black text-sm mt-1">${j.title}</h4>
-                        <p class="text-slate-500">🏢 ${j.company} • 📍 ${j.city} • 💰 ${j.salary} • HR: ${j.hrName || 'N/A'}</p>
+                        <p class="text-slate-500">🏢 ${j.company} • 📍 ${j.city} • 💰 ${j.salary}</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
                         <button type="button" onclick="openAdminChannelPost('${docSnap.id}')" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white px-3.5 py-2 rounded-xl font-bold transition">📢 Channel Post</button>
@@ -303,7 +390,6 @@
             document.getElementById('repTotalJobs').innerText = jobCount;
             document.getElementById('adminJobsContainer').innerHTML = jobsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई जॉब नहीं मिली।</p>`;
 
-            // 2. Registered HRs
             let hrsHtml = "", hrCount = 0;
             hrSnap.forEach(d => {
                 hrCount++;
@@ -319,7 +405,6 @@
             document.getElementById('repTotalHRs').innerText = hrCount;
             document.getElementById('adminHrsContainer').innerHTML = hrsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई HR प्रोफाइल नहीं मिली।</p>`;
 
-            // 3. Candidates & Applications
             let candMap = {};
             let appsHtml = "", appCount = 0;
 
