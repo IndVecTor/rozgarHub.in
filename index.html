@@ -9,7 +9,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -27,6 +27,7 @@
         window.setDoc = setDoc;
         window.deleteDoc = deleteDoc;
         window.getDoc = getDoc;
+        window.addDoc = addDoc;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
@@ -131,20 +132,26 @@
         </section>
     </main>
 
-    <!-- ADMIN CONTROLLED WELCOME / NOTICE POPUP MODAL -->
+    <!-- WHATSAPP CHANNEL JOIN POPUP MODAL -->
     <div id="siteWelcomePopupModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden animate-pop-in">
-            <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-6 py-4 flex justify-between items-center">
-                <span class="text-[11px] font-black uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">📣 RozgarHub.in सूचना</span>
+            <div class="bg-gradient-to-r from-[#128C7E] via-[#25D366] to-emerald-500 text-white px-6 py-4 flex justify-between items-center">
+                <span class="text-[11px] font-black uppercase tracking-wider bg-black/20 px-3 py-1 rounded-full flex items-center gap-1.5">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
+                    <span>WhatsApp Channel</span>
+                </span>
                 <button type="button" onclick="closeSiteWelcomePopup()" class="w-8 h-8 rounded-full bg-black/25 hover:bg-black/45 flex items-center justify-center font-black text-xs transition">✕</button>
             </div>
             <div class="p-6 md:p-7 space-y-4 text-center">
-                <h3 id="sitePopupTitle" class="text-xl md:text-2xl font-black text-gray-900 dark:text-white leading-snug">महत्वपूर्ण सूचना</h3>
-                <p id="sitePopupMessage" class="text-xs md:text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed"></p>
-                
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-[#25D366]/15 text-[#1ebe5d] flex items-center justify-center">
+                    <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
+                </div>
+                <h3 id="sitePopupTitle" class="text-xl md:text-2xl font-black text-gray-900 dark:text-white leading-snug">हमारे RozgarHub.in WhatsApp Channel से जुड़ें!</h3>
+                <p id="sitePopupMessage" class="text-xs md:text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed">रोज़ाना नई प्राइवेट नौकरियों, सेवायोजन अपडेट्स और वेरिफाइड कंपनियों की हायरिंग सूचनाएं सबसे पहले पाने के लिए हमारा आधिकारिक WhatsApp Channel जॉइन करें।</p>
+
                 <div class="pt-2 flex flex-wrap justify-center gap-2.5">
-                    <a id="sitePopupActionBtn" href="#" target="_blank" rel="noopener noreferrer" class="hidden flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-5 rounded-2xl font-black text-xs shadow-lg transition">देखें &rarr;</a>
-                    <button type="button" onclick="closeSiteWelcomePopup()" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white py-3 px-5 rounded-2xl font-black text-xs transition">ठीक है</button>
+                    <a id="sitePopupActionBtn" href="https://whatsapp.com/channel/" onclick="trackAnalyticsEvent('channel_popup_click', { label: 'WhatsApp Channel Join' })" target="_blank" rel="noopener noreferrer" class="flex-1 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-3 px-5 rounded-2xl font-black text-xs shadow-lg transition">WhatsApp Channel जॉइन करें</a>
+                    <button type="button" onclick="closeSiteWelcomePopup()" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white py-3 px-5 rounded-2xl font-black text-xs transition">बाद में</button>
                 </div>
 
                 <p id="sitePopupTimerNote" class="hidden text-[10px] text-gray-400 font-semibold"></p>
@@ -268,11 +275,88 @@
         let hrProfilesMap = {};
         let followerCountsMap = {};
         let popupAutoCloseTimer = null;
+        let cachedGeoInfo = null;
+        let pageVisitTracked = false;
+
+        function getTodayKey() {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function getVisitorId() {
+            let vid = localStorage.getItem('rozgarHubVisitorId');
+            if (!vid) {
+                vid = 'vis_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
+                localStorage.setItem('rozgarHubVisitorId', vid);
+            }
+            return vid;
+        }
+
+        function getDeviceType() {
+            const ua = navigator.userAgent || "";
+            if (/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) return "Mobile";
+            return "Desktop";
+        }
+
+        async function detectVisitorLocation() {
+            if (cachedGeoInfo) return cachedGeoInfo;
+            try {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 2500);
+                const res = await fetch("https://ipwho.is/", { signal: controller.signal });
+                clearTimeout(timer);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.success !== false) {
+                        cachedGeoInfo = {
+                            city: (data.city || "").trim() || "Unknown City",
+                            region: (data.region || "").trim() || "Unknown State",
+                            country: (data.country || "").trim() || "India"
+                        };
+                        return cachedGeoInfo;
+                    }
+                }
+            } catch (e) {}
+
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata";
+            const fallbackCity = tz.includes("/") ? tz.split("/")[1].replace(/_/g, " ") : "India";
+            cachedGeoInfo = { city: fallbackCity, region: "India", country: "India" };
+            return cachedGeoInfo;
+        }
+
+        async function trackAnalyticsEvent(eventType, extraData = {}) {
+            if (!window.db) return;
+            try {
+                const geo = await detectVisitorLocation();
+                const isUniqueToday = (() => {
+                    const key = `rozgarHubUnique_${getTodayKey()}`;
+                    if (localStorage.getItem(key)) return false;
+                    localStorage.setItem(key, "1");
+                    return true;
+                })();
+
+                await window.addDoc(window.collection(window.db, "analyticsEvents"), {
+                    eventType,
+                    dateKey: getTodayKey(),
+                    timestamp: Date.now(),
+                    visitorId: getVisitorId(),
+                    isUniqueToday,
+                    device: getDeviceType(),
+                    city: geo.city,
+                    region: geo.region,
+                    country: geo.country,
+                    ...extraData
+                });
+            } catch (e) {}
+        }
 
         function showSiteWelcomePopup(pData) {
             if (!pData || !pData.enabled) return;
-            document.getElementById('sitePopupTitle').innerText = pData.title || "महत्वपूर्ण सूचना";
-            document.getElementById('sitePopupMessage').innerText = pData.message || "";
+            document.getElementById('sitePopupTitle').innerText = pData.title || "हमारे RozgarHub.in WhatsApp Channel से जुड़ें!";
+            document.getElementById('sitePopupMessage').innerText = pData.message || "रोज़ाना नई प्राइवेट नौकरियों, सेवायोजन अपडेट्स और वेरिफाइड कंपनियों की हायरिंग सूचनाएं सबसे पहले पाने के लिए हमारा आधिकारिक WhatsApp Channel जॉइन करें।";
 
             const actionBtn = document.getElementById('sitePopupActionBtn');
             if (pData.btnText && pData.btnUrl) {
@@ -280,7 +364,9 @@
                 actionBtn.href = pData.btnUrl;
                 actionBtn.classList.remove('hidden');
             } else {
-                actionBtn.classList.add('hidden');
+                actionBtn.innerText = "WhatsApp Channel जॉइन करें";
+                actionBtn.href = "https://whatsapp.com/channel/";
+                actionBtn.classList.remove('hidden');
             }
 
             document.getElementById('siteWelcomePopupModal').classList.remove('hidden');
@@ -541,6 +627,11 @@
         }
 
         window.addEventListener('firebase-ready', async () => {
+            if (!pageVisitTracked) {
+                pageVisitTracked = true;
+                trackAnalyticsEvent("page_view", { page: "index" });
+            }
+
             try {
                 const [profSnap, followsSnap, jobsSnap, linksSnap, popupSnap] = await Promise.all([
                     window.getDocs(window.collection(window.db, "hrProfiles")),
@@ -661,6 +752,12 @@
             const job = filteredJobs[index];
             if (!job) return;
 
+            trackAnalyticsEvent("job_view", {
+                jobTitle: job.title || "Untitled Job",
+                company: job.company || "Unknown",
+                sourceType: job.isGovtJob ? "Govt / Sewayojan" : "Private"
+            });
+
             document.getElementById('modalCategoryBadge').innerText = job.category || 'Corporate';
             document.getElementById('modalJobTypeBadge').innerText = job.jobType || 'Full-Time';
             document.getElementById('modalJobTitle').innerText = job.title;
@@ -731,6 +828,8 @@
         function shareOnWhatsApp(index) {
             const job = filteredJobs[index];
             if (!job) return;
+            trackAnalyticsEvent("whatsapp_share", { jobTitle: job.title || "Untitled Job" });
+
             const siteUrl = window.location.origin + window.location.pathname;
             const shareText = `🔥 *${job.isGovtJob ? 'Govt / Sewayojan अपडेट' : 'नौकरी का अवसर'} - RozgarHub.in*\n\n` +
                               `📌 *पद:* ${job.title}\n` +

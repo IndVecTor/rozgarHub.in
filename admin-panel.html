@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin Panel & Complete Report - RozgarHub.in</title>
+    <title>Super Admin Panel & Analytics - RozgarHub.in</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
@@ -71,8 +71,8 @@
         
         <div class="flex flex-wrap justify-between items-center gap-3">
             <div>
-                <h1 class="text-2xl font-black">📊 सुपर एडमिन कंट्रोल पैनल</h1>
-                <p class="text-xs text-slate-500">Notice Popup, उपयोगी लिंक, Govt पोस्ट और सभी लाइव रिपोर्ट्स</p>
+                <h1 class="text-2xl font-black">📊 सुपर एडमिन कंट्रोल व Analytics डैशबोर्ड</h1>
+                <p class="text-xs text-slate-500">दैनिक विज़िट्स, ज़िला/शहर लोकेशन, टॉप जॉब्स, डिवाइस और सभी पोर्टल रिपोर्ट्स</p>
             </div>
             <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
         </div>
@@ -99,7 +99,8 @@
 
         <!-- Tabs -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
-            <button type="button" onclick="switchReportTab('noticePopup')" id="rTabNoticePopup" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">📣 Notice Popup</button>
+            <button type="button" onclick="switchReportTab('analytics')" id="rTabAnalytics" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">📈 Analytics</button>
+            <button type="button" onclick="switchReportTab('noticePopup')" id="rTabNoticePopup" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📣 Notice Popup</button>
             <button type="button" onclick="switchReportTab('usefulLinks')" id="rTabUsefulLinks" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🔗 उपयोगी लिंक</button>
             <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏛️ Govt / Sewayojan पोस्ट</button>
             <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📢 Jobs Report</button>
@@ -108,8 +109,66 @@
             <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications Report</button>
         </div>
 
+        <!-- TAB: DEDICATED ANALYTICS DASHBOARD -->
+        <div id="repSectionAnalytics" class="space-y-6">
+            <!-- Traffic KPI Row -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                    <p class="text-[11px] text-slate-500 font-bold uppercase">आज की विज़िट्स (Today)</p>
+                    <h3 id="anTodayVisits" class="text-3xl font-black text-blue-600 mt-1">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                    <p class="text-[11px] text-slate-500 font-bold uppercase">आज के यूनिक विज़िटर</p>
+                    <h3 id="anTodayUnique" class="text-3xl font-black text-emerald-600 mt-1">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                    <p class="text-[11px] text-slate-500 font-bold uppercase">जॉब डिटेल व्यूज़</p>
+                    <h3 id="anJobViews" class="text-3xl font-black text-indigo-600 mt-1">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                    <p class="text-[11px] text-slate-500 font-bold uppercase">WhatsApp शेयर / चैनल</p>
+                    <h3 id="anWaActions" class="text-3xl font-black text-[#1ebe5d] mt-1">0</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 7-Day Daily Visits Trend -->
+                <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <h3 class="font-black text-sm uppercase text-indigo-600 dark:text-indigo-400">📅 पिछले 7 दिनों का ट्रैफ़िक (Daily Visits)</h3>
+                    <div id="anSevenDayChart" class="space-y-3 text-xs">
+                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
+                    </div>
+                </div>
+
+                <!-- Top Districts / Cities & States -->
+                <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <h3 class="font-black text-sm uppercase text-emerald-600 dark:text-emerald-400">📍 टॉप ज़िले / शहर और राज्य (Location Breakdown)</h3>
+                    <div id="anTopCitiesList" class="space-y-2.5 text-xs">
+                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Top Viewed Jobs & Private vs Govt Interest -->
+                <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <h3 class="font-black text-sm uppercase text-blue-600 dark:text-blue-400">🔥 सबसे ज़्यादा देखी गई जॉब्स (Top Viewed Jobs)</h3>
+                    <div id="anTopJobsList" class="space-y-2.5 text-xs">
+                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
+                    </div>
+                </div>
+
+                <!-- Device & Category Interest -->
+                <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-5">
+                    <h3 class="font-black text-sm uppercase text-purple-600 dark:text-purple-400">📱 डिवाइस और कैटेगरी रुचि (Device & Sector Mix)</h3>
+                    <div id="anDeviceStats" class="space-y-3 text-xs"></div>
+                    <div id="anSectorStats" class="pt-3 border-t dark:border-slate-800 space-y-2 text-xs"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- TAB: NOTICE POPUP MANAGER -->
-        <div id="repSectionNoticePopup" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+        <div id="repSectionNoticePopup" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-6 hidden">
             <div class="border-b pb-3 flex flex-wrap justify-between items-center gap-2">
                 <div>
                     <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">📣 होम पेज Welcome / Notice Popup सेटिंग्स</h3>
@@ -133,7 +192,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold mb-1">पॉपअप हेडिंग / टाइटल *</label>
-                        <input type="text" id="popupTitleInput" placeholder="जैसे: 🔔 जरूरी सूचना / स्वागत है!" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="text" id="popupTitleInput" placeholder="जैसे: हमारे RozgarHub.in WhatsApp Channel से जुड़ें!" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                     <div>
                         <label class="block font-bold mb-1">अपने-आप बंद होने का समय (Auto-Close Seconds)</label>
@@ -148,17 +207,17 @@
 
                 <div>
                     <label class="block font-bold mb-1">पॉपअप मैसेज (जो आप दिखाना चाहते हैं) *</label>
-                    <textarea id="popupMessageInput" rows="4" placeholder="यहाँ अपना कोई भी मैसेज, सूचना, या ऑफर लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
+                    <textarea id="popupMessageInput" rows="4" placeholder="यहाँ अपना कोई भी मैसेज लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold mb-1">एक्शन बटन का नाम (Optional)</label>
-                        <input type="text" id="popupBtnTextInput" placeholder="जैसे: अभी देखें / WhatsApp जुड़ें" class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="text" id="popupBtnTextInput" placeholder="WhatsApp Channel जॉइन करें" class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                     <div>
                         <label class="block font-bold mb-1">एक्शन बटन लिंक (Optional - https://...)</label>
-                        <input type="url" id="popupBtnUrlInput" placeholder="https://..." class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="url" id="popupBtnUrlInput" placeholder="https://whatsapp.com/channel/..." class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                 </div>
 
@@ -301,6 +360,141 @@
     <script>
         let adminJobsMap = {};
 
+        function getTodayKey() {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function getLast7DateKeys() {
+            const keys = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                keys.push(`${yyyy}-${mm}-${dd}`);
+            }
+            return keys;
+        }
+
+        function renderAnalyticsDashboard(events) {
+            const todayKey = getTodayKey();
+            let todayVisits = 0;
+            let todayUniqueSet = new Set();
+            let jobViews = 0;
+            let waActions = 0;
+
+            const dayCounts = {};
+            const cityCounts = {};
+            const jobTitleCounts = {};
+            const deviceCounts = { Mobile: 0, Desktop: 0 };
+            const sectorCounts = { Private: 0, "Govt / Sewayojan": 0 };
+
+            events.forEach(ev => {
+                const dKey = ev.dateKey || "";
+                if (ev.eventType === "page_view") {
+                    if (dKey) dayCounts[dKey] = (dayCounts[dKey] || 0) + 1;
+                    if (dKey === todayKey) {
+                        todayVisits++;
+                        if (ev.visitorId) todayUniqueSet.add(ev.visitorId);
+                    }
+                    const dev = ev.device === "Mobile" ? "Mobile" : "Desktop";
+                    deviceCounts[dev] = (deviceCounts[dev] || 0) + 1;
+
+                    const locLabel = `${ev.city || "Unknown City"}${ev.region ? ", " + ev.region : ""}`;
+                    cityCounts[locLabel] = (cityCounts[locLabel] || 0) + 1;
+                } else if (ev.eventType === "job_view") {
+                    jobViews++;
+                    const jTitle = ev.jobTitle || "Untitled Job";
+                    jobTitleCounts[jTitle] = (jobTitleCounts[jTitle] || 0) + 1;
+                    const sec = ev.sourceType === "Govt / Sewayojan" ? "Govt / Sewayojan" : "Private";
+                    sectorCounts[sec] = (sectorCounts[sec] || 0) + 1;
+                } else if (ev.eventType === "whatsapp_share" || ev.eventType === "channel_popup_click") {
+                    waActions++;
+                }
+            });
+
+            document.getElementById('anTodayVisits').innerText = todayVisits;
+            document.getElementById('anTodayUnique').innerText = todayUniqueSet.size;
+            document.getElementById('anJobViews').innerText = jobViews;
+            document.getElementById('anWaActions').innerText = waActions;
+
+            // 7-Day Trend Bars
+            const last7 = getLast7DateKeys();
+            const max7 = Math.max(1, ...last7.map(k => dayCounts[k] || 0));
+            let chartHtml = "";
+            last7.forEach(k => {
+                const val = dayCounts[k] || 0;
+                const pct = Math.round((val / max7) * 100);
+                const label = k === todayKey ? `${k} (आज)` : k.slice(5);
+                chartHtml += `
+                    <div class="space-y-1">
+                        <div class="flex justify-between font-bold">
+                            <span>${label}</span>
+                            <span class="text-indigo-600 dark:text-indigo-400">${val} visits</span>
+                        </div>
+                        <div class="w-full h-2.5 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden">
+                            <div class="h-full rounded-full bg-gradient-to-r from-indigo-600 to-blue-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('anSevenDayChart').innerHTML = chartHtml;
+
+            // Top Cities / Districts
+            const sortedCities = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+            if (sortedCities.length === 0) {
+                document.getElementById('anTopCitiesList').innerHTML = `<p class="text-slate-400 text-center py-6">अभी लोकेशन ट्रैफ़िक डेटा नहीं आया है।</p>`;
+            } else {
+                document.getElementById('anTopCitiesList').innerHTML = sortedCities.map(([loc, cnt], idx) => `
+                    <div class="flex justify-between items-center p-3 rounded-2xl bg-gray-50 dark:bg-slate-900/70 border dark:border-slate-800">
+                        <span class="font-bold truncate">📍 #${idx + 1} ${loc}</span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-black shrink-0 ml-2">${cnt}</span>
+                    </div>
+                `).join("");
+            }
+
+            // Top Viewed Jobs
+            const sortedJobs = Object.entries(jobTitleCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            if (sortedJobs.length === 0) {
+                document.getElementById('anTopJobsList').innerHTML = `<p class="text-slate-400 text-center py-6">अभी किसी जॉब पर व्यू डेटा दर्ज नहीं हुआ है।</p>`;
+            } else {
+                document.getElementById('anTopJobsList').innerHTML = sortedJobs.map(([title, cnt], idx) => `
+                    <div class="flex justify-between items-center p-3 rounded-2xl bg-gray-50 dark:bg-slate-900/70 border dark:border-slate-800">
+                        <span class="font-bold truncate">#${idx + 1} ${title}</span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-black shrink-0 ml-2">${cnt} views</span>
+                    </div>
+                `).join("");
+            }
+
+            // Device & Sector Mix
+            const totalDev = Math.max(1, deviceCounts.Mobile + deviceCounts.Desktop);
+            const mobPct = Math.round((deviceCounts.Mobile / totalDev) * 100);
+            const deskPct = 100 - mobPct;
+            document.getElementById('anDeviceStats').innerHTML = `
+                <div class="flex justify-between font-bold">
+                    <span>📱 Mobile: ${deviceCounts.Mobile} (${mobPct}%)</span>
+                    <span>💻 Desktop: ${deviceCounts.Desktop} (${deskPct}%)</span>
+                </div>
+                <div class="w-full h-3 rounded-full bg-gray-200 dark:bg-slate-800 overflow-hidden flex">
+                    <div class="bg-purple-600 h-full" style="width: ${mobPct}%"></div>
+                    <div class="bg-amber-500 h-full" style="width: ${deskPct}%"></div>
+                </div>
+            `;
+
+            document.getElementById('anSectorStats').innerHTML = `
+                <p class="font-bold text-slate-500">जॉब सेक्टर रुचि (Job Views):</p>
+                <div class="flex justify-between font-black">
+                    <span class="text-blue-600 dark:text-blue-400">🏢 Private Jobs: ${sectorCounts.Private}</span>
+                    <span class="text-emerald-600 dark:text-emerald-400">🏛️ Govt / Sewayojan: ${sectorCounts["Govt / Sewayojan"]}</span>
+                </div>
+            `;
+        }
+
         function applyDeviceOrSavedTheme() {
             const root = document.getElementById('htmlRoot');
             const savedTheme = localStorage.getItem('rozgarHubTheme');
@@ -363,6 +557,7 @@
 
         function switchReportTab(tab) {
             const map = {
+                analytics: 'repSectionAnalytics',
                 noticePopup: 'repSectionNoticePopup',
                 usefulLinks: 'repSectionUsefulLinks',
                 govtPost: 'repSectionGovtPost',
@@ -372,6 +567,7 @@
                 apps: 'repSectionApps'
             };
             const btnMap = {
+                analytics: 'rTabAnalytics',
                 noticePopup: 'rTabNoticePopup',
                 usefulLinks: 'rTabUsefulLinks',
                 govtPost: 'rTabGovtPost',
@@ -546,14 +742,20 @@
         async function loadAllAdminReports() {
             if (!window.db) return;
 
-            const [jobsSnap, hrSnap, appsSnap, followsSnap, linksSnap, popupSnap] = await Promise.all([
+            const [jobsSnap, hrSnap, appsSnap, followsSnap, linksSnap, popupSnap, eventsSnap] = await Promise.all([
                 window.getDocs(window.collection(window.db, "jobs")),
                 window.getDocs(window.collection(window.db, "hrProfiles")),
                 window.getDocs(window.collection(window.db, "applications")),
                 window.getDocs(window.collection(window.db, "follows")),
                 window.getDocs(window.collection(window.db, "usefulLinks")),
-                window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup"))
+                window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup")),
+                window.getDocs(window.collection(window.db, "analyticsEvents"))
             ]);
+
+            // Analytics Render
+            const eventsArr = [];
+            eventsSnap.forEach(d => eventsArr.push(d.data()));
+            renderAnalyticsDashboard(eventsArr);
 
             // Load Popup Settings
             if (popupSnap.exists()) {
