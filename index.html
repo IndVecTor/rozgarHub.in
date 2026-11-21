@@ -103,7 +103,7 @@
         </div>
     </section>
 
-    <!-- JOB FEED GRID + USEFUL LINKS SECTION -->
+    <!-- JOB FEED GRID + USEFUL LINKS + CANDIDATE FEEDBACK & RATING -->
     <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-12">
         <section class="space-y-6">
             <div class="flex flex-wrap justify-between items-center gap-3 border-b dark:border-gray-700 pb-4">
@@ -130,7 +130,53 @@
             </div>
             <div id="usefulLinksContainer" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs md:text-sm font-bold"></div>
         </section>
+
+        <!-- CANDIDATE FEEDBACK & SITE RATING SECTION -->
+        <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-pink-600 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-base md:text-lg font-black tracking-wide">⭐ कैंडिडेट रिव्यू और रेटिंग (User Feedback)</h2>
+                    <span id="avgRatingBadge" class="bg-black/25 px-3 py-1 rounded-full text-xs font-black">★ 0.0 (0 Reviews)</span>
+                </div>
+                <button type="button" onclick="openFeedbackModal()" class="bg-white text-gray-900 hover:bg-yellow-100 px-4 py-2 rounded-2xl text-xs font-black shadow transition">✍️ अपना विचार / रेटिंग दें</button>
+            </div>
+            <div id="feedbacksListContainer" class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <p class="text-gray-400 col-span-full text-center py-4">रिव्यू लोड हो रहे हैं...</p>
+            </div>
+        </section>
     </main>
+
+    <!-- FEEDBACK & RATING SUBMIT MODAL -->
+    <div id="feedbackModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden animate-pop-in">
+            <div class="bg-gradient-to-r from-amber-500 to-pink-600 text-white px-6 py-4 flex justify-between items-center">
+                <h3 class="font-black text-base">⭐ RozgarHub.in को रेटिंग व विचार दें</h3>
+                <button type="button" onclick="closeFeedbackModal()" class="w-8 h-8 rounded-full bg-black/25 hover:bg-black/45 flex items-center justify-center font-black text-xs">✕</button>
+            </div>
+            <form onsubmit="submitSiteFeedback(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">आपका नाम *</label>
+                    <input type="text" id="fbNameInput" placeholder="अपना नाम लिखें" required class="w-full p-3.5 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">स्टार रेटिंग चुनें *</label>
+                    <div id="starRatingSelector" class="flex items-center gap-2 text-2xl">
+                        <button type="button" onclick="setRatingValue(1)" data-val="1" class="star-btn text-amber-400">★</button>
+                        <button type="button" onclick="setRatingValue(2)" data-val="2" class="star-btn text-amber-400">★</button>
+                        <button type="button" onclick="setRatingValue(3)" data-val="3" class="star-btn text-amber-400">★</button>
+                        <button type="button" onclick="setRatingValue(4)" data-val="4" class="star-btn text-amber-400">★</button>
+                        <button type="button" onclick="setRatingValue(5)" data-val="5" class="star-btn text-amber-400">★</button>
+                        <span id="ratingValueText" class="text-xs font-black text-gray-500 ml-2">5 / 5 Stars</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">आपके विचार / सुझाव *</label>
+                    <textarea id="fbMessageInput" rows="3" placeholder="हमारी वेबसाइट के बारे में अपना अनुभव या सुझाव लिखें..." required class="w-full p-3.5 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900 font-bold"></textarea>
+                </div>
+                <button type="submit" id="fbSubmitBtn" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-pink-600 text-white font-black text-sm shadow-lg transition">फीडबैक सबमिट करें 🚀</button>
+            </form>
+        </div>
+    </div>
 
     <!-- WHATSAPP CHANNEL JOIN POPUP MODAL -->
     <div id="siteWelcomePopupModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4">
@@ -274,6 +320,8 @@
         let activeSourceTab = "all";
         let hrProfilesMap = {};
         let followerCountsMap = {};
+        let jobLikeCountsMap = {};
+        let selectedFeedbackRating = 5;
         let popupAutoCloseTimer = null;
         let cachedGeoInfo = null;
         let pageVisitTracked = false;
@@ -353,6 +401,127 @@
             } catch (e) {}
         }
 
+        // --- LIKE FUNCTIONALITY ---
+        function getLikedJobIds() {
+            return JSON.parse(localStorage.getItem('rozgarHubLikedJobs')) || [];
+        }
+
+        async function toggleLikeJob(jobId, jobTitle) {
+            if (!jobId) return;
+            let liked = getLikedJobIds();
+            const isLiked = liked.includes(jobId);
+            const docId = `${encodeURIComponent(jobId)}__${encodeURIComponent(getVisitorId())}`;
+
+            if (isLiked) {
+                liked = liked.filter(id => id !== jobId);
+                jobLikeCountsMap[jobId] = Math.max(0, (jobLikeCountsMap[jobId] || 1) - 1);
+                if (window.db) {
+                    try { await window.deleteDoc(window.doc(window.db, "jobLikes", docId)); } catch (e) {}
+                }
+            } else {
+                liked.push(jobId);
+                jobLikeCountsMap[jobId] = (jobLikeCountsMap[jobId] || 0) + 1;
+                if (window.db) {
+                    try {
+                        await window.setDoc(window.doc(window.db, "jobLikes", docId), {
+                            jobId,
+                            jobTitle: jobTitle || "Job",
+                            visitorId: getVisitorId(),
+                            likedAt: Date.now()
+                        });
+                    } catch (e) {}
+                }
+                trackAnalyticsEvent("job_like", { jobId, jobTitle: jobTitle || "Job" });
+            }
+
+            localStorage.setItem('rozgarHubLikedJobs', JSON.stringify(liked));
+            renderJobs(filteredJobs);
+        }
+
+        // --- FEEDBACK & RATING FUNCTIONALITY ---
+        function openFeedbackModal() {
+            setRatingValue(5);
+            document.getElementById('feedbackModal').classList.remove('hidden');
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedbackModal').classList.add('hidden');
+        }
+
+        function setRatingValue(val) {
+            selectedFeedbackRating = val;
+            document.getElementById('ratingValueText').innerText = `${val} / 5 Stars`;
+            document.querySelectorAll('#starRatingSelector .star-btn').forEach(btn => {
+                const bVal = parseInt(btn.getAttribute('data-val'), 10);
+                if (bVal <= val) {
+                    btn.classList.remove('text-gray-300', 'dark:text-gray-600');
+                    btn.classList.add('text-amber-400');
+                } else {
+                    btn.classList.remove('text-amber-400');
+                    btn.classList.add('text-gray-300', 'dark:text-gray-600');
+                }
+            });
+        }
+
+        async function submitSiteFeedback(e) {
+            e.preventDefault();
+            if (!window.db) return;
+            const btn = document.getElementById('fbSubmitBtn');
+            btn.disabled = true;
+
+            const payload = {
+                name: document.getElementById('fbNameInput').value.trim(),
+                rating: selectedFeedbackRating,
+                message: document.getElementById('fbMessageInput').value.trim(),
+                createdAt: Date.now()
+            };
+
+            await window.addDoc(window.collection(window.db, "siteFeedbacks"), payload);
+            trackAnalyticsEvent("site_feedback", { rating: payload.rating, reviewerName: payload.name });
+
+            document.getElementById('fbNameInput').value = "";
+            document.getElementById('fbMessageInput').value = "";
+            btn.disabled = false;
+            closeFeedbackModal();
+            alert("धन्यवाद! आपका फीडबैक और रेटिंग सबमिट हो गई है।");
+
+            const fbSnap = await window.getDocs(window.collection(window.db, "siteFeedbacks"));
+            let list = [];
+            fbSnap.forEach(d => list.push({ id: d.id, ...d.data() }));
+            list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            renderFeedbacks(list);
+        }
+
+        function renderFeedbacks(list) {
+            const badge = document.getElementById('avgRatingBadge');
+            const container = document.getElementById('feedbacksListContainer');
+
+            if (!list || list.length === 0) {
+                badge.innerText = "★ 0.0 (0 Reviews)";
+                container.innerHTML = `<p class="text-gray-400 col-span-full text-center py-4">अभी कोई फीडबैक नहीं है। सबसे पहले अपना अनुभव साझा करें!</p>`;
+                return;
+            }
+
+            const totalStars = list.reduce((sum, item) => sum + (Number(item.rating) || 5), 0);
+            const avg = (totalStars / list.length).toFixed(1);
+            badge.innerText = `★ ${avg} (${list.length} Reviews)`;
+
+            const topSix = list.slice(0, 6);
+            container.innerHTML = topSix.map(item => {
+                const stars = "★".repeat(Number(item.rating) || 5) + "☆".repeat(Math.max(0, 5 - (Number(item.rating) || 5)));
+                return `
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/70 border dark:border-gray-700 flex flex-col justify-between space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <span class="font-black text-gray-900 dark:text-white truncate">👤 ${item.name || "Candidate"}</span>
+                            <span class="text-amber-500 font-black tracking-tight shrink-0 ml-2">${stars}</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed">${item.message || ""}</p>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // --- WELCOME / WHATSAPP CHANNEL POPUP ---
         function showSiteWelcomePopup(pData) {
             if (!pData || !pData.enabled) return;
             document.getElementById('sitePopupTitle').innerText = pData.title || "हमारे RozgarHub.in WhatsApp Channel से जुड़ें!";
@@ -401,6 +570,10 @@
 
         document.getElementById('siteWelcomePopupModal').addEventListener('click', function(e) {
             if (e.target === this) closeSiteWelcomePopup();
+        });
+
+        document.getElementById('feedbackModal').addEventListener('click', function(e) {
+            if (e.target === this) closeFeedbackModal();
         });
 
         const defaultUsefulLinks = [
@@ -633,13 +806,26 @@
             }
 
             try {
-                const [profSnap, followsSnap, jobsSnap, linksSnap, popupSnap] = await Promise.all([
+                const [profSnap, followsSnap, jobsSnap, linksSnap, popupSnap, likesSnap, fbSnap] = await Promise.all([
                     window.getDocs(window.collection(window.db, "hrProfiles")),
                     window.getDocs(window.collection(window.db, "follows")),
                     window.getDocs(window.collection(window.db, "jobs")),
                     window.getDocs(window.collection(window.db, "usefulLinks")),
-                    window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup"))
+                    window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup")),
+                    window.getDocs(window.collection(window.db, "jobLikes")),
+                    window.getDocs(window.collection(window.db, "siteFeedbacks"))
                 ]);
+
+                jobLikeCountsMap = {};
+                likesSnap.forEach(d => {
+                    const jId = d.data().jobId;
+                    if (jId) jobLikeCountsMap[jId] = (jobLikeCountsMap[jId] || 0) + 1;
+                });
+
+                let fbList = [];
+                fbSnap.forEach(d => fbList.push({ id: d.id, ...d.data() }));
+                fbList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                renderFeedbacks(fbList);
 
                 if (popupSnap.exists()) {
                     showSiteWelcomePopup(popupSnap.data());
@@ -689,10 +875,15 @@
             }
 
             const followed = getFollowedCompanies();
+            const likedIds = getLikedJobIds();
             const fragment = document.createDocumentFragment();
 
             jobs.forEach((job, index) => {
                 const isFollowing = followed.includes(job.company);
+                const isLiked = likedIds.includes(job.id);
+                const likeCount = jobLikeCountsMap[job.id] || 0;
+                const safeTitleForJs = (job.title || "Job").replace(/'/g, "\\'");
+
                 const card = document.createElement('div');
                 card.className = "cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border dark:border-gray-700 flex flex-col justify-between space-y-4 hover:shadow-2xl hover:-translate-y-1 transition duration-300 group";
                 card.onclick = () => openJobDetail(index);
@@ -733,11 +924,15 @@
                             <p class="text-[10px] text-gray-400 font-semibold">वेतन / मानदेय</p>
                             <span class="font-black text-sm text-green-600 dark:text-green-400">💰 ${job.salary}</span>
                         </div>
-                        <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+                        <div class="flex items-center gap-1.5" onclick="event.stopPropagation()">
+                            <button onclick="toggleLikeJob('${job.id}', '${safeTitleForJs}')" title="पसंद करें" class="px-3 py-2 rounded-2xl text-xs font-black transition flex items-center gap-1 ${isLiked ? 'bg-pink-600 text-white shadow' : 'bg-pink-50 hover:bg-pink-100 text-pink-700 dark:bg-pink-950/60 dark:text-pink-300'}">
+                                <span>👍</span>
+                                <span>${likeCount}</span>
+                            </button>
                             <button onclick="shareOnWhatsApp(${index})" title="WhatsApp पर शेयर करें" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white p-2.5 rounded-2xl transition shadow-sm flex items-center justify-center">
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
                             </button>
-                            <button onclick="openJobDetail(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">पूरी डिटेल देखें</button>
+                            <button onclick="openJobDetail(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition">पूरी डिटेल देखें</button>
                         </div>
                     </div>
                 `;
