@@ -36,6 +36,11 @@
         .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .glass-modal { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); }
+        .cool-banner-title {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            letter-spacing: 0.08em;
+            text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+        }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
@@ -108,7 +113,7 @@
             </div>
         </section>
 
-        <!-- USEFUL / IMPORTANT LINKS BOX (Controlled from Super Admin) -->
+        <!-- USEFUL / IMPORTANT LINKS BOX -->
         <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
             <div class="bg-gradient-to-r from-indigo-700 to-blue-800 text-white px-6 py-4 flex items-center justify-between">
                 <h2 class="text-base md:text-lg font-black tracking-wide flex items-center gap-2">
@@ -116,9 +121,7 @@
                 </h2>
                 <span class="text-[11px] bg-white/20 px-3 py-1 rounded-full font-bold">Official Websites</span>
             </div>
-            <div id="usefulLinksContainer" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs md:text-sm font-bold">
-                <!-- Populated dynamically from Firestore or Default List -->
-            </div>
+            <div id="usefulLinksContainer" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs md:text-sm font-bold"></div>
         </section>
     </main>
 
@@ -265,46 +268,43 @@
             container.innerHTML = html;
         }
 
-        // Render defaults immediately so there is zero delay
         renderUsefulLinks(defaultUsefulLinks);
 
-        const bannerGradients = [
-            "from-blue-900 via-indigo-900 to-slate-900",
-            "from-slate-900 via-blue-950 to-indigo-900",
-            "from-indigo-950 via-purple-950 to-slate-900",
-            "from-blue-950 via-slate-900 to-indigo-950"
-        ];
+        function getCoolNoImageBanner(job, index) {
+            const isGovt = Boolean(job.isGovtJob);
+            const displayLabel = isGovt
+                ? ((job.category || "Govt / Sewayojan").replace(/</g, "&lt;"))
+                : "PRIVATE JOB";
 
-        function getAutoBrandedBanner(job, index) {
-            const grad = bannerGradients[index % bannerGradients.length];
-            const safeCompany = (job.company || "RozgarHub Partner").replace(/</g, "&lt;");
-            const safeTitle = (job.title || "Hiring Now").replace(/</g, "&lt;");
-            const safeCity = (job.city || "India").replace(/</g, "&lt;");
-            const safeSalary = (job.salary || "Best in Industry").replace(/</g, "&lt;");
-            const tagLabel = job.isGovtJob ? "🏛️ Govt / Sewayojan" : "✓ Verified";
+            const themeStyle = isGovt
+                ? "from-emerald-950 via-teal-900 to-slate-950"
+                : "from-slate-950 via-indigo-950 to-purple-950";
+
+            const accentGlow = isGovt
+                ? "bg-emerald-400/20"
+                : "bg-fuchsia-500/20";
+
+            const textGradient = isGovt
+                ? "from-emerald-200 via-teal-100 to-amber-200"
+                : "from-white via-indigo-100 to-pink-200";
+
+            const fontSizeClass = displayLabel.length > 16
+                ? "text-xl sm:text-2xl"
+                : "text-2xl sm:text-3xl";
 
             return `
-                <div class="w-full h-full bg-gradient-to-br ${grad} text-white p-4 flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10">
-                        <span class="text-2xl md:text-3xl font-black tracking-wider -rotate-12">RozgarHub.in</span>
-                    </div>
-                    <div class="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-yellow-400/10 blur-xl pointer-events-none"></div>
+                <div class="w-full h-full bg-gradient-to-br ${themeStyle} text-white px-5 py-4 flex flex-col items-center justify-center relative overflow-hidden select-none">
+                    <!-- Ambient Glow Blobs -->
+                    <div class="absolute -top-10 -left-10 w-32 h-32 rounded-full ${accentGlow} blur-2xl pointer-events-none"></div>
+                    <div class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-cyan-400/15 blur-2xl pointer-events-none"></div>
 
-                    <div class="flex justify-between items-center gap-2 z-10">
-                        <span class="bg-white/15 backdrop-blur border border-white/20 px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide flex items-center gap-1">
-                            <span>RozgarHub</span><span class="text-yellow-400">.in</span>
-                        </span>
-                        <span class="bg-yellow-400 text-gray-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">${tagLabel}</span>
-                    </div>
-
-                    <div class="z-10 my-auto py-1 space-y-0.5">
-                        <p class="text-[10px] font-bold text-blue-200 truncate">🏢 ${safeCompany}</p>
-                        <p class="text-base md:text-lg font-black leading-snug line-clamp-2 drop-shadow">${safeTitle}</p>
-                    </div>
-
-                    <div class="flex justify-between items-center text-[10px] font-bold z-10 bg-black/35 backdrop-blur px-2.5 py-1.5 rounded-xl border border-white/10">
-                        <span class="truncate">📍 ${safeCity}</span>
-                        <span class="text-yellow-300 font-black shrink-0 ml-2">💰 ${safeSalary}</span>
+                    <!-- Decorative Subtle Frame -->
+                    <div class="w-full h-full rounded-2xl border border-white/15 bg-white/[0.03] backdrop-blur-[2px] flex flex-col items-center justify-center p-3 text-center relative z-10">
+                        <span class="text-[10px] font-black tracking-[0.28em] uppercase text-white/50 mb-1.5">RozgarHub.in</span>
+                        <div class="cool-banner-title ${fontSizeClass} font-black uppercase bg-gradient-to-r ${textGradient} bg-clip-text text-transparent leading-tight">
+                            ${displayLabel}
+                        </div>
+                        <div class="w-12 h-1 rounded-full bg-gradient-to-r from-amber-400 via-pink-500 to-cyan-400 mt-2.5 opacity-85"></div>
                     </div>
                 </div>
             `;
@@ -475,7 +475,6 @@
                     window.getDocs(window.collection(window.db, "usefulLinks"))
                 ]);
 
-                // Update Useful Links if Admin has saved any
                 let customLinks = [];
                 linksSnap.forEach(d => customLinks.push(d.data()));
                 customLinks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
@@ -530,7 +529,7 @@
 
                 const mediaHtml = job.posterUrl
                     ? `<img src="${job.posterUrl}" alt="Job Poster" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">`
-                    : getAutoBrandedBanner(job, index);
+                    : getCoolNoImageBanner(job, index);
 
                 const sourceBadge = job.isGovtJob
                     ? `<span class="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300 px-2.5 py-0.5 rounded-full font-bold text-[10px]">🏛️ Govt / Sewayojan</span>`
