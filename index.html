@@ -91,20 +91,35 @@
         </div>
     </section>
 
-    <!-- JOB FEED GRID WITH SEPARATE TABS FOR PRIVATE JOBS & GOVT/SEWAYOJAN UPDATES -->
-    <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-6">
-        <div class="flex flex-wrap justify-between items-center gap-3 border-b dark:border-gray-700 pb-4">
-            <div class="flex flex-wrap gap-2 text-xs font-black">
-                <button type="button" onclick="setJobSourceTab('all')" id="tabSourceAll" class="px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition">🔥 सभी (All)</button>
-                <button type="button" onclick="setJobSourceTab('private')" id="tabSourcePrivate" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏢 Private Jobs</button>
-                <button type="button" onclick="setJobSourceTab('govt')" id="tabSourceGovt" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏛️ Govt / Sewayojan Updates</button>
+    <!-- JOB FEED GRID + USEFUL LINKS SECTION -->
+    <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-12">
+        <section class="space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-3 border-b dark:border-gray-700 pb-4">
+                <div class="flex flex-wrap gap-2 text-xs font-black">
+                    <button type="button" onclick="setJobSourceTab('all')" id="tabSourceAll" class="px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition">🔥 सभी (All)</button>
+                    <button type="button" onclick="setJobSourceTab('private')" id="tabSourcePrivate" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏢 Private Jobs</button>
+                    <button type="button" onclick="setJobSourceTab('govt')" id="tabSourceGovt" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏛️ Govt / Sewayojan Updates</button>
+                </div>
+                <span id="jobCountBadge" class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold">लोड हो रहा है...</span>
             </div>
-            <span id="jobCountBadge" class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold">लोड हो रहा है...</span>
-        </div>
 
-        <div id="publicJobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <p class="text-xs text-gray-500 col-span-full text-center py-12">लाइव जॉब्स लोड हो रही हैं...</p>
-        </div>
+            <div id="publicJobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p class="text-xs text-gray-500 col-span-full text-center py-12">लाइव जॉब्स लोड हो रही हैं...</p>
+            </div>
+        </section>
+
+        <!-- USEFUL / IMPORTANT LINKS BOX (Controlled from Super Admin) -->
+        <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-700 to-blue-800 text-white px-6 py-4 flex items-center justify-between">
+                <h2 class="text-base md:text-lg font-black tracking-wide flex items-center gap-2">
+                    <span>🔗</span> <span>उपयोगी लिंक (Important Portals)</span>
+                </h2>
+                <span class="text-[11px] bg-white/20 px-3 py-1 rounded-full font-bold">Official Websites</span>
+            </div>
+            <div id="usefulLinksContainer" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs md:text-sm font-bold">
+                <!-- Populated dynamically from Firestore or Default List -->
+            </div>
+        </section>
     </main>
 
     <!-- FULL JOB DETAIL MODAL -->
@@ -222,6 +237,36 @@
         let activeSourceTab = "all";
         let hrProfilesMap = {};
         let followerCountsMap = {};
+
+        const defaultUsefulLinks = [
+            { title: "कर्मचारी चयन आयोग", url: "https://ssc.gov.in" },
+            { title: "लोक सेवा आयोग उ.प्र.", url: "https://uppsc.up.nic.in" },
+            { title: "उ.प्र. अधीनस्थ सेवा चयन आयोग", url: "https://upsssc.gov.in" },
+            { title: "उ.प्र. पुलिस भर्ती एवं प्रोन्नति बोर्ड", url: "https://uppbpb.gov.in" },
+            { title: "उ.प्र. पॉवर कॉर्पोरेशन लिमिटेड", url: "https://uppcl.org" },
+            { title: "आई. बी. पी. एस.", url: "https://www.ibps.in" }
+        ];
+
+        function renderUsefulLinks(linksList) {
+            const container = document.getElementById('usefulLinksContainer');
+            const list = (linksList && linksList.length > 0) ? linksList : defaultUsefulLinks;
+            let html = "";
+            list.forEach(item => {
+                html += `
+                    <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-900/70 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 hover:text-indigo-700 dark:hover:text-indigo-300 transition group">
+                        <span class="flex items-center gap-2.5 truncate">
+                            <span class="w-2 h-2 rounded-full bg-indigo-600 shrink-0"></span>
+                            <span class="truncate">${item.title}</span>
+                        </span>
+                        <span class="text-xs text-gray-400 group-hover:text-indigo-600 shrink-0 ml-2">↗</span>
+                    </a>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Render defaults immediately so there is zero delay
+        renderUsefulLinks(defaultUsefulLinks);
 
         const bannerGradients = [
             "from-blue-900 via-indigo-900 to-slate-900",
@@ -423,11 +468,18 @@
 
         window.addEventListener('firebase-ready', async () => {
             try {
-                const [profSnap, followsSnap, jobsSnap] = await Promise.all([
+                const [profSnap, followsSnap, jobsSnap, linksSnap] = await Promise.all([
                     window.getDocs(window.collection(window.db, "hrProfiles")),
                     window.getDocs(window.collection(window.db, "follows")),
-                    window.getDocs(window.collection(window.db, "jobs"))
+                    window.getDocs(window.collection(window.db, "jobs")),
+                    window.getDocs(window.collection(window.db, "usefulLinks"))
                 ]);
+
+                // Update Useful Links if Admin has saved any
+                let customLinks = [];
+                linksSnap.forEach(d => customLinks.push(d.data()));
+                customLinks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                if (customLinks.length > 0) renderUsefulLinks(customLinks);
 
                 hrProfilesMap = {};
                 profSnap.forEach(d => {

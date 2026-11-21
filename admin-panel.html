@@ -69,8 +69,8 @@
         
         <div class="flex flex-wrap justify-between items-center gap-3">
             <div>
-                <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट व Govt/Sewayojan पोस्टिंग</h1>
-                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स, आवेदनों की लाइव रिपोर्ट और Official Link वैकेंसी पोस्टिंग</p>
+                <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट, Govt पोस्ट व उपयोगी लिंक कंट्रोल</h1>
+                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स की रिपोर्ट और होम पेज के उपयोगी लिंक मैनेज करें</p>
             </div>
             <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
         </div>
@@ -95,17 +95,45 @@
             </div>
         </div>
 
-        <!-- Report & Govt Post Tabs -->
+        <!-- Tabs -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
-            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">🏛️ Govt / Sewayojan पोस्ट करें</button>
+            <button type="button" onclick="switchReportTab('usefulLinks')" id="rTabUsefulLinks" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">🔗 उपयोगी लिंक (Useful Links)</button>
+            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏛️ Govt / Sewayojan पोस्ट करें</button>
             <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📢 Jobs Report</button>
             <button type="button" onclick="switchReportTab('hrs')" id="rTabHrs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏢 Registered HRs</button>
             <button type="button" onclick="switchReportTab('candidates')" id="rTabCandidates" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">👤 Candidates Report</button>
             <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications Report</button>
         </div>
 
-        <!-- TAB 0: GOVT / SEWAYOJAN OFFICIAL LINK JOB FORM -->
-        <div id="repSectionGovtPost" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-5">
+        <!-- TAB: USEFUL LINKS MANAGER -->
+        <div id="repSectionUsefulLinks" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+            <div class="border-b pb-3 flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">🔗 होम पेज "उपयोगी लिंक" मैनेज करें</h3>
+                    <p class="text-xs text-slate-500 mt-1">यहाँ आप जो भी लिंक जोड़ेंगे या हटाएंगे, वही होम पेज पर "उपयोगी लिंक" सेक्शन में दिखेंगे।</p>
+                </div>
+                <button type="button" onclick="seedDefaultUsefulLinks()" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-black">✨ डिफ़ॉल्ट 6 लिंक लोड करें</button>
+            </div>
+
+            <form id="usefulLinkForm" onsubmit="addUsefulLink(event)" class="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs">
+                <div class="md:col-span-5">
+                    <input type="text" id="uLinkTitle" placeholder="लिंक का नाम (जैसे: कर्मचारी चयन आयोग)" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                </div>
+                <div class="md:col-span-5">
+                    <input type="url" id="uLinkUrl" placeholder="वेबसाइट लिंक (https://ssc.gov.in)" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" id="uLinkBtn" class="w-full h-full py-3.5 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow">➕ जोड़ें</button>
+                </div>
+            </form>
+
+            <div id="adminUsefulLinksList" class="space-y-2.5">
+                <p class="text-xs text-slate-400 text-center py-6">उपयोगी लिंक लोड हो रहे हैं...</p>
+            </div>
+        </div>
+
+        <!-- TAB: GOVT / SEWAYOJAN OFFICIAL LINK JOB FORM -->
+        <div id="repSectionGovtPost" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-5 hidden">
             <div class="border-b pb-3">
                 <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">🏛️ नई Govt / Sewayojan वैकेंसी पब्लिश करें (With Official Apply Link)</h3>
                 <p class="text-xs text-slate-500 mt-1">यह पोस्ट होम पेज के "Govt / Sewayojan Updates" टैब में दिखेगी और इसमें आधिकारिक आवेदन लिंक जुड़ेगा।</p>
@@ -273,12 +301,73 @@
         });
 
         function switchReportTab(tab) {
-            const map = { govtPost: 'repSectionGovtPost', jobs: 'repSectionJobs', hrs: 'repSectionHrs', candidates: 'repSectionCandidates', apps: 'repSectionApps' };
-            const btnMap = { govtPost: 'rTabGovtPost', jobs: 'rTabJobs', hrs: 'rTabHrs', candidates: 'rTabCandidates', apps: 'rTabApps' };
+            const map = {
+                usefulLinks: 'repSectionUsefulLinks',
+                govtPost: 'repSectionGovtPost',
+                jobs: 'repSectionJobs',
+                hrs: 'repSectionHrs',
+                candidates: 'repSectionCandidates',
+                apps: 'repSectionApps'
+            };
+            const btnMap = {
+                usefulLinks: 'rTabUsefulLinks',
+                govtPost: 'rTabGovtPost',
+                jobs: 'rTabJobs',
+                hrs: 'rTabHrs',
+                candidates: 'rTabCandidates',
+                apps: 'rTabApps'
+            };
             Object.keys(map).forEach(k => {
                 document.getElementById(map[k]).classList.toggle('hidden', k !== tab);
-                document.getElementById(btnMap[k]).className = (k === tab) ? "px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black" : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
+                document.getElementById(btnMap[k]).className = (k === tab)
+                    ? "px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black"
+                    : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
             });
+        }
+
+        async function addUsefulLink(e) {
+            e.preventDefault();
+            if (!window.db) return;
+            const btn = document.getElementById('uLinkBtn');
+            btn.disabled = true;
+            const title = document.getElementById('uLinkTitle').value.trim();
+            const url = document.getElementById('uLinkUrl').value.trim();
+            await window.addDoc(window.collection(window.db, "usefulLinks"), {
+                title,
+                url,
+                createdAt: Date.now()
+            });
+            document.getElementById('usefulLinkForm').reset();
+            btn.disabled = false;
+            loadAllAdminReports();
+        }
+
+        async function seedDefaultUsefulLinks() {
+            if (!window.db) return;
+            const defaults = [
+                { title: "कर्मचारी चयन आयोग", url: "https://ssc.gov.in" },
+                { title: "लोक सेवा आयोग उ.प्र.", url: "https://uppsc.up.nic.in" },
+                { title: "उ.प्र. अधीनस्थ सेवा चयन आयोग", url: "https://upsssc.gov.in" },
+                { title: "उ.प्र. पुलिस भर्ती एवं प्रोन्नति बोर्ड", url: "https://uppbpb.gov.in" },
+                { title: "उ.प्र. पॉवर कॉर्पोरेशन लिमिटेड", url: "https://uppcl.org" },
+                { title: "आई. बी. पी. एस.", url: "https://www.ibps.in" }
+            ];
+            for (const item of defaults) {
+                await window.addDoc(window.collection(window.db, "usefulLinks"), {
+                    title: item.title,
+                    url: item.url,
+                    createdAt: Date.now()
+                });
+            }
+            alert("सभी 6 डिफ़ॉल्ट उपयोगी लिंक जोड़ दिए गए हैं!");
+            loadAllAdminReports();
+        }
+
+        async function deleteUsefulLink(docId) {
+            if (confirm("क्या आप इस उपयोगी लिंक को हटाना चाहते हैं?")) {
+                await window.deleteDoc(window.doc(window.db, "usefulLinks", docId));
+                loadAllAdminReports();
+            }
         }
 
         async function publishGovtJob(e) {
@@ -359,13 +448,31 @@
         async function loadAllAdminReports() {
             if (!window.db) return;
 
-            const [jobsSnap, hrSnap, appsSnap, followsSnap] = await Promise.all([
+            const [jobsSnap, hrSnap, appsSnap, followsSnap, linksSnap] = await Promise.all([
                 window.getDocs(window.collection(window.db, "jobs")),
                 window.getDocs(window.collection(window.db, "hrProfiles")),
                 window.getDocs(window.collection(window.db, "applications")),
-                window.getDocs(window.collection(window.db, "follows"))
+                window.getDocs(window.collection(window.db, "follows")),
+                window.getDocs(window.collection(window.db, "usefulLinks"))
             ]);
 
+            // Useful Links Render
+            let linksArr = [];
+            linksSnap.forEach(d => linksArr.push({ id: d.id, ...d.data() }));
+            linksArr.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            let linksHtml = "";
+            linksArr.forEach(l => {
+                linksHtml += `<div class="p-3.5 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-2">
+                    <div>
+                        <div class="font-black text-sm">🔗 ${l.title}</div>
+                        <a href="${l.url}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline">${l.url}</a>
+                    </div>
+                    <button type="button" onclick="deleteUsefulLink('${l.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-xl font-bold">🗑️ हटाएं</button>
+                </div>`;
+            });
+            document.getElementById('adminUsefulLinksList').innerHTML = linksHtml || `<p class="text-xs text-slate-400 text-center py-4">अभी कोई उपयोगी लिंक नहीं जोड़ा गया है (ऊपर से नया जोड़ें या डिफ़ॉल्ट 6 लिंक लोड करें)।</p>`;
+
+            // Jobs Render
             let jobsHtml = "", jobCount = 0;
             adminJobsMap = {};
             jobsSnap.forEach(docSnap => {
@@ -390,6 +497,7 @@
             document.getElementById('repTotalJobs').innerText = jobCount;
             document.getElementById('adminJobsContainer').innerHTML = jobsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई जॉब नहीं मिली।</p>`;
 
+            // HRs Render
             let hrsHtml = "", hrCount = 0;
             hrSnap.forEach(d => {
                 hrCount++;
@@ -405,6 +513,7 @@
             document.getElementById('repTotalHRs').innerText = hrCount;
             document.getElementById('adminHrsContainer').innerHTML = hrsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई HR प्रोफाइल नहीं मिली।</p>`;
 
+            // Candidates & Applications
             let candMap = {};
             let appsHtml = "", appCount = 0;
 
