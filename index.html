@@ -103,20 +103,63 @@
         </div>
     </section>
 
-    <!-- JOB FEED GRID + USEFUL LINKS + CANDIDATE FEEDBACK & RATING -->
+    <!-- MAIN CONTENT: TABS + JOB GRID / DEDICATED REVIEWS TAB + USEFUL LINKS -->
     <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-12">
-        <section class="space-y-6">
+        <section id="mainTabsSection" class="space-y-6">
             <div class="flex flex-wrap justify-between items-center gap-3 border-b dark:border-gray-700 pb-4">
                 <div class="flex flex-wrap gap-2 text-xs font-black">
                     <button type="button" onclick="setJobSourceTab('all')" id="tabSourceAll" class="px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition">🔥 सभी (All)</button>
                     <button type="button" onclick="setJobSourceTab('private')" id="tabSourcePrivate" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏢 Private Jobs</button>
                     <button type="button" onclick="setJobSourceTab('govt')" id="tabSourceGovt" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏛️ Govt / Sewayojan Updates</button>
+                    <button type="button" onclick="setJobSourceTab('reviews')" id="tabSourceReviews" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">⭐ Candidate Reviews & Rating</button>
                 </div>
                 <span id="jobCountBadge" class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold">लोड हो रहा है...</span>
             </div>
 
+            <!-- JOBS GRID -->
             <div id="publicJobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <p class="text-xs text-gray-500 col-span-full text-center py-12">लाइव जॉब्स लोड हो रही हैं...</p>
+            </div>
+
+            <!-- DEDICATED CANDIDATE REVIEWS & RATING WALL (Option 1) -->
+            <div id="dedicatedReviewsTabPanel" class="hidden space-y-6">
+                <!-- Trust Score Hero Card -->
+                <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-5 text-center md:text-left space-y-2 border-b md:border-b-0 md:border-r dark:border-gray-700 pb-5 md:pb-0 md:pr-6">
+                        <span class="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Candidate Trust Score</span>
+                        <div class="flex items-baseline justify-center md:justify-start gap-2 pt-1">
+                            <span id="heroAvgScore" class="text-5xl font-black text-gray-900 dark:text-white">0.0</span>
+                            <span class="text-base font-bold text-gray-400">/ 5.0</span>
+                        </div>
+                        <div id="heroStarsDisplay" class="text-2xl text-amber-400 tracking-wider">☆☆☆☆☆</div>
+                        <p id="heroTotalReviewsText" class="text-xs text-gray-500 dark:text-gray-400 font-bold">0 कैंडिडेट रिव्यूज़ के आधार पर</p>
+                        <div class="pt-2">
+                            <button type="button" onclick="openFeedbackModal()" class="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-pink-600 hover:opacity-95 text-white px-5 py-3 rounded-2xl text-xs font-black shadow-lg transition">✍️ रेटिंग / विचार दें</button>
+                        </div>
+                    </div>
+
+                    <div id="starBreakdownBars" class="md:col-span-7 space-y-2.5 text-xs">
+                        <!-- 5★ to 1★ progress bars populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Interactive Star-Wise Filter Buttons -->
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow border dark:border-gray-700">
+                    <div class="flex flex-wrap gap-2 text-xs font-black" id="starFilterButtons">
+                        <button type="button" onclick="filterReviewsByStar('all')" data-star="all" class="star-filter-btn px-3.5 py-2 rounded-xl bg-indigo-600 text-white">सभी (All)</button>
+                        <button type="button" onclick="filterReviewsByStar(5)" data-star="5" class="star-filter-btn px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 dark:hover:bg-amber-950/50">5 ★</button>
+                        <button type="button" onclick="filterReviewsByStar(4)" data-star="4" class="star-filter-btn px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 dark:hover:bg-amber-950/50">4 ★</button>
+                        <button type="button" onclick="filterReviewsByStar(3)" data-star="3" class="star-filter-btn px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 dark:hover:bg-amber-950/50">3 ★</button>
+                        <button type="button" onclick="filterReviewsByStar(2)" data-star="2" class="star-filter-btn px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 dark:hover:bg-amber-950/50">2 ★</button>
+                        <button type="button" onclick="filterReviewsByStar(1)" data-star="1" class="star-filter-btn px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 dark:hover:bg-amber-950/50">1 ★</button>
+                    </div>
+                    <span id="filteredReviewCountText" class="text-xs font-bold text-gray-500">0 रिव्यूज़</span>
+                </div>
+
+                <!-- Filtered Review Cards Grid -->
+                <div id="feedbacksListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                    <p class="text-gray-400 col-span-full text-center py-8">रिव्यू लोड हो रहे हैं...</p>
+                </div>
             </div>
         </section>
 
@@ -130,21 +173,15 @@
             </div>
             <div id="usefulLinksContainer" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs md:text-sm font-bold"></div>
         </section>
-
-        <!-- CANDIDATE FEEDBACK & SITE RATING SECTION -->
-        <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
-            <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-pink-600 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <h2 class="text-base md:text-lg font-black tracking-wide">⭐ कैंडिडेट रिव्यू और रेटिंग (User Feedback)</h2>
-                    <span id="avgRatingBadge" class="bg-black/25 px-3 py-1 rounded-full text-xs font-black">★ 0.0 (0 Reviews)</span>
-                </div>
-                <button type="button" onclick="openFeedbackModal()" class="bg-white text-gray-900 hover:bg-yellow-100 px-4 py-2 rounded-2xl text-xs font-black shadow transition">✍️ अपना विचार / रेटिंग दें</button>
-            </div>
-            <div id="feedbacksListContainer" class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                <p class="text-gray-400 col-span-full text-center py-4">रिव्यू लोड हो रहे हैं...</p>
-            </div>
-        </section>
     </main>
+
+    <!-- FLOATING COMPACT RATING BADGE (Option 3) -->
+    <button type="button" onclick="jumpToReviewsTabAndScroll()" id="floatingRatingBadge" class="fixed bottom-5 right-5 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-pink-600 hover:scale-105 text-white px-4 py-3 rounded-full shadow-2xl border border-white/30 flex items-center gap-2 text-xs font-black transition">
+        <span>⭐</span>
+        <span id="floatingAvgText">0.0</span>
+        <span class="opacity-80">•</span>
+        <span>रिव्यू / रेटिंग</span>
+    </button>
 
     <!-- FEEDBACK & RATING SUBMIT MODAL -->
     <div id="feedbackModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4">
@@ -318,6 +355,8 @@
         let allLoadedJobs = [];
         let filteredJobs = [];
         let activeSourceTab = "all";
+        let allFeedbackList = [];
+        let activeStarFilter = "all";
         let hrProfilesMap = {};
         let followerCountsMap = {};
         let jobLikeCountsMap = {};
@@ -438,6 +477,13 @@
             renderJobs(filteredJobs);
         }
 
+        // --- FLOATING BADGE -> DEDICATED TAB SCROLL ---
+        function jumpToReviewsTabAndScroll() {
+            setJobSourceTab('reviews');
+            const sec = document.getElementById('mainTabsSection');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         // --- FEEDBACK & RATING FUNCTIONALITY ---
         function openFeedbackModal() {
             setRatingValue(5);
@@ -489,31 +535,90 @@
             let list = [];
             fbSnap.forEach(d => list.push({ id: d.id, ...d.data() }));
             list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-            renderFeedbacks(list);
+            allFeedbackList = list;
+            renderTrustHeroAndFilteredReviews();
         }
 
-        function renderFeedbacks(list) {
-            const badge = document.getElementById('avgRatingBadge');
-            const container = document.getElementById('feedbacksListContainer');
+        function filterReviewsByStar(star) {
+            activeStarFilter = star;
+            document.querySelectorAll('#starFilterButtons .star-filter-btn').forEach(btn => {
+                const bStar = btn.getAttribute('data-star');
+                const matches = String(bStar) === String(star);
+                btn.className = matches
+                    ? "star-filter-btn px-3.5 py-2 rounded-xl bg-indigo-600 text-white"
+                    : "star-filter-btn px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-amber-100 dark:hover:bg-amber-950/50";
+            });
+            renderFilteredReviewCards();
+        }
 
-            if (!list || list.length === 0) {
-                badge.innerText = "★ 0.0 (0 Reviews)";
-                container.innerHTML = `<p class="text-gray-400 col-span-full text-center py-4">अभी कोई फीडबैक नहीं है। सबसे पहले अपना अनुभव साझा करें!</p>`;
+        function renderTrustHeroAndFilteredReviews() {
+            const list = allFeedbackList || [];
+            const total = list.length;
+            const avgNum = total > 0
+                ? (list.reduce((sum, item) => sum + (Number(item.rating) || 5), 0) / total)
+                : 0;
+            const avgStr = avgNum.toFixed(1);
+
+            document.getElementById('heroAvgScore').innerText = avgStr;
+            document.getElementById('floatingAvgText').innerText = avgStr;
+            const roundedStars = Math.round(avgNum);
+            document.getElementById('heroStarsDisplay').innerText = "★".repeat(roundedStars) + "☆".repeat(Math.max(0, 5 - roundedStars));
+            document.getElementById('heroTotalReviewsText').innerText = `${total} कैंडिडेट रिव्यूज़ के आधार पर`;
+
+            // 5★ to 1★ breakdown bars
+            const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+            list.forEach(item => {
+                const r = Math.min(5, Math.max(1, Number(item.rating) || 5));
+                starCounts[r] = (starCounts[r] || 0) + 1;
+            });
+
+            let barsHtml = "";
+            [5, 4, 3, 2, 1].forEach(s => {
+                const cnt = starCounts[s] || 0;
+                const pct = total > 0 ? Math.round((cnt / total) * 100) : 0;
+                barsHtml += `
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 font-black text-amber-500">${s} ★</span>
+                        <div class="flex-1 h-2.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                            <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="w-12 text-right font-bold text-gray-500">${cnt} (${pct}%)</span>
+                    </div>
+                `;
+            });
+            document.getElementById('starBreakdownBars').innerHTML = barsHtml;
+
+            renderFilteredReviewCards();
+        }
+
+        function renderFilteredReviewCards() {
+            const container = document.getElementById('feedbacksListContainer');
+            const filtered = activeStarFilter === "all"
+                ? allFeedbackList
+                : allFeedbackList.filter(item => (Number(item.rating) || 5) === Number(activeStarFilter));
+
+            document.getElementById('filteredReviewCountText').innerText = `${filtered.length} रिव्यूज़ दिख रहे हैं`;
+
+            if (!filtered || filtered.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 col-span-full text-center py-8 bg-white dark:bg-gray-800 rounded-2xl border dark:border-gray-700">इस रेटिंग के लिए अभी कोई रिव्यू नहीं है।</p>`;
                 return;
             }
 
-            const totalStars = list.reduce((sum, item) => sum + (Number(item.rating) || 5), 0);
-            const avg = (totalStars / list.length).toFixed(1);
-            badge.innerText = `★ ${avg} (${list.length} Reviews)`;
-
-            const topSix = list.slice(0, 6);
-            container.innerHTML = topSix.map(item => {
-                const stars = "★".repeat(Number(item.rating) || 5) + "☆".repeat(Math.max(0, 5 - (Number(item.rating) || 5)));
+            container.innerHTML = filtered.map(item => {
+                const rVal = Math.min(5, Math.max(1, Number(item.rating) || 5));
+                const stars = "★".repeat(rVal) + "☆".repeat(5 - rVal);
+                const initial = (item.name || "C").trim().charAt(0).toUpperCase();
                 return `
-                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/70 border dark:border-gray-700 flex flex-col justify-between space-y-2.5">
-                        <div class="flex justify-between items-center">
-                            <span class="font-black text-gray-900 dark:text-white truncate">👤 ${item.name || "Candidate"}</span>
-                            <span class="text-amber-500 font-black tracking-tight shrink-0 ml-2">${stars}</span>
+                    <div class="p-5 rounded-3xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-lg flex flex-col justify-between space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <span class="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-black text-xs flex items-center justify-center shrink-0">${initial}</span>
+                                <div class="truncate">
+                                    <p class="font-black text-sm text-gray-900 dark:text-white truncate">${item.name || "Candidate"}</p>
+                                    <p class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">✓ Verified Feedback</p>
+                                </div>
+                            </div>
+                            <span class="text-amber-400 font-black text-sm tracking-tight shrink-0">${stars}</span>
                         </div>
                         <p class="text-gray-600 dark:text-gray-300 leading-relaxed">${item.message || ""}</p>
                     </div>
@@ -670,15 +775,33 @@
 
         function setJobSourceTab(tab) {
             activeSourceTab = tab;
-            ['all', 'private', 'govt'].forEach(t => {
-                const btn = document.getElementById('tabSource' + t.charAt(0).toUpperCase() + t.slice(1));
+            const tabIds = {
+                all: 'tabSourceAll',
+                private: 'tabSourcePrivate',
+                govt: 'tabSourceGovt',
+                reviews: 'tabSourceReviews'
+            };
+            Object.keys(tabIds).forEach(t => {
+                const btn = document.getElementById(tabIds[t]);
                 if (btn) {
                     btn.className = (t === tab)
                         ? "px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition"
                         : "px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition";
                 }
             });
-            applyJobFilters();
+
+            const jobsGrid = document.getElementById('publicJobsContainer');
+            const reviewsPanel = document.getElementById('dedicatedReviewsTabPanel');
+            if (tab === 'reviews') {
+                jobsGrid.classList.add('hidden');
+                reviewsPanel.classList.remove('hidden');
+                document.getElementById('jobCountBadge').innerText = `${allFeedbackList.length} रिव्यूज़`;
+                renderTrustHeroAndFilteredReviews();
+            } else {
+                jobsGrid.classList.remove('hidden');
+                reviewsPanel.classList.add('hidden');
+                applyJobFilters();
+            }
         }
 
         function populateCityOptions(jobs) {
@@ -697,6 +820,7 @@
         }
 
         function applyJobFilters() {
+            if (activeSourceTab === 'reviews') return;
             const query = (document.getElementById('jobSearchInput').value || "").trim().toLowerCase();
             const city = (document.getElementById('cityFilterSelect').value || "").trim().toLowerCase();
             const category = (document.getElementById('categoryFilterSelect').value || "").trim().toLowerCase();
@@ -825,7 +949,8 @@
                 let fbList = [];
                 fbSnap.forEach(d => fbList.push({ id: d.id, ...d.data() }));
                 fbList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-                renderFeedbacks(fbList);
+                allFeedbackList = fbList;
+                renderTrustHeroAndFilteredReviews();
 
                 if (popupSnap.exists()) {
                     showSiteWelcomePopup(popupSnap.data());
