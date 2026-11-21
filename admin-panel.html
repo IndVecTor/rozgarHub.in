@@ -8,7 +8,7 @@
     <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -25,6 +25,8 @@
         window.deleteDoc = deleteDoc;
         window.doc = doc;
         window.addDoc = addDoc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
@@ -69,8 +71,8 @@
         
         <div class="flex flex-wrap justify-between items-center gap-3">
             <div>
-                <h1 class="text-2xl font-black">📊 सुपर एडमिन रिपोर्ट, Govt पोस्ट व उपयोगी लिंक कंट्रोल</h1>
-                <p class="text-xs text-slate-500">सभी जॉब्स, HR, कैंडिडेट्स की रिपोर्ट और होम पेज के उपयोगी लिंक मैनेज करें</p>
+                <h1 class="text-2xl font-black">📊 सुपर एडमिन कंट्रोल पैनल</h1>
+                <p class="text-xs text-slate-500">Notice Popup, उपयोगी लिंक, Govt पोस्ट और सभी लाइव रिपोर्ट्स</p>
             </div>
             <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
         </div>
@@ -97,16 +99,75 @@
 
         <!-- Tabs -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
-            <button type="button" onclick="switchReportTab('usefulLinks')" id="rTabUsefulLinks" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">🔗 उपयोगी लिंक (Useful Links)</button>
-            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏛️ Govt / Sewayojan पोस्ट करें</button>
+            <button type="button" onclick="switchReportTab('noticePopup')" id="rTabNoticePopup" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">📣 Notice Popup</button>
+            <button type="button" onclick="switchReportTab('usefulLinks')" id="rTabUsefulLinks" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🔗 उपयोगी लिंक</button>
+            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏛️ Govt / Sewayojan पोस्ट</button>
             <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📢 Jobs Report</button>
             <button type="button" onclick="switchReportTab('hrs')" id="rTabHrs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏢 Registered HRs</button>
             <button type="button" onclick="switchReportTab('candidates')" id="rTabCandidates" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">👤 Candidates Report</button>
             <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications Report</button>
         </div>
 
+        <!-- TAB: NOTICE POPUP MANAGER -->
+        <div id="repSectionNoticePopup" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+            <div class="border-b pb-3 flex flex-wrap justify-between items-center gap-2">
+                <div>
+                    <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">📣 होम पेज Welcome / Notice Popup सेटिंग्स</h3>
+                    <p class="text-xs text-slate-500 mt-1">यहाँ से आप जब चाहें पॉपअप का मैसेज लिख/बदल सकते हैं और इसे Enable या Disable कर सकते हैं।</p>
+                </div>
+                <span id="popupCurrentBadge" class="px-3 py-1 rounded-full text-xs font-black bg-gray-200 text-gray-700">लोड हो रहा है...</span>
+            </div>
+
+            <form onsubmit="saveSitePopupSettings(event)" class="space-y-4 text-xs">
+                <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <p class="font-black text-sm text-gray-900 dark:text-white">पॉपअप स्टेटस (Enable / Disable)</p>
+                        <p class="text-slate-500">Enable रखने पर होम पेज खोलते ही यह पॉपअप दिखाई देगा।</p>
+                    </div>
+                    <select id="popupEnabledSelect" class="p-3 rounded-2xl border dark:border-slate-700 bg-white dark:bg-slate-900 font-black text-xs">
+                        <option value="true">🟢 Enabled (चालू रखें)</option>
+                        <option value="false">🔴 Disabled (बंद रखें)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold mb-1">पॉपअप हेडिंग / टाइटल *</label>
+                        <input type="text" id="popupTitleInput" placeholder="जैसे: 🔔 जरूरी सूचना / स्वागत है!" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">अपने-आप बंद होने का समय (Auto-Close Seconds)</label>
+                        <select id="popupAutoCloseSelect" class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                            <option value="5">5 सेकंड बाद अपने-आप बंद हो जाए</option>
+                            <option value="8" selected>8 सेकंड बाद अपने-आप बंद हो जाए</option>
+                            <option value="12">12 सेकंड बाद अपने-आप बंद हो जाए</option>
+                            <option value="0">Manual Close (यूज़र खुद बंद करे)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">पॉपअप मैसेज (जो आप दिखाना चाहते हैं) *</label>
+                    <textarea id="popupMessageInput" rows="4" placeholder="यहाँ अपना कोई भी मैसेज, सूचना, या ऑफर लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold mb-1">एक्शन बटन का नाम (Optional)</label>
+                        <input type="text" id="popupBtnTextInput" placeholder="जैसे: अभी देखें / WhatsApp जुड़ें" class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">एक्शन बटन लिंक (Optional - https://...)</label>
+                        <input type="url" id="popupBtnUrlInput" placeholder="https://..." class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    </div>
+                </div>
+
+                <button type="submit" id="savePopupBtn" class="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow-xl transition">पॉपअप सेटिंग्स सेव करें 💾</button>
+            </form>
+        </div>
+
         <!-- TAB: USEFUL LINKS MANAGER -->
-        <div id="repSectionUsefulLinks" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+        <div id="repSectionUsefulLinks" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-6 hidden">
             <div class="border-b pb-3 flex flex-wrap justify-between items-center gap-2">
                 <div>
                     <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">🔗 होम पेज "उपयोगी लिंक" मैनेज करें</h3>
@@ -302,6 +363,7 @@
 
         function switchReportTab(tab) {
             const map = {
+                noticePopup: 'repSectionNoticePopup',
                 usefulLinks: 'repSectionUsefulLinks',
                 govtPost: 'repSectionGovtPost',
                 jobs: 'repSectionJobs',
@@ -310,6 +372,7 @@
                 apps: 'repSectionApps'
             };
             const btnMap = {
+                noticePopup: 'rTabNoticePopup',
                 usefulLinks: 'rTabUsefulLinks',
                 govtPost: 'rTabGovtPost',
                 jobs: 'rTabJobs',
@@ -323,6 +386,41 @@
                     ? "px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black"
                     : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
             });
+        }
+
+        async function saveSitePopupSettings(e) {
+            e.preventDefault();
+            if (!window.db) return;
+            const btn = document.getElementById('savePopupBtn');
+            btn.disabled = true;
+
+            const enabled = document.getElementById('popupEnabledSelect').value === "true";
+            const payload = {
+                enabled,
+                title: document.getElementById('popupTitleInput').value.trim(),
+                message: document.getElementById('popupMessageInput').value.trim(),
+                autoCloseSec: parseInt(document.getElementById('popupAutoCloseSelect').value, 10) || 0,
+                btnText: document.getElementById('popupBtnTextInput').value.trim(),
+                btnUrl: document.getElementById('popupBtnUrlInput').value.trim(),
+                updatedAt: Date.now()
+            };
+
+            await window.setDoc(window.doc(window.db, "siteSettings", "welcomePopup"), payload);
+            updatePopupBadgeUI(enabled);
+            btn.disabled = false;
+            alert(enabled ? "पॉपअप सेव और चालू (Enabled) हो गया है!" : "पॉपअप सेव और बंद (Disabled) कर दिया गया है!");
+        }
+
+        function updatePopupBadgeUI(enabled) {
+            const badge = document.getElementById('popupCurrentBadge');
+            if (!badge) return;
+            if (enabled) {
+                badge.innerText = "🟢 Currently Enabled";
+                badge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800";
+            } else {
+                badge.innerText = "🔴 Currently Disabled";
+                badge.className = "px-3 py-1 rounded-full text-xs font-black bg-red-100 text-red-700";
+            }
         }
 
         async function addUsefulLink(e) {
@@ -448,13 +546,29 @@
         async function loadAllAdminReports() {
             if (!window.db) return;
 
-            const [jobsSnap, hrSnap, appsSnap, followsSnap, linksSnap] = await Promise.all([
+            const [jobsSnap, hrSnap, appsSnap, followsSnap, linksSnap, popupSnap] = await Promise.all([
                 window.getDocs(window.collection(window.db, "jobs")),
                 window.getDocs(window.collection(window.db, "hrProfiles")),
                 window.getDocs(window.collection(window.db, "applications")),
                 window.getDocs(window.collection(window.db, "follows")),
-                window.getDocs(window.collection(window.db, "usefulLinks"))
+                window.getDocs(window.collection(window.db, "usefulLinks")),
+                window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup"))
             ]);
+
+            // Load Popup Settings
+            if (popupSnap.exists()) {
+                const pData = popupSnap.data();
+                document.getElementById('popupEnabledSelect').value = pData.enabled ? "true" : "false";
+                document.getElementById('popupTitleInput').value = pData.title || "";
+                document.getElementById('popupMessageInput').value = pData.message || "";
+                document.getElementById('popupAutoCloseSelect').value = String(pData.autoCloseSec ?? 8);
+                document.getElementById('popupBtnTextInput').value = pData.btnText || "";
+                document.getElementById('popupBtnUrlInput').value = pData.btnUrl || "";
+                updatePopupBadgeUI(Boolean(pData.enabled));
+            } else {
+                document.getElementById('popupEnabledSelect').value = "false";
+                updatePopupBadgeUI(false);
+            }
 
             // Useful Links Render
             let linksArr = [];

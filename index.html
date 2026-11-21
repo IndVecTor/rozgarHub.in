@@ -9,7 +9,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -26,6 +26,7 @@
         window.doc = doc;
         window.setDoc = setDoc;
         window.deleteDoc = deleteDoc;
+        window.getDoc = getDoc;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
@@ -41,6 +42,11 @@
             letter-spacing: 0.08em;
             text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
         }
+        @keyframes popScaleIn {
+            0% { opacity: 0; transform: scale(0.92) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-pop-in { animation: popScaleIn 0.28s ease-out forwards; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
@@ -124,6 +130,27 @@
             <div id="usefulLinksContainer" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs md:text-sm font-bold"></div>
         </section>
     </main>
+
+    <!-- ADMIN CONTROLLED WELCOME / NOTICE POPUP MODAL -->
+    <div id="siteWelcomePopupModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden animate-pop-in">
+            <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-6 py-4 flex justify-between items-center">
+                <span class="text-[11px] font-black uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">📣 RozgarHub.in सूचना</span>
+                <button type="button" onclick="closeSiteWelcomePopup()" class="w-8 h-8 rounded-full bg-black/25 hover:bg-black/45 flex items-center justify-center font-black text-xs transition">✕</button>
+            </div>
+            <div class="p-6 md:p-7 space-y-4 text-center">
+                <h3 id="sitePopupTitle" class="text-xl md:text-2xl font-black text-gray-900 dark:text-white leading-snug">महत्वपूर्ण सूचना</h3>
+                <p id="sitePopupMessage" class="text-xs md:text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed"></p>
+                
+                <div class="pt-2 flex flex-wrap justify-center gap-2.5">
+                    <a id="sitePopupActionBtn" href="#" target="_blank" rel="noopener noreferrer" class="hidden flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-5 rounded-2xl font-black text-xs shadow-lg transition">देखें &rarr;</a>
+                    <button type="button" onclick="closeSiteWelcomePopup()" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white py-3 px-5 rounded-2xl font-black text-xs transition">ठीक है</button>
+                </div>
+
+                <p id="sitePopupTimerNote" class="hidden text-[10px] text-gray-400 font-semibold"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- FULL JOB DETAIL MODAL -->
     <div id="jobDetailModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
@@ -240,6 +267,55 @@
         let activeSourceTab = "all";
         let hrProfilesMap = {};
         let followerCountsMap = {};
+        let popupAutoCloseTimer = null;
+
+        function showSiteWelcomePopup(pData) {
+            if (!pData || !pData.enabled) return;
+            document.getElementById('sitePopupTitle').innerText = pData.title || "महत्वपूर्ण सूचना";
+            document.getElementById('sitePopupMessage').innerText = pData.message || "";
+
+            const actionBtn = document.getElementById('sitePopupActionBtn');
+            if (pData.btnText && pData.btnUrl) {
+                actionBtn.innerText = pData.btnText;
+                actionBtn.href = pData.btnUrl;
+                actionBtn.classList.remove('hidden');
+            } else {
+                actionBtn.classList.add('hidden');
+            }
+
+            document.getElementById('siteWelcomePopupModal').classList.remove('hidden');
+
+            const sec = parseInt(pData.autoCloseSec, 10) || 0;
+            const timerNote = document.getElementById('sitePopupTimerNote');
+            if (sec > 0) {
+                let remaining = sec;
+                timerNote.classList.remove('hidden');
+                timerNote.innerText = `यह संदेश ${remaining} सेकंड में अपने-आप बंद हो जाएगा...`;
+                if (popupAutoCloseTimer) clearInterval(popupAutoCloseTimer);
+                popupAutoCloseTimer = setInterval(() => {
+                    remaining--;
+                    if (remaining <= 0) {
+                        closeSiteWelcomePopup();
+                    } else {
+                        timerNote.innerText = `यह संदेश ${remaining} सेकंड में अपने-आप बंद हो जाएगा...`;
+                    }
+                }, 1000);
+            } else {
+                timerNote.classList.add('hidden');
+            }
+        }
+
+        function closeSiteWelcomePopup() {
+            if (popupAutoCloseTimer) {
+                clearInterval(popupAutoCloseTimer);
+                popupAutoCloseTimer = null;
+            }
+            document.getElementById('siteWelcomePopupModal').classList.add('hidden');
+        }
+
+        document.getElementById('siteWelcomePopupModal').addEventListener('click', function(e) {
+            if (e.target === this) closeSiteWelcomePopup();
+        });
 
         const defaultUsefulLinks = [
             { title: "कर्मचारी चयन आयोग", url: "https://ssc.gov.in" },
@@ -294,11 +370,9 @@
 
             return `
                 <div class="w-full h-full bg-gradient-to-br ${themeStyle} text-white px-5 py-4 flex flex-col items-center justify-center relative overflow-hidden select-none">
-                    <!-- Ambient Glow Blobs -->
                     <div class="absolute -top-10 -left-10 w-32 h-32 rounded-full ${accentGlow} blur-2xl pointer-events-none"></div>
                     <div class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-cyan-400/15 blur-2xl pointer-events-none"></div>
 
-                    <!-- Decorative Subtle Frame -->
                     <div class="w-full h-full rounded-2xl border border-white/15 bg-white/[0.03] backdrop-blur-[2px] flex flex-col items-center justify-center p-3 text-center relative z-10">
                         <span class="text-[10px] font-black tracking-[0.28em] uppercase text-white/50 mb-1.5">RozgarHub.in</span>
                         <div class="cool-banner-title ${fontSizeClass} font-black uppercase bg-gradient-to-r ${textGradient} bg-clip-text text-transparent leading-tight">
@@ -468,12 +542,17 @@
 
         window.addEventListener('firebase-ready', async () => {
             try {
-                const [profSnap, followsSnap, jobsSnap, linksSnap] = await Promise.all([
+                const [profSnap, followsSnap, jobsSnap, linksSnap, popupSnap] = await Promise.all([
                     window.getDocs(window.collection(window.db, "hrProfiles")),
                     window.getDocs(window.collection(window.db, "follows")),
                     window.getDocs(window.collection(window.db, "jobs")),
-                    window.getDocs(window.collection(window.db, "usefulLinks"))
+                    window.getDocs(window.collection(window.db, "usefulLinks")),
+                    window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup"))
                 ]);
+
+                if (popupSnap.exists()) {
+                    showSiteWelcomePopup(popupSnap.data());
+                }
 
                 let customLinks = [];
                 linksSnap.forEach(d => customLinks.push(d.data()));
