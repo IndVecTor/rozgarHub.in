@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Panel & Analytics - RozgarHub.in</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class', }</script>
     <script type="module">
-        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js)";
-        import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, getDoc } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js)";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAfbDA-3Lh8VyUg2kirKV6kTgRiFj77gxc",
@@ -30,36 +30,36 @@
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
     <style>
-        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); }
-        .dark .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
-        .glass-modal { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(14px); }
+        .dark .glass-card { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(14px); }
+        .glass-modal { background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans flex flex-col min-h-screen transition-colors duration-300 overflow-x-hidden">
 
-    <header class="glass-card shadow-lg sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
-        <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide bg-gradient-to-r from-red-600 to-amber-600 bg-clip-text text-transparent">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-white font-bold px-2.5 py-1 bg-red-600 rounded-full shadow">👑 Super Admin</span></a>
-            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
-                <button type="button" onclick="toggleDarkMode()" id="themeToggleBtn" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm"><span id="themeIcon">🌙</span></button>
-                <a href="index.html" class="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-slate-800">🏠 होम पेज</a>
-                <button type="button" id="logoutBtn" onclick="handleAdminLogout()" class="hidden px-4 py-2.5 rounded-2xl bg-red-600 text-white hover:bg-red-700 transition shadow">लॉग आउट</button>
+    <header class="glass-card shadow-md sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800">
+        <div class="container mx-auto flex justify-between items-center p-3.5 md:p-4 gap-2">
+            <a href="index.html" class="text-lg md:text-2xl font-black tracking-wide bg-gradient-to-r from-red-600 to-amber-600 bg-clip-text text-transparent truncate">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-[10px] md:text-xs text-white font-bold px-2 py-0.5 md:px-2.5 md:py-1 bg-red-600 rounded-full shadow">👑 Admin</span></a>
+            <div class="flex items-center space-x-2 text-xs md:text-sm font-bold shrink-0">
+                <button type="button" onclick="toggleDarkMode()" id="themeToggleBtn" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800"><span id="themeIcon">🌙</span></button>
+                <a href="index.html" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-slate-800">🏠 होम</a>
+                <button type="button" id="logoutBtn" onclick="handleAdminLogout()" class="hidden px-3 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition shadow">लॉग आउट</button>
             </div>
         </div>
     </header>
 
-    <!-- ADMIN LOGIN MODAL -->
-    <main id="adminAuthView" class="container mx-auto px-4 py-16 flex-grow flex justify-center items-center max-w-md">
-        <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 w-full space-y-6 text-center">
+    <!-- ADMIN LOGIN VIEW -->
+    <main id="adminAuthView" class="container mx-auto px-4 py-12 flex-grow flex justify-center items-center max-w-md">
+        <div class="glass-card p-7 md:p-8 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full space-y-6 text-center">
             <div class="w-16 h-16 mx-auto rounded-3xl bg-red-600 flex items-center justify-center text-3xl shadow-xl shadow-red-600/30 text-white font-black">🔐</div>
             <div class="space-y-1">
-                <h1 class="text-2xl font-black tracking-tight">सुपर एडमिन लॉगिन</h1>
+                <h1 class="text-xl md:text-2xl font-black tracking-tight">सुपर एडमिन लॉगिन</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">पासवर्ड दर्ज करें (पासवर्ड: 2026)</p>
             </div>
             <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs text-left">
                 <div class="space-y-1">
                     <label class="block font-bold">एडमिन पासवर्ड</label>
-                    <input type="password" id="adminPassInput" placeholder="••••" required class="w-full border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white/50 dark:bg-slate-900/50 font-bold focus:ring-2 focus:ring-red-600 outline-none">
+                    <input type="password" id="adminPassInput" placeholder="••••" required class="w-full border border-slate-200 dark:border-slate-700 p-4 rounded-2xl bg-white dark:bg-slate-900 font-bold focus:ring-2 focus:ring-red-600 outline-none">
                 </div>
                 <button type="submit" class="w-full py-4 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-black text-sm shadow-xl shadow-red-600/30 transition">लॉगिन करें 🛡️</button>
             </form>
@@ -67,52 +67,51 @@
     </main>
 
     <!-- ADMIN DASHBOARD & COMPLETE REPORT VIEW -->
-    <main id="adminDashboardView" class="container mx-auto px-4 py-10 max-w-6xl flex-grow hidden space-y-8">
+    <main id="adminDashboardView" class="container mx-auto px-3 sm:px-4 py-6 md:py-10 max-w-6xl flex-grow hidden space-y-6 md:space-y-8">
         
         <div class="flex flex-wrap justify-between items-center gap-3">
             <div>
-                <h1 class="text-2xl font-black">📊 सुपर एडमिन कंट्रोल व Analytics डैशबोर्ड</h1>
+                <h1 class="text-xl md:text-2xl font-black">📊 सुपर एडमिन कंट्रोल व Analytics डैशबोर्ड</h1>
                 <p class="text-xs text-slate-500">विज़िट्स, ज़िला/शहर लोकेशन, पोस्ट लाइक्स, रेटिंग व फीडबैक और पोर्टल रिपोर्ट्स</p>
             </div>
-            <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 पूरी रिपोर्ट रिफ्रेश करें</button>
+            <button type="button" onclick="loadAllAdminReports()" class="px-4 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-black shadow">🔄 रिपोर्ट रिफ्रेश करें</button>
         </div>
 
         <!-- 4 Summary Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
-                <p class="text-[11px] text-slate-500 font-bold uppercase">Total Jobs Posted</p>
-                <h3 id="repTotalJobs" class="text-3xl font-black text-red-600 mt-1">0</h3>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <div class="glass-card p-4 md:p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase">Total Jobs Posted</p>
+                <h3 id="repTotalJobs" class="text-2xl md:text-3xl font-black text-red-600 mt-1">0</h3>
             </div>
-            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
-                <p class="text-[11px] text-slate-500 font-bold uppercase">Registered HRs</p>
-                <h3 id="repTotalHRs" class="text-3xl font-black text-indigo-600 mt-1">0</h3>
+            <div class="glass-card p-4 md:p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase">Registered HRs</p>
+                <h3 id="repTotalHRs" class="text-2xl md:text-3xl font-black text-indigo-600 mt-1">0</h3>
             </div>
-            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
-                <p class="text-[11px] text-slate-500 font-bold uppercase">Registered Candidates</p>
-                <h3 id="repTotalCandidates" class="text-3xl font-black text-emerald-600 mt-1">0</h3>
+            <div class="glass-card p-4 md:p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase">Registered Candidates</p>
+                <h3 id="repTotalCandidates" class="text-2xl md:text-3xl font-black text-emerald-600 mt-1">0</h3>
             </div>
-            <div class="glass-card p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
-                <p class="text-[11px] text-slate-500 font-bold uppercase">Total Applications</p>
-                <h3 id="repTotalApps" class="text-3xl font-black text-amber-600 mt-1">0</h3>
+            <div class="glass-card p-4 md:p-5 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
+                <p class="text-[10px] md:text-[11px] text-slate-500 font-bold uppercase">Total Applications</p>
+                <h3 id="repTotalApps" class="text-2xl md:text-3xl font-black text-amber-600 mt-1">0</h3>
             </div>
         </div>
 
         <!-- Tabs -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
-            <button type="button" onclick="switchReportTab('analytics')" id="rTabAnalytics" class="px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">📈 Analytics</button>
-            <button type="button" onclick="switchReportTab('noticePopup')" id="rTabNoticePopup" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📣 Notice Popup</button>
-            <button type="button" onclick="switchReportTab('usefulLinks')" id="rTabUsefulLinks" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🔗 उपयोगी लिंक</button>
-            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏛️ Govt / Sewayojan पोस्ट</button>
-            <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📢 Jobs Report</button>
-            <button type="button" onclick="switchReportTab('hrs')" id="rTabHrs" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏢 Registered HRs</button>
-            <button type="button" onclick="switchReportTab('candidates')" id="rTabCandidates" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">👤 Candidates Report</button>
-            <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications Report</button>
+            <button type="button" onclick="switchReportTab('analytics')" id="rTabAnalytics" class="px-3.5 py-2.5 rounded-2xl bg-indigo-600 text-white font-black">📈 Analytics</button>
+            <button type="button" onclick="switchReportTab('noticePopup')" id="rTabNoticePopup" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📣 Notice Popup</button>
+            <button type="button" onclick="switchReportTab('usefulLinks')" id="rTabUsefulLinks" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🔗 उपयोगी लिंक</button>
+            <button type="button" onclick="switchReportTab('govtPost')" id="rTabGovtPost" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏛️ Govt / Sewayojan</button>
+            <button type="button" onclick="switchReportTab('jobs')" id="rTabJobs" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📢 Jobs Report</button>
+            <button type="button" onclick="switchReportTab('hrs')" id="rTabHrs" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">🏢 HRs</button>
+            <button type="button" onclick="switchReportTab('candidates')" id="rTabCandidates" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">👤 Candidates</button>
+            <button type="button" onclick="switchReportTab('apps')" id="rTabApps" class="px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border">📥 Applications</button>
         </div>
 
         <!-- TAB: DEDICATED ANALYTICS DASHBOARD -->
         <div id="repSectionAnalytics" class="space-y-6">
-            <!-- Traffic & Engagement KPI Row -->
-            <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 <div class="glass-card p-4 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800">
                     <p class="text-[10px] text-slate-500 font-bold uppercase">आज की विज़िट्स</p>
                     <h3 id="anTodayVisits" class="text-2xl font-black text-blue-600 mt-1">0</h3>
@@ -140,41 +139,25 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- 7-Day Daily Visits Trend -->
                 <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
                     <h3 class="font-black text-sm uppercase text-indigo-600 dark:text-indigo-400">📅 पिछले 7 दिनों का ट्रैफ़िक (Daily Visits)</h3>
-                    <div id="anSevenDayChart" class="space-y-3 text-xs">
-                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
-                    </div>
+                    <div id="anSevenDayChart" class="space-y-3 text-xs"><p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p></div>
                 </div>
-
-                <!-- Top Districts / Cities & States -->
                 <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
                     <h3 class="font-black text-sm uppercase text-emerald-600 dark:text-emerald-400">📍 टॉप ज़िले / शहर और राज्य (Location Breakdown)</h3>
-                    <div id="anTopCitiesList" class="space-y-2.5 text-xs">
-                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
-                    </div>
+                    <div id="anTopCitiesList" class="space-y-2.5 text-xs"><p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Top Viewed Jobs -->
                 <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
                     <h3 class="font-black text-sm uppercase text-blue-600 dark:text-blue-400">🔥 सबसे ज़्यादा देखी गई जॉब्स</h3>
-                    <div id="anTopJobsList" class="space-y-2.5 text-xs">
-                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
-                    </div>
+                    <div id="anTopJobsList" class="space-y-2.5 text-xs"><p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p></div>
                 </div>
-
-                <!-- Top Liked Jobs -->
                 <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
                     <h3 class="font-black text-sm uppercase text-pink-600 dark:text-pink-400">👍 सबसे ज़्यादा पसंद की गई जॉब्स</h3>
-                    <div id="anTopLikedJobsList" class="space-y-2.5 text-xs">
-                        <p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p>
-                    </div>
+                    <div id="anTopLikedJobsList" class="space-y-2.5 text-xs"><p class="text-slate-400 text-center py-6">डेटा लोड हो रहा है...</p></div>
                 </div>
-
-                <!-- Device & Category Interest -->
                 <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-5">
                     <h3 class="font-black text-sm uppercase text-purple-600 dark:text-purple-400">📱 डिवाइस और सेक्टर मिक्स</h3>
                     <div id="anDeviceStats" class="space-y-3 text-xs"></div>
@@ -182,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- User Feedbacks & Ratings Moderation -->
             <div class="glass-card p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-black text-sm uppercase text-amber-600 dark:text-amber-400">💬 यूज़र फीडबैक और स्टार रेटिंग्स</h3>
                 <div id="anFeedbacksModerationList" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
@@ -216,7 +198,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold mb-1">पॉपअप हेडिंग / टाइटल *</label>
-                        <input type="text" id="popupTitleInput" placeholder="जैसे: हमारे RozgarHub.in WhatsApp Channel से जुड़ें!" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="text" id="popupTitleInput" placeholder="हमारे RozgarHub.in WhatsApp Channel से जुड़ें!" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                     <div>
                         <label class="block font-bold mb-1">अपने-आप बंद होने का समय (Auto-Close Seconds)</label>
@@ -230,7 +212,7 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold mb-1">पॉपअप मैसेज (जो आप दिखाना चाहते हैं) *</label>
+                    <label class="block font-bold mb-1">पॉपअप मैसेज *</label>
                     <textarea id="popupMessageInput" rows="4" placeholder="यहाँ अपना कोई भी मैसेज लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
                 </div>
 
@@ -241,7 +223,7 @@
                     </div>
                     <div>
                         <label class="block font-bold mb-1">एक्शन बटन लिंक (Optional - https://...)</label>
-                        <input type="url" id="popupBtnUrlInput" placeholder="[https://whatsapp.com/channel/](https://whatsapp.com/channel/)..." class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="url" id="popupBtnUrlInput" placeholder="https://whatsapp.com/channel/..." class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                 </div>
 
@@ -264,30 +246,28 @@
                     <input type="text" id="uLinkTitle" placeholder="लिंक का नाम (जैसे: कर्मचारी चयन आयोग)" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                 </div>
                 <div class="md:col-span-5">
-                    <input type="url" id="uLinkUrl" placeholder="वेबसाइट लिंक ([https://ssc.gov.in](https://ssc.gov.in))" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                    <input type="url" id="uLinkUrl" placeholder="वेबसाइट लिंक (https://ssc.gov.in)" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" id="uLinkBtn" class="w-full h-full py-3.5 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow">➕ जोड़ें</button>
                 </div>
             </form>
 
-            <div id="adminUsefulLinksList" class="space-y-2.5">
-                <p class="text-xs text-slate-400 text-center py-6">उपयोगी लिंक लोड हो रहे हैं...</p>
-            </div>
+            <div id="adminUsefulLinksList" class="space-y-2.5"><p class="text-xs text-slate-400 text-center py-6">उपयोगी लिंक लोड हो रहे हैं...</p></div>
         </div>
 
         <!-- TAB: GOVT / SEWAYOJAN OFFICIAL LINK JOB FORM -->
         <div id="repSectionGovtPost" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-5 hidden">
             <div class="border-b pb-3">
-                <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">🏛️ नई Govt / Sewayojan वैकेंसी पब्लिश करें (With Official Apply Link)</h3>
-                <p class="text-xs text-slate-500 mt-1">यह पोस्ट होम पेज के "Govt / Sewayojan Updates" टैब में दिखेगी और इसमें आधिकारिक आवेदन लिंक जुड़ेगा।</p>
+                <h3 class="font-black text-base uppercase text-indigo-600 dark:text-indigo-400">🏛️ नई Govt / Sewayojan वैकेंसी पब्लिश करें</h3>
+                <p class="text-xs text-slate-500 mt-1">यह पोस्ट केवल होम पेज के "Govt / Sewayojan Updates" टैब में दिखेगी (किसी HR पोर्टल में नहीं)।</p>
             </div>
 
             <form id="govtJobPostForm" onsubmit="publishGovtJob(event)" class="space-y-4 text-xs">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold mb-1">पद / वैकेंसी का नाम *</label>
-                        <input type="text" id="gTitle" placeholder="जैसे: Data Entry Operator / Rojgar Mela Vacancy" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="text" id="gTitle" placeholder="Data Entry Operator / Rojgar Mela" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                     <div>
                         <label class="block font-bold mb-1">विभाग / पोर्टल का नाम *</label>
@@ -295,11 +275,11 @@
                     </div>
                     <div>
                         <label class="block font-bold mb-1">लोकेशन / जिला *</label>
-                        <input type="text" id="gCity" placeholder="जैसे: Azamgarh / Varanasi / All UP" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="text" id="gCity" placeholder="Azamgarh / Varanasi / All UP" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                     <div>
                         <label class="block font-bold mb-1">वेतन / मानदेय *</label>
-                        <input type="text" id="gSalary" placeholder="₹10,000 - ₹15,000 / As per norms" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
+                        <input type="text" id="gSalary" placeholder="₹10,000 - ₹15,000 / माह" required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold">
                     </div>
                     <div>
                         <label class="block font-bold mb-1">योग्यता (Qualification)</label>
@@ -312,58 +292,49 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold mb-1 text-emerald-600 dark:text-emerald-400">🔗 Official Apply Link (आधिकारिक आवेदन लिंक - https://...) *</label>
-                    <input type="url" id="gOfficialUrl" placeholder="[https://sewayojan.up.nic.in/](https://sewayojan.up.nic.in/)..." required class="w-full p-3.5 border border-emerald-300 dark:border-emerald-800 rounded-2xl bg-emerald-50/40 dark:bg-slate-900 font-bold">
+                    <label class="block font-bold mb-1 text-emerald-600 dark:text-emerald-400">🔗 Official Apply Link (https://...) *</label>
+                    <input type="url" id="gOfficialUrl" placeholder="https://sewayojan.up.nic.in/..." required class="w-full p-3.5 border border-emerald-300 dark:border-emerald-800 rounded-2xl bg-emerald-50/40 dark:bg-slate-900 font-bold">
                 </div>
 
                 <div>
                     <label class="block font-bold mb-1">विस्तृत जानकारी / पात्रता शर्तें *</label>
-                    <textarea id="gDesc" rows="3" placeholder="आवेदन प्रक्रिया, आवश्यक दस्तावेज और महत्वपूर्ण जानकारी लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
+                    <textarea id="gDesc" rows="3" placeholder="आवेदन प्रक्रिया और आवश्यक जानकारी लिखें..." required class="w-full p-3.5 border dark:border-slate-700 rounded-2xl bg-white/70 dark:bg-slate-900 font-bold"></textarea>
                 </div>
 
                 <button type="submit" id="gSubmitBtn" class="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow-xl transition">Govt / Sewayojan पोस्ट लाइव करें 🚀</button>
             </form>
         </div>
 
-        <!-- REPORT 1: JOBS -->
+        <!-- REPORT SECTIONS -->
         <div id="repSectionJobs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
-            <h3 class="font-black text-base uppercase border-b pb-3">📋 सभी पोस्ट की गई जॉब्स (Channel Post / Moderation & Delete)</h3>
+            <h3 class="font-black text-base uppercase border-b pb-3">📋 सभी पोस्ट की गई जॉब्स</h3>
             <div id="adminJobsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-8">रिपोर्ट लोड हो रही है...</p></div>
         </div>
-
-        <!-- REPORT 2: REGISTERED HRs -->
         <div id="repSectionHrs" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
             <h3 class="font-black text-base uppercase border-b pb-3">🏢 रजिस्टर्ड HR / कंपनियाँ</h3>
             <div id="adminHrsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-6">लोड हो रहा है...</p></div>
         </div>
-
-        <!-- REPORT 3: REGISTERED CANDIDATES -->
         <div id="repSectionCandidates" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
             <h3 class="font-black text-base uppercase border-b pb-3">👤 रजिस्टर्ड कैंडिडेट्स</h3>
             <div id="adminCandidatesContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-6">लोड हो रहा है...</p></div>
         </div>
-
-        <!-- REPORT 4: APPLICATIONS -->
         <div id="repSectionApps" class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 space-y-4 hidden">
             <h3 class="font-black text-base uppercase border-b pb-3">📥 सभी आवेदनों की रिपोर्ट</h3>
             <div id="adminAppsContainer" class="space-y-3"><p class="text-xs text-slate-400 text-center py-6">लोड हो रहा है...</p></div>
         </div>
     </main>
 
-    <!-- ONE-CLICK WHATSAPP CHANNEL BROADCAST MODAL -->
+    <!-- WHATSAPP CHANNEL BROADCAST MODAL -->
     <div id="waChannelModal" class="fixed inset-0 z-50 hidden glass-modal flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl border dark:border-gray-700 overflow-hidden my-8">
             <div class="bg-[#25D366] text-white p-5 flex justify-between items-center">
-                <div class="flex items-center gap-2.5">
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/></svg>
-                    <h3 class="font-black text-base">WhatsApp Channel में पोस्ट करें</h3>
-                </div>
+                <h3 class="font-black text-base">📢 WhatsApp Channel में पोस्ट करें</h3>
                 <button type="button" onclick="closeWaChannelModal()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 font-black text-xs">✕</button>
             </div>
             <div class="p-6 space-y-4 text-xs">
                 <div>
-                    <label class="block font-bold mb-1">आपका WhatsApp Channel लिंक (सेव रहेगा)</label>
-                    <input type="url" id="waChannelLinkInput" placeholder="[https://whatsapp.com/channel/](https://whatsapp.com/channel/)..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    <label class="block font-bold mb-1">WhatsApp Channel लिंक</label>
+                    <input type="url" id="waChannelLinkInput" placeholder="https://whatsapp.com/channel/..." class="w-full p-3 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                 </div>
                 <div>
                     <label class="block font-bold mb-1">Channel मैसेज प्रीव्यू</label>
@@ -383,6 +354,28 @@
 
     <script>
         let adminJobsMap = {};
+
+        async function safeGetDocs(colName) {
+            try {
+                if (!window.db) return [];
+                const snap = await window.getDocs(window.collection(window.db, colName));
+                const arr = [];
+                snap.forEach(d => arr.push({ id: d.id, ...d.data() }));
+                return arr;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        async function safeGetDoc(colName, docId) {
+            try {
+                if (!window.db) return null;
+                const snap = await window.getDoc(window.doc(window.db, colName, docId));
+                return snap && snap.exists() ? { id: snap.id, ...snap.data() } : null;
+            } catch (e) {
+                return null;
+            }
+        }
 
         function getTodayKey() {
             const now = new Date();
@@ -429,7 +422,6 @@
                     }
                     const dev = ev.device === "Mobile" ? "Mobile" : "Desktop";
                     deviceCounts[dev] = (deviceCounts[dev] || 0) + 1;
-
                     const locLabel = `${ev.city || "Unknown City"}${ev.region ? ", " + ev.region : ""}`;
                     cityCounts[locLabel] = (cityCounts[locLabel] || 0) + 1;
                 } else if (ev.eventType === "job_view") {
@@ -461,15 +453,13 @@
             document.getElementById('anAvgRating').innerText = avgRatingText;
             document.getElementById('anWaActions').innerText = waActions;
 
-            // 7-Day Trend Bars
             const last7 = getLast7DateKeys();
             const max7 = Math.max(1, ...last7.map(k => dayCounts[k] || 0));
-            let chartHtml = "";
-            last7.forEach(k => {
+            document.getElementById('anSevenDayChart').innerHTML = last7.map(k => {
                 const val = dayCounts[k] || 0;
                 const pct = Math.round((val / max7) * 100);
                 const label = k === todayKey ? `${k} (आज)` : k.slice(5);
-                chartHtml += `
+                return `
                     <div class="space-y-1">
                         <div class="flex justify-between font-bold">
                             <span>${label}</span>
@@ -480,49 +470,38 @@
                         </div>
                     </div>
                 `;
-            });
-            document.getElementById('anSevenDayChart').innerHTML = chartHtml;
+            }).join("");
 
-            // Top Cities / Districts
             const sortedCities = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
-            if (sortedCities.length === 0) {
-                document.getElementById('anTopCitiesList').innerHTML = `<p class="text-slate-400 text-center py-6">अभी लोकेशन ट्रैफ़िक डेटा नहीं आया है।</p>`;
-            } else {
-                document.getElementById('anTopCitiesList').innerHTML = sortedCities.map(([loc, cnt], idx) => `
+            document.getElementById('anTopCitiesList').innerHTML = sortedCities.length === 0
+                ? `<p class="text-slate-400 text-center py-6">अभी लोकेशन ट्रैफ़िक डेटा नहीं आया है।</p>`
+                : sortedCities.map(([loc, cnt], idx) => `
                     <div class="flex justify-between items-center p-3 rounded-2xl bg-gray-50 dark:bg-slate-900/70 border dark:border-slate-800">
                         <span class="font-bold truncate">📍 #${idx + 1} ${loc}</span>
-                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-black shrink-0 ml-2">${cnt}</span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-black shrink-0 ml-2">${cnt}</span>
                     </div>
                 `).join("");
-            }
 
-            // Top Viewed Jobs
             const sortedJobs = Object.entries(jobTitleCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-            if (sortedJobs.length === 0) {
-                document.getElementById('anTopJobsList').innerHTML = `<p class="text-slate-400 text-center py-6">अभी किसी जॉब पर व्यू डेटा दर्ज नहीं हुआ है।</p>`;
-            } else {
-                document.getElementById('anTopJobsList').innerHTML = sortedJobs.map(([title, cnt], idx) => `
+            document.getElementById('anTopJobsList').innerHTML = sortedJobs.length === 0
+                ? `<p class="text-slate-400 text-center py-6">अभी किसी जॉब पर व्यू डेटा दर्ज नहीं हुआ है।</p>`
+                : sortedJobs.map(([title, cnt], idx) => `
                     <div class="flex justify-between items-center p-3 rounded-2xl bg-gray-50 dark:bg-slate-900/70 border dark:border-slate-800">
                         <span class="font-bold truncate">#${idx + 1} ${title}</span>
-                        <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-black shrink-0 ml-2">${cnt} views</span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 font-black shrink-0 ml-2">${cnt} views</span>
                     </div>
                 `).join("");
-            }
 
-            // Top Liked Jobs
             const sortedLiked = Object.entries(jobLikeCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-            if (sortedLiked.length === 0) {
-                document.getElementById('anTopLikedJobsList').innerHTML = `<p class="text-slate-400 text-center py-6">अभी किसी जॉब पर लाइक डेटा नहीं आया है।</p>`;
-            } else {
-                document.getElementById('anTopLikedJobsList').innerHTML = sortedLiked.map(([title, cnt], idx) => `
+            document.getElementById('anTopLikedJobsList').innerHTML = sortedLiked.length === 0
+                ? `<p class="text-slate-400 text-center py-6">अभी किसी जॉब पर लाइक डेटा नहीं आया है।</p>`
+                : sortedLiked.map(([title, cnt], idx) => `
                     <div class="flex justify-between items-center p-3 rounded-2xl bg-gray-50 dark:bg-slate-900/70 border dark:border-slate-800">
                         <span class="font-bold truncate">#${idx + 1} ${title}</span>
-                        <span class="px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300 font-black shrink-0 ml-2">👍 ${cnt}</span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-800 font-black shrink-0 ml-2">👍 ${cnt}</span>
                     </div>
                 `).join("");
-            }
 
-            // Device & Sector Mix
             const totalDev = Math.max(1, deviceCounts.Mobile + deviceCounts.Desktop);
             const mobPct = Math.round((deviceCounts.Mobile / totalDev) * 100);
             const deskPct = 100 - mobPct;
@@ -540,12 +519,11 @@
             document.getElementById('anSectorStats').innerHTML = `
                 <p class="font-bold text-slate-500">जॉब सेक्टर रुचि (Job Views):</p>
                 <div class="flex justify-between font-black">
-                    <span class="text-blue-600 dark:text-blue-400">🏢 Private Jobs: ${sectorCounts.Private}</span>
-                    <span class="text-emerald-600 dark:text-emerald-400">🏛️ Govt / Sewayojan: ${sectorCounts["Govt / Sewayojan"]}</span>
+                    <span class="text-blue-600 dark:text-blue-400">🏢 Private: ${sectorCounts.Private}</span>
+                    <span class="text-emerald-600 dark:text-emerald-400">🏛️ Govt: ${sectorCounts["Govt / Sewayojan"]}</span>
                 </div>
             `;
 
-            // Feedback Moderation List
             if (feedbacksDocs.length === 0) {
                 document.getElementById('anFeedbacksModerationList').innerHTML = `<p class="text-slate-400 col-span-full text-center py-4">अभी कोई यूज़र फीडबैक नहीं है।</p>`;
             } else {
@@ -580,8 +558,7 @@
             const savedTheme = localStorage.getItem('rozgarHubTheme');
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const isDark = savedTheme ? (savedTheme === 'dark') : systemDark;
-            if (isDark) root.classList.add('dark');
-            else root.classList.remove('dark');
+            root.classList.toggle('dark', isDark);
             const icon = document.getElementById('themeIcon');
             if (icon) icon.innerText = isDark ? '☀️' : '🌙';
         }
@@ -596,15 +573,11 @@
         }
 
         applyDeviceOrSavedTheme();
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('rozgarHubTheme')) applyDeviceOrSavedTheme();
-        });
 
         function handleAdminLogin(e) {
             e.preventDefault();
             if (document.getElementById('adminPassInput').value === "2026") {
                 localStorage.setItem('rozgarHubAdminLoggedIn', 'true');
-                alert("एडमिन लॉगिन सफल!");
                 checkAdminAuth();
             } else {
                 alert("गलत पासवर्ड! (पासवर्ड 2026 है)");
@@ -619,6 +592,7 @@
         window.onload = checkAdminAuth;
 
         function checkAdminAuth() {
+            document.body.style.overflow = "auto";
             if (localStorage.getItem('rozgarHubAdminLoggedIn') === 'true') {
                 document.getElementById('adminAuthView').classList.add('hidden');
                 document.getElementById('adminDashboardView').classList.remove('hidden');
@@ -659,8 +633,8 @@
             Object.keys(map).forEach(k => {
                 document.getElementById(map[k]).classList.toggle('hidden', k !== tab);
                 document.getElementById(btnMap[k]).className = (k === tab)
-                    ? "px-4 py-2.5 rounded-2xl bg-indigo-600 text-white font-black"
-                    : "px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
+                    ? "px-3.5 py-2.5 rounded-2xl bg-indigo-600 text-white font-black"
+                    : "px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border";
             });
         }
 
@@ -684,7 +658,7 @@
             await window.setDoc(window.doc(window.db, "siteSettings", "welcomePopup"), payload);
             updatePopupBadgeUI(enabled);
             btn.disabled = false;
-            alert(enabled ? "पॉपअप सेव और चालू (Enabled) हो गया है!" : "पॉपअप सेव और बंद (Disabled) कर दिया गया है!");
+            alert(enabled ? "पॉपअप सेव और चालू हो गया है!" : "पॉपअप सेव और बंद कर दिया गया है!");
         }
 
         function updatePopupBadgeUI(enabled) {
@@ -704,11 +678,9 @@
             if (!window.db) return;
             const btn = document.getElementById('uLinkBtn');
             btn.disabled = true;
-            const title = document.getElementById('uLinkTitle').value.trim();
-            const url = document.getElementById('uLinkUrl').value.trim();
             await window.addDoc(window.collection(window.db, "usefulLinks"), {
-                title,
-                url,
+                title: document.getElementById('uLinkTitle').value.trim(),
+                url: document.getElementById('uLinkUrl').value.trim(),
                 createdAt: Date.now()
             });
             document.getElementById('usefulLinkForm').reset();
@@ -719,19 +691,15 @@
         async function seedDefaultUsefulLinks() {
             if (!window.db) return;
             const defaults = [
-                { title: "कर्मचारी चयन आयोग", url: "[https://ssc.gov.in](https://ssc.gov.in)" },
-                { title: "लोक सेवा आयोग उ.प्र.", url: "[https://uppsc.up.nic.in](https://uppsc.up.nic.in)" },
-                { title: "उ.प्र. अधीनस्थ सेवा चयन आयोग", url: "[https://upsssc.gov.in](https://upsssc.gov.in)" },
-                { title: "उ.प्र. पुलिस भर्ती एवं प्रोन्नति बोर्ड", url: "[https://uppbpb.gov.in](https://uppbpb.gov.in)" },
-                { title: "उ.प्र. पॉवर कॉर्पोरेशन लिमिटेड", url: "[https://uppcl.org](https://uppcl.org)" },
-                { title: "आई. बी. पी. एस.", url: "[https://www.ibps.in](https://www.ibps.in)" }
+                { title: "कर्मचारी चयन आयोग", url: "https://ssc.gov.in" },
+                { title: "लोक सेवा आयोग उ.प्र.", url: "https://uppsc.up.nic.in" },
+                { title: "उ.प्र. अधीनस्थ सेवा चयन आयोग", url: "https://upsssc.gov.in" },
+                { title: "उ.प्र. पुलिस भर्ती एवं प्रोन्नति बोर्ड", url: "https://uppbpb.gov.in" },
+                { title: "उ.प्र. पॉवर कॉर्पोरेशन लिमिटेड", url: "https://uppcl.org" },
+                { title: "आई. बी. पी. एस.", url: "https://www.ibps.in" }
             ];
             for (const item of defaults) {
-                await window.addDoc(window.collection(window.db, "usefulLinks"), {
-                    title: item.title,
-                    url: item.url,
-                    createdAt: Date.now()
-                });
+                await window.addDoc(window.collection(window.db, "usefulLinks"), { ...item, createdAt: Date.now() });
             }
             alert("सभी 6 डिफ़ॉल्ट उपयोगी लिंक जोड़ दिए गए हैं!");
             loadAllAdminReports();
@@ -762,6 +730,7 @@
                 category: "Govt / Sewayojan",
                 jobType: "Official Portal",
                 isGovtJob: true,
+                postedByRole: "super_admin",
                 hrName: "Super Admin (Official Update)",
                 status: "Active",
                 createdAt: Date.now()
@@ -772,27 +741,21 @@
             document.getElementById('gDepartment').value = "UP Sewayojan / Govt Dept";
             document.getElementById('gQual').value = "12th Pass / Graduate";
             btn.disabled = false;
-            alert("Govt / Sewayojan वैकेंसी सफलतापूर्वक पब्लिश हो गई है!");
+            alert("Govt / Sewayojan वैकेंसी पब्लिश हो गई है!");
             loadAllAdminReports();
             switchReportTab('jobs');
             openWaChannelModal(payload);
         }
 
         function openWaChannelModal(job) {
-            const savedChannelUrl = localStorage.getItem('rozgarHubWaChannelUrl') || "[https://whatsapp.com/channel/](https://whatsapp.com/channel/)";
+            const savedChannelUrl = localStorage.getItem('rozgarHubWaChannelUrl') || "https://whatsapp.com/channel/";
             document.getElementById('waChannelLinkInput').value = savedChannelUrl;
-
             const siteLink = window.location.origin + "/index.html";
-            const msg = `🏛️ *Govt / Sewayojan अपडेट - RozgarHub.in*\n\n` +
-                        `📌 *पद:* ${job.title}\n` +
-                        `🏢 *विभाग:* ${job.company}\n` +
-                        `📍 *लोकेशन:* ${job.city}\n` +
-                        `🎓 *योग्यता:* ${job.qual || 'Any'}\n` +
-                        `💰 *वेतन:* ${job.salary}\n` +
-                        (job.officialApplyUrl ? `🔗 *Official Link:* ${job.officialApplyUrl}\n\n` : `\n`) +
-                        `पूरी जानकारी यहाँ देखें:\n${siteLink}`;
-
-            document.getElementById('waChannelMessagePreview').value = msg;
+            document.getElementById('waChannelMessagePreview').value =
+                `🏛️ *Govt / Sewayojan अपडेट - RozgarHub.in*\n\n` +
+                `📌 *पद:* ${job.title}\n🏢 *विभाग:* ${job.company}\n📍 *लोकेशन:* ${job.city}\n🎓 *योग्यता:* ${job.qual || 'Any'}\n💰 *वेतन:* ${job.salary}\n` +
+                (job.officialApplyUrl ? `🔗 *Official Link:* ${job.officialApplyUrl}\n\n` : `\n`) +
+                `पूरी जानकारी यहाँ देखें:\n${siteLink}`;
             document.getElementById('waChannelModal').classList.remove('hidden');
         }
 
@@ -816,125 +779,98 @@
             const channelUrl = document.getElementById('waChannelLinkInput').value.trim();
             if (channelUrl) localStorage.setItem('rozgarHubWaChannelUrl', channelUrl);
             const fullText = document.getElementById('waChannelMessagePreview').value + (channelUrl ? `\n\n📢 *हमारा WhatsApp Channel जॉइन करें:* ${channelUrl}` : "");
-            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(fullText)}`, '_blank');
+            window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
         }
 
         async function loadAllAdminReports() {
             if (!window.db) return;
 
-            const [jobsSnap, hrSnap, appsSnap, followsSnap, linksSnap, popupSnap, eventsSnap, likesSnap, fbSnap] = await Promise.all([
-                window.getDocs(window.collection(window.db, "jobs")),
-                window.getDocs(window.collection(window.db, "hrProfiles")),
-                window.getDocs(window.collection(window.db, "applications")),
-                window.getDocs(window.collection(window.db, "follows")),
-                window.getDocs(window.collection(window.db, "usefulLinks")),
-                window.getDoc(window.doc(window.db, "siteSettings", "welcomePopup")),
-                window.getDocs(window.collection(window.db, "analyticsEvents")),
-                window.getDocs(window.collection(window.db, "jobLikes")),
-                window.getDocs(window.collection(window.db, "siteFeedbacks"))
+            const [jobsArr, hrArr, appsArr, followsArr, linksArr, popupData, eventsArr, likesArr, fbArr] = await Promise.all([
+                safeGetDocs("jobs"),
+                safeGetDocs("hrProfiles"),
+                safeGetDocs("applications"),
+                safeGetDocs("follows"),
+                safeGetDocs("usefulLinks"),
+                safeGetDoc("siteSettings", "welcomePopup"),
+                safeGetDocs("analyticsEvents"),
+                safeGetDocs("jobLikes"),
+                safeGetDocs("siteFeedbacks")
             ]);
-
-            const eventsArr = [];
-            eventsSnap.forEach(d => eventsArr.push(d.data()));
-
-            const likesArr = [];
-            likesSnap.forEach(d => likesArr.push({ id: d.id, ...d.data() }));
-
-            const fbArr = [];
-            fbSnap.forEach(d => fbArr.push({ id: d.id, ...d.data() }));
 
             renderAnalyticsDashboard(eventsArr, likesArr, fbArr);
 
-            if (popupSnap.exists()) {
-                const pData = popupSnap.data();
-                document.getElementById('popupEnabledSelect').value = pData.enabled ? "true" : "false";
-                document.getElementById('popupTitleInput').value = pData.title || "";
-                document.getElementById('popupMessageInput').value = pData.message || "";
-                document.getElementById('popupAutoCloseSelect').value = String(pData.autoCloseSec ?? 8);
-                document.getElementById('popupBtnTextInput').value = pData.btnText || "";
-                document.getElementById('popupBtnUrlInput').value = pData.btnUrl || "";
-                updatePopupBadgeUI(Boolean(pData.enabled));
+            if (popupData) {
+                document.getElementById('popupEnabledSelect').value = popupData.enabled ? "true" : "false";
+                document.getElementById('popupTitleInput').value = popupData.title || "";
+                document.getElementById('popupMessageInput').value = popupData.message || "";
+                document.getElementById('popupAutoCloseSelect').value = String(popupData.autoCloseSec ?? 8);
+                document.getElementById('popupBtnTextInput').value = popupData.btnText || "";
+                document.getElementById('popupBtnUrlInput').value = popupData.btnUrl || "";
+                updatePopupBadgeUI(Boolean(popupData.enabled));
             } else {
                 document.getElementById('popupEnabledSelect').value = "false";
                 updatePopupBadgeUI(false);
             }
 
-            let linksArr = [];
-            linksSnap.forEach(d => linksArr.push({ id: d.id, ...d.data() }));
             linksArr.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-            let linksHtml = "";
-            linksArr.forEach(l => {
-                linksHtml += `<div class="p-3.5 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-2">
-                    <div>
-                        <div class="font-black text-sm">🔗 ${l.title}</div>
-                        <a href="${l.url}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline">${l.url}</a>
+            document.getElementById('adminUsefulLinksList').innerHTML = linksArr.length === 0
+                ? `<p class="text-xs text-slate-400 text-center py-4">अभी कोई उपयोगी लिंक नहीं जोड़ा गया है।</p>`
+                : linksArr.map(l => `
+                    <div class="p-3.5 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-2">
+                        <div>
+                            <div class="font-black text-sm">🔗 ${l.title}</div>
+                            <a href="${l.url}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline">${l.url}</a>
+                        </div>
+                        <button type="button" onclick="deleteUsefulLink('${l.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-xl font-bold">🗑️ हटाएं</button>
                     </div>
-                    <button type="button" onclick="deleteUsefulLink('${l.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-xl font-bold">🗑️ हटाएं</button>
-                </div>`;
-            });
-            document.getElementById('adminUsefulLinksList').innerHTML = linksHtml || `<p class="text-xs text-slate-400 text-center py-4">अभी कोई उपयोगी लिंक नहीं जोड़ा गया है (ऊपर से नया जोड़ें या डिफ़ॉल्ट 6 लिंक लोड करें)।</p>`;
+                `).join("");
 
-            let jobsHtml = "", jobCount = 0;
             adminJobsMap = {};
-            jobsSnap.forEach(docSnap => {
-                jobCount++;
-                const j = docSnap.data();
-                adminJobsMap[docSnap.id] = j;
-                const badge = j.isGovtJob
-                    ? `<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-indigo-100 text-indigo-800">🏛️ Govt / Sewayojan</span>`
-                    : `<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 text-blue-800">🏢 Private</span>`;
-                jobsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-3">
-                    <div>
-                        ${badge} <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-emerald-800">${j.status || 'Active'}</span>
-                        <h4 class="font-black text-sm mt-1">${j.title}</h4>
-                        <p class="text-slate-500">🏢 ${j.company} • 📍 ${j.city} • 💰 ${j.salary}</p>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <button type="button" onclick="openAdminChannelPost('${docSnap.id}')" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white px-3.5 py-2 rounded-xl font-bold transition">📢 Channel Post</button>
-                        <button type="button" onclick="adminDeleteJob('${docSnap.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl font-bold">🗑️ डिलीट करें</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('repTotalJobs').innerText = jobCount;
-            document.getElementById('adminJobsContainer').innerHTML = jobsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई जॉब नहीं मिली।</p>`;
+            document.getElementById('repTotalJobs').innerText = jobsArr.length;
+            document.getElementById('adminJobsContainer').innerHTML = jobsArr.length === 0
+                ? `<p class="text-xs text-slate-400 text-center py-6">कोई जॉब नहीं मिली।</p>`
+                : jobsArr.map(j => {
+                    adminJobsMap[j.id] = j;
+                    const badge = j.isGovtJob
+                        ? `<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-indigo-100 text-indigo-800">🏛️ Govt / Sewayojan</span>`
+                        : `<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 text-blue-800">🏢 Private</span>`;
+                    return `
+                        <div class="p-4 border dark:border-slate-800 rounded-2xl flex flex-wrap justify-between items-center text-xs bg-white/60 dark:bg-slate-900/60 gap-3">
+                            <div>
+                                ${badge} <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-emerald-800">${j.status || 'Active'}</span>
+                                <h4 class="font-black text-sm mt-1">${j.title}</h4>
+                                <p class="text-slate-500">🏢 ${j.company} • 📍 ${j.city} • 💰 ${j.salary}</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button type="button" onclick="openAdminChannelPost('${j.id}')" class="bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white px-3.5 py-2 rounded-xl font-bold transition">📢 Channel Post</button>
+                                <button type="button" onclick="adminDeleteJob('${j.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl font-bold">🗑️ डिलीट करें</button>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
 
-            let hrsHtml = "", hrCount = 0;
-            hrSnap.forEach(d => {
-                hrCount++;
-                const h = d.data();
-                hrsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
-                    <div>
-                        <div class="font-black text-sm">🏢 ${h.company || "Company"}</div>
-                        <div class="text-slate-500">HR: ${h.hrName || "-"} • 📍 ${h.city || "India"} • 🏷️ ${h.industry || "-"}</div>
+            document.getElementById('repTotalHRs').innerText = hrArr.length;
+            document.getElementById('adminHrsContainer').innerHTML = hrArr.length === 0
+                ? `<p class="text-xs text-slate-400 text-center py-6">कोई HR प्रोफाइल नहीं मिली।</p>`
+                : hrArr.map(h => `
+                    <div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
+                        <div>
+                            <div class="font-black text-sm">🏢 ${h.company || "Company"}</div>
+                            <div class="text-slate-500">HR: ${h.hrName || "-"} • 📍 ${h.city || "India"} • 🏷️ ${h.industry || "-"}</div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-bold text-[10px]">Verified HR</span>
                     </div>
-                    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-bold text-[10px]">Verified HR</span>
-                </div>`;
-            });
-            document.getElementById('repTotalHRs').innerText = hrCount;
-            document.getElementById('adminHrsContainer').innerHTML = hrsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई HR प्रोफाइल नहीं मिली।</p>`;
+                `).join("");
 
             let candMap = {};
-            let appsHtml = "", appCount = 0;
-
-            appsSnap.forEach(d => {
-                appCount++;
-                const a = d.data();
-                const emailKey = (a.candidateEmail || a.candidateName || d.id).toLowerCase();
+            appsArr.forEach(a => {
+                const emailKey = (a.candidateEmail || a.candidateName || a.id).toLowerCase();
                 if (!candMap[emailKey]) {
                     candMap[emailKey] = { name: a.candidateName || "Candidate", email: a.candidateEmail || "N/A", qual: a.candidateQual || "Graduate" };
                 }
-                appsHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
-                    <div>
-                        <div class="font-black text-sm">${a.candidateName || "Candidate"} &rarr; <span class="text-indigo-600">${a.jobTitle}</span></div>
-                        <div class="text-slate-500">🏢 ${a.company} • 📧 ${a.candidateEmail || "N/A"} • 🎓 ${a.candidateQual || "Graduate"}</div>
-                    </div>
-                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">${a.status || 'Submitted'}</span>
-                </div>`;
             });
-
-            followsSnap.forEach(d => {
-                const f = d.data();
-                const emailKey = (f.candidateEmail || f.candidateName || d.id).toLowerCase();
+            followsArr.forEach(f => {
+                const emailKey = (f.candidateEmail || f.candidateName || f.id).toLowerCase();
                 if (!candMap[emailKey]) {
                     candMap[emailKey] = { name: f.candidateName || "Candidate", email: f.candidateEmail || "N/A", qual: "Active Member" };
                 }
@@ -942,26 +878,36 @@
 
             const candList = Object.values(candMap);
             document.getElementById('repTotalCandidates').innerText = candList.length;
-            document.getElementById('repTotalApps').innerText = appCount;
-            document.getElementById('adminAppsContainer').innerHTML = appsHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई आवेदन नहीं मिला।</p>`;
+            document.getElementById('repTotalApps').innerText = appsArr.length;
 
-            let candHtml = "";
-            candList.forEach(c => {
-                candHtml += `<div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
-                    <div>
-                        <div class="font-black text-sm">👤 ${c.name}</div>
-                        <div class="text-slate-500">📧 ${c.email} • 🎓 ${c.qual}</div>
+            document.getElementById('adminAppsContainer').innerHTML = appsArr.length === 0
+                ? `<p class="text-xs text-slate-400 text-center py-6">कोई आवेदन नहीं मिला।</p>`
+                : appsArr.map(a => `
+                    <div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
+                        <div>
+                            <div class="font-black text-sm">${a.candidateName || "Candidate"} &rarr; <span class="text-indigo-600">${a.jobTitle}</span></div>
+                            <div class="text-slate-500">🏢 ${a.company} • 📧 ${a.candidateEmail || "N/A"} • 🎓 ${a.candidateQual || "Graduate"}</div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">${a.status || 'Submitted'}</span>
                     </div>
-                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Active Candidate</span>
-                </div>`;
-            });
-            document.getElementById('adminCandidatesContainer').innerHTML = candHtml || `<p class="text-xs text-slate-400 text-center py-6">कोई कैंडिडेट डेटा नहीं मिला।</p>`;
+                `).join("");
+
+            document.getElementById('adminCandidatesContainer').innerHTML = candList.length === 0
+                ? `<p class="text-xs text-slate-400 text-center py-6">कोई कैंडिडेट डेटा नहीं मिला।</p>`
+                : candList.map(c => `
+                    <div class="p-4 border dark:border-slate-800 rounded-2xl text-xs bg-white/60 dark:bg-slate-900/60 flex flex-wrap justify-between items-center gap-2">
+                        <div>
+                            <div class="font-black text-sm">👤 ${c.name}</div>
+                            <div class="text-slate-500">📧 ${c.email} • 🎓 ${c.qual}</div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Active Candidate</span>
+                    </div>
+                `).join("");
         }
 
         async function adminDeleteJob(docId) {
             if (confirm("चेतावनी: क्या आप वाकई इस जॉब को हमेशा के लिए डिलीट करना चाहते हैं?")) {
                 await window.deleteDoc(window.doc(window.db, "jobs", docId));
-                alert("जॉब डिलीट हो गई है!");
                 loadAllAdminReports();
             }
         }
