@@ -48,21 +48,55 @@
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         .animate-pop-in { animation: popScaleIn 0.28s ease-out forwards; }
+        @keyframes tickerMarquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .ticker-track {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: tickerMarquee 28s linear infinite;
+        }
+        .ticker-track:hover { animation-play-state: paused; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Top Navbar -->
-    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40 transition-colors duration-300">
-        <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="index.html" class="text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| Jobs & Updates</span></a>
-            <div class="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm font-bold">
+    <!-- TOP HEADER WITH QUICK NAVIGATION LINKS -->
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40 transition-colors duration-300 border-b dark:border-gray-700">
+        <div class="container mx-auto flex justify-between items-center p-3.5 md:p-4 gap-3">
+            <a href="index.html" class="text-xl md:text-2xl font-black tracking-wide text-blue-700 dark:text-blue-400 shrink-0">RozgarHub<span class="text-yellow-500">.in</span> <span class="hidden sm:inline text-xs text-gray-400 font-normal">| Jobs & Updates</span></a>
+
+            <!-- Center Quick Navigation Links -->
+            <nav class="hidden lg:flex items-center space-x-1.5 text-xs font-black">
+                <button type="button" onclick="navigateHeaderTab('all')" class="px-3.5 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition">🏠 होम (Jobs)</button>
+                <button type="button" onclick="navigateHeaderTab('govt')" class="px-3.5 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition">🏛️ सेवायोजन / सरकारी</button>
+                <a href="#usefulLinksSection" class="px-3.5 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition">🔗 उपयोगी लिंक</a>
+                <button type="button" onclick="navigateHeaderTab('reviews')" class="px-3.5 py-2 rounded-xl hover:bg-amber-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition">⭐ रिव्यूज़</button>
+            </nav>
+
+            <!-- Right Action Buttons -->
+            <div class="flex items-center space-x-2 md:space-x-3 text-xs md:text-sm font-bold shrink-0">
                 <button onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-2 rounded-xl transition shadow-sm"><span id="themeIcon">🌙</span></button>
-                <a href="candidate-login.html" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-xl transition shadow">👤 कैंडिडेट पोर्टल</a>
-                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-4 py-2.5 rounded-xl transition shadow">🏢 HR / एप्लॉयर</a>
+                <a id="headerCandidateBtn" href="candidate-login.html" class="bg-blue-700 hover:bg-blue-800 text-white px-3.5 md:px-4 py-2.5 rounded-xl transition shadow">👤 कैंडिडेट पोर्टल</a>
+                <a href="employer-login.html" class="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-3.5 md:px-4 py-2.5 rounded-xl transition shadow">🏢 HR / एप्लॉयर</a>
             </div>
         </div>
     </header>
+
+    <!-- LIVE UPDATES TICKER BAR -->
+    <div class="bg-slate-950 text-white border-b border-slate-800 py-2 px-3 overflow-hidden text-xs">
+        <div class="container mx-auto flex items-center gap-3">
+            <span class="bg-red-600 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full shrink-0 animate-pulse">🔴 LIVE अपडेट</span>
+            <div class="overflow-hidden flex-1">
+                <div id="liveUpdatesTickerTrack" class="ticker-track font-bold text-slate-200 gap-8">
+                    <span>🚀 RozgarHub.in पर रोज़ाना नई प्राइवेट नौकरियां और UP Sewayojan अपडेट्स देखें •</span>
+                    <span>🏛️ आधिकारिक सेवायोजन व सरकारी भर्तियों के लिए "Govt / Sewayojan Updates" टैब चुनें •</span>
+                    <span>⭐ अपनी पसंद की नौकरी पर लाइक करें और अपना रिव्यू साझा करें •</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- HERO SECTION WITH SEARCH & FILTER BAR -->
     <section class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white py-12 px-4 text-center space-y-6 shadow-xl relative overflow-hidden">
@@ -70,7 +104,7 @@
         <div class="container mx-auto max-w-4xl space-y-3 relative z-10">
             <span class="bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest">🚀 Private Jobs & Sewayojan Updates</span>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight">अपनी पसंद की नौकरी और अपडेट खोजें</h1>
-            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">प्राइवेट नौकरियां या सेवायोजन/सरकारी अपडेट्स छांटें और पूरी जानकारी देखें।</p>
+            <p class="text-xs md:text-sm text-blue-200 max-w-xl mx-auto">प्राइवेट नौकरियां, सेवायोजन अपडेट्स या अपने शहर की जॉब्स एक क्लिक में देखें।</p>
         </div>
 
         <div class="container mx-auto max-w-4xl relative z-10 pt-2">
@@ -103,17 +137,28 @@
         </div>
     </section>
 
-    <!-- MAIN CONTENT: TABS + JOB GRID / DEDICATED REVIEWS TAB + USEFUL LINKS -->
+    <!-- MAIN CONTENT: 5 TABS + JOB GRID / DEDICATED REVIEWS TAB + USEFUL LINKS -->
     <main class="container mx-auto px-4 py-10 flex-grow max-w-6xl space-y-12">
         <section id="mainTabsSection" class="space-y-6">
             <div class="flex flex-wrap justify-between items-center gap-3 border-b dark:border-gray-700 pb-4">
                 <div class="flex flex-wrap gap-2 text-xs font-black">
-                    <button type="button" onclick="setJobSourceTab('all')" id="tabSourceAll" class="px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition">🔥 सभी (All)</button>
-                    <button type="button" onclick="setJobSourceTab('private')" id="tabSourcePrivate" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏢 Private Jobs</button>
-                    <button type="button" onclick="setJobSourceTab('govt')" id="tabSourceGovt" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏛️ Govt / Sewayojan Updates</button>
-                    <button type="button" onclick="setJobSourceTab('reviews')" id="tabSourceReviews" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">⭐ Candidate Reviews & Rating</button>
+                    <button type="button" onclick="setJobSourceTab('all')" id="tabSourceAll" class="px-4 py-2.5 rounded-2xl bg-blue-600 text-white shadow transition">🔥 सभी (<span id="cntAll">0</span>)</button>
+                    <button type="button" onclick="setJobSourceTab('private')" id="tabSourcePrivate" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏢 Private Jobs (<span id="cntPrivate">0</span>)</button>
+                    <button type="button" onclick="setJobSourceTab('govt')" id="tabSourceGovt" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">🏛️ Govt / Sewayojan (<span id="cntGovt">0</span>)</button>
+                    <button type="button" onclick="setJobSourceTab('local')" id="tabSourceLocal" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">📍 मेरे शहर की जॉब्स (<span id="cntLocal">0</span>)</button>
+                    <button type="button" onclick="setJobSourceTab('reviews')" id="tabSourceReviews" class="px-4 py-2.5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition">⭐ Reviews & Rating (<span id="cntReviews">0</span>)</button>
                 </div>
                 <span id="jobCountBadge" class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full font-bold">लोड हो रहा है...</span>
+            </div>
+
+            <!-- Local City Info Banner (Visible only on Local City Tab) -->
+            <div id="localCityBanner" class="hidden p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex flex-wrap justify-between items-center gap-3 text-xs">
+                <p class="font-bold text-emerald-900 dark:text-emerald-200">📍 आपका लोकेशन ज़िला/शहर: <span id="detectedUserCityLabel" class="font-black underline">पहचाना जा रहा है...</span></p>
+                <div class="flex items-center gap-2">
+                    <select id="manualLocalCitySelect" onchange="changeDetectedLocalCity(this.value)" class="p-2 rounded-xl border dark:border-gray-700 bg-white dark:bg-gray-900 font-bold text-xs">
+                        <option value="">शहर बदलें...</option>
+                    </select>
+                </div>
             </div>
 
             <!-- JOBS GRID -->
@@ -121,9 +166,8 @@
                 <p class="text-xs text-gray-500 col-span-full text-center py-12">लाइव जॉब्स लोड हो रही हैं...</p>
             </div>
 
-            <!-- DEDICATED CANDIDATE REVIEWS & RATING WALL (Option 1) -->
+            <!-- DEDICATED CANDIDATE REVIEWS & RATING WALL -->
             <div id="dedicatedReviewsTabPanel" class="hidden space-y-6">
-                <!-- Trust Score Hero Card -->
                 <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-xl border dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                     <div class="md:col-span-5 text-center md:text-left space-y-2 border-b md:border-b-0 md:border-r dark:border-gray-700 pb-5 md:pb-0 md:pr-6">
                         <span class="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">Candidate Trust Score</span>
@@ -138,12 +182,9 @@
                         </div>
                     </div>
 
-                    <div id="starBreakdownBars" class="md:col-span-7 space-y-2.5 text-xs">
-                        <!-- 5★ to 1★ progress bars populated dynamically -->
-                    </div>
+                    <div id="starBreakdownBars" class="md:col-span-7 space-y-2.5 text-xs"></div>
                 </div>
 
-                <!-- Interactive Star-Wise Filter Buttons -->
                 <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow border dark:border-gray-700">
                     <div class="flex flex-wrap gap-2 text-xs font-black" id="starFilterButtons">
                         <button type="button" onclick="filterReviewsByStar('all')" data-star="all" class="star-filter-btn px-3.5 py-2 rounded-xl bg-indigo-600 text-white">सभी (All)</button>
@@ -156,7 +197,6 @@
                     <span id="filteredReviewCountText" class="text-xs font-bold text-gray-500">0 रिव्यूज़</span>
                 </div>
 
-                <!-- Filtered Review Cards Grid -->
                 <div id="feedbacksListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
                     <p class="text-gray-400 col-span-full text-center py-8">रिव्यू लोड हो रहे हैं...</p>
                 </div>
@@ -164,7 +204,7 @@
         </section>
 
         <!-- USEFUL / IMPORTANT LINKS BOX -->
-        <section class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden">
+        <section id="usefulLinksSection" class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border dark:border-gray-700 overflow-hidden scroll-mt-24">
             <div class="bg-gradient-to-r from-indigo-700 to-blue-800 text-white px-6 py-4 flex items-center justify-between">
                 <h2 class="text-base md:text-lg font-black tracking-wide flex items-center gap-2">
                     <span>🔗</span> <span>उपयोगी लिंक (Important Portals)</span>
@@ -175,7 +215,7 @@
         </section>
     </main>
 
-    <!-- FLOATING COMPACT RATING BADGE (Option 3) -->
+    <!-- FLOATING COMPACT RATING BADGE -->
     <button type="button" onclick="jumpToReviewsTabAndScroll()" id="floatingRatingBadge" class="fixed bottom-5 right-5 z-40 bg-gradient-to-r from-amber-500 via-orange-500 to-pink-600 hover:scale-105 text-white px-4 py-3 rounded-full shadow-2xl border border-white/30 flex items-center gap-2 text-xs font-black transition">
         <span>⭐</span>
         <span id="floatingAvgText">0.0</span>
@@ -357,6 +397,7 @@
         let activeSourceTab = "all";
         let allFeedbackList = [];
         let activeStarFilter = "all";
+        let detectedUserCity = "";
         let hrProfilesMap = {};
         let followerCountsMap = {};
         let jobLikeCountsMap = {};
@@ -364,6 +405,21 @@
         let popupAutoCloseTimer = null;
         let cachedGeoInfo = null;
         let pageVisitTracked = false;
+
+        // Check if candidate is already logged in for smart header label
+        (function updateHeaderCandidateState() {
+            const cand = JSON.parse(localStorage.getItem('rozgarHubCandidateUser'));
+            const btn = document.getElementById('headerCandidateBtn');
+            if (cand && cand.name && btn) {
+                btn.innerText = "👤 मेरा डैशबोर्ड";
+            }
+        })();
+
+        function navigateHeaderTab(tab) {
+            setJobSourceTab(tab);
+            const sec = document.getElementById('mainTabsSection');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
         function getTodayKey() {
             const now = new Date();
@@ -399,8 +455,8 @@
                     const data = await res.json();
                     if (data && data.success !== false) {
                         cachedGeoInfo = {
-                            city: (data.city || "").trim() || "Unknown City",
-                            region: (data.region || "").trim() || "Unknown State",
+                            city: (data.city || "").trim() || "Lucknow",
+                            region: (data.region || "").trim() || "Uttar Pradesh",
                             country: (data.country || "").trim() || "India"
                         };
                         return cachedGeoInfo;
@@ -408,9 +464,7 @@
                 }
             } catch (e) {}
 
-            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata";
-            const fallbackCity = tz.includes("/") ? tz.split("/")[1].replace(/_/g, " ") : "India";
-            cachedGeoInfo = { city: fallbackCity, region: "India", country: "India" };
+            cachedGeoInfo = { city: "Lucknow", region: "Uttar Pradesh", country: "India" };
             return cachedGeoInfo;
         }
 
@@ -438,6 +492,41 @@
                     ...extraData
                 });
             } catch (e) {}
+        }
+
+        function changeDetectedLocalCity(val) {
+            if (!val) return;
+            detectedUserCity = val;
+            localStorage.setItem('rozgarHubPreferredCity', val);
+            document.getElementById('detectedUserCityLabel').innerText = val;
+            updateTabBadgesCounts();
+            if (activeSourceTab === 'local') applyJobFilters();
+        }
+
+        function updateTabBadgesCounts() {
+            const totalAll = allLoadedJobs.length;
+            const totalPrivate = allLoadedJobs.filter(j => !j.isGovtJob).length;
+            const totalGovt = allLoadedJobs.filter(j => Boolean(j.isGovtJob)).length;
+            const localKey = (detectedUserCity || "").trim().toLowerCase();
+            const totalLocal = localKey
+                ? allLoadedJobs.filter(j => (j.city || "").toLowerCase().includes(localKey) || (j.city || "").toLowerCase().includes("all")).length
+                : 0;
+
+            document.getElementById('cntAll').innerText = totalAll;
+            document.getElementById('cntPrivate').innerText = totalPrivate;
+            document.getElementById('cntGovt').innerText = totalGovt;
+            document.getElementById('cntLocal').innerText = totalLocal;
+            document.getElementById('cntReviews').innerText = allFeedbackList.length;
+        }
+
+        function updateLiveUpdatesTicker(jobs) {
+            const track = document.getElementById('liveUpdatesTickerTrack');
+            if (!track || !jobs || jobs.length === 0) return;
+            const topItems = jobs.slice(0, 6).map(j => {
+                const tag = j.isGovtJob ? "🏛️ [Govt/Sewayojan]" : "🏢 [Private]";
+                return `<span>${tag} <strong>${j.title}</strong> (${j.company} - ${j.city}) •</span>`;
+            }).join("");
+            track.innerHTML = topItems + topItems;
         }
 
         // --- LIKE FUNCTIONALITY ---
@@ -536,6 +625,7 @@
             fbSnap.forEach(d => list.push({ id: d.id, ...d.data() }));
             list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
             allFeedbackList = list;
+            updateTabBadgesCounts();
             renderTrustHeroAndFilteredReviews();
         }
 
@@ -565,7 +655,6 @@
             document.getElementById('heroStarsDisplay').innerText = "★".repeat(roundedStars) + "☆".repeat(Math.max(0, 5 - roundedStars));
             document.getElementById('heroTotalReviewsText').innerText = `${total} कैंडिडेट रिव्यूज़ के आधार पर`;
 
-            // 5★ to 1★ breakdown bars
             const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
             list.forEach(item => {
                 const r = Math.min(5, Math.max(1, Number(item.rating) || 5));
@@ -779,6 +868,7 @@
                 all: 'tabSourceAll',
                 private: 'tabSourcePrivate',
                 govt: 'tabSourceGovt',
+                local: 'tabSourceLocal',
                 reviews: 'tabSourceReviews'
             };
             Object.keys(tabIds).forEach(t => {
@@ -792,6 +882,10 @@
 
             const jobsGrid = document.getElementById('publicJobsContainer');
             const reviewsPanel = document.getElementById('dedicatedReviewsTabPanel');
+            const localBanner = document.getElementById('localCityBanner');
+
+            localBanner.classList.toggle('hidden', tab !== 'local');
+
             if (tab === 'reviews') {
                 jobsGrid.classList.add('hidden');
                 reviewsPanel.classList.remove('hidden');
@@ -806,16 +900,21 @@
 
         function populateCityOptions(jobs) {
             const select = document.getElementById('cityFilterSelect');
+            const localSelect = document.getElementById('manualLocalCitySelect');
             const currentVal = select.value;
             const citySet = new Set();
             jobs.forEach(j => {
                 if (j.city && j.city.trim()) citySet.add(j.city.trim());
             });
             let opts = `<option value="">📍 सभी शहर (All Cities)</option>`;
+            let localOpts = `<option value="">शहर बदलें...</option>`;
             Array.from(citySet).sort().forEach(city => {
-                opts += `<option value="${city.replace(/"/g, '&quot;')}">${city}</option>`;
+                const safe = city.replace(/"/g, '&quot;');
+                opts += `<option value="${safe}">${city}</option>`;
+                localOpts += `<option value="${safe}">${city}</option>`;
             });
             select.innerHTML = opts;
+            if (localSelect) localSelect.innerHTML = localOpts;
             if (Array.from(citySet).includes(currentVal)) select.value = currentVal;
         }
 
@@ -824,11 +923,16 @@
             const query = (document.getElementById('jobSearchInput').value || "").trim().toLowerCase();
             const city = (document.getElementById('cityFilterSelect').value || "").trim().toLowerCase();
             const category = (document.getElementById('categoryFilterSelect').value || "").trim().toLowerCase();
+            const localKey = (detectedUserCity || "").trim().toLowerCase();
 
             filteredJobs = allLoadedJobs.filter(job => {
                 const isGovt = Boolean(job.isGovtJob);
                 if (activeSourceTab === "govt" && !isGovt) return false;
                 if (activeSourceTab === "private" && isGovt) return false;
+                if (activeSourceTab === "local" && localKey) {
+                    const jCity = (job.city || "").toLowerCase();
+                    if (!jCity.includes(localKey) && !jCity.includes("all")) return false;
+                }
 
                 const matchesQuery = !query ||
                     (job.title || "").toLowerCase().includes(query) ||
@@ -924,6 +1028,14 @@
         }
 
         window.addEventListener('firebase-ready', async () => {
+            detectVisitorLocation().then(geo => {
+                const savedPref = localStorage.getItem('rozgarHubPreferredCity');
+                detectedUserCity = savedPref || geo.city || "Lucknow";
+                const lbl = document.getElementById('detectedUserCityLabel');
+                if (lbl) lbl.innerText = detectedUserCity;
+                updateTabBadgesCounts();
+            });
+
             if (!pageVisitTracked) {
                 pageVisitTracked = true;
                 trackAnalyticsEvent("page_view", { page: "index" });
@@ -984,6 +1096,8 @@
                 allLoadedJobs = jobs;
                 filteredJobs = [...allLoadedJobs];
                 populateCityOptions(allLoadedJobs);
+                updateTabBadgesCounts();
+                updateLiveUpdatesTicker(allLoadedJobs);
                 renderJobs(filteredJobs);
             } catch(e) {
                 document.getElementById('publicJobsContainer').innerHTML = `<p class="text-xs text-red-500 text-center col-span-full">डेटा लोड करने में समस्या आई।</p>`;
@@ -995,7 +1109,7 @@
             document.getElementById('jobCountBadge').innerText = `${jobs.length} जॉब्स उपलब्ध`;
 
             if(jobs.length === 0) {
-                container.innerHTML = `<div class="col-span-full bg-white dark:bg-gray-800 p-12 rounded-2xl text-center space-y-2"><p class="text-sm font-bold text-gray-500">कोई जॉब पोस्ट नहीं मिली।</p></div>`;
+                container.innerHTML = `<div class="col-span-full bg-white dark:bg-gray-800 p-12 rounded-2xl text-center space-y-2"><p class="text-sm font-bold text-gray-500">इस फ़िल्टर में कोई जॉब पोस्ट नहीं मिली।</p></div>`;
                 return;
             }
 
