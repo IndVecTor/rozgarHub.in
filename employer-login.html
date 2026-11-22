@@ -30,17 +30,24 @@
         window.getDoc = getDoc;
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+    </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Navbar -->
-    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+    <!-- Top Navbar -->
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40 transition-colors duration-300">
         <div class="container mx-auto flex justify-between items-center p-4">
             <a href="index.html" class="text-2xl font-black tracking-wide text-indigo-700 dark:text-indigo-400">RozgarHub<span class="text-yellow-500">.in</span> <span class="text-xs text-gray-400 font-normal">| HR Portal</span></a>
-            <div class="flex items-center space-x-3 text-xs md:text-sm font-bold">
-                <button type="button" onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-xl"><span id="themeIcon">🌙</span></button>
-                <a href="index.html" class="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-xl">🏠 होम पेज</a>
-                <button type="button" id="logoutBtn" onclick="handleHrLogout()" class="hidden bg-red-600 text-white px-4 py-2 rounded-xl">लॉग आउट</button>
+            <div class="flex items-center space-x-2 md:space-x-3 text-xs md:text-sm font-bold">
+                <button type="button" onclick="toggleDarkMode()" id="themeToggleBtn" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-2 rounded-xl transition shadow-sm"><span id="themeIcon">🌙</span></button>
+                <a href="index.html" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-4 py-2 rounded-xl transition">🏠 होम पेज</a>
+                <button type="button" id="logoutBtn" onclick="handleHrLogout()" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition shadow">लॉग आउट</button>
             </div>
         </div>
     </header>
@@ -49,9 +56,9 @@
     <main id="hrAuthView" class="container mx-auto px-4 py-12 flex-grow flex justify-center items-center max-w-md">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl border dark:border-gray-700 w-full space-y-6">
             <div class="text-center space-y-1">
-                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-[11px] font-black uppercase">Employer & HR Dashboard</span>
+                <span class="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300 px-3 py-1 rounded-full text-[11px] font-black uppercase">Employer & HR Dashboard</span>
                 <h1 class="text-2xl font-black">HR लॉगिन / रजिस्ट्रेशन</h1>
-                <p class="text-xs text-gray-500">केवल अपनी कंपनी की जॉब्स पोस्ट करें, एडिट करें और आवेदन मैनेज करें</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">केवल अपनी कंपनी की जॉब्स पोस्ट करें, एडिट करें और आवेदन मैनेज करें</p>
             </div>
 
             <form onsubmit="handleHrLogin(event)" class="space-y-4 text-xs">
@@ -68,8 +75,20 @@
                     <input type="email" id="hrEmailInput" placeholder="hr@company.com" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                 </div>
                 <div>
-                    <label class="block font-bold mb-1">मोबाइल नंबर *</label>
+                    <label class="block font-bold mb-1">मोबाइल / WhatsApp नंबर *</label>
                     <input type="tel" id="hrPhoneInput" placeholder="9876543210" required class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">शहर / लोकेशन</label>
+                    <input type="text" id="hrCityInput" placeholder="जैसे: Lucknow / Azamgarh / Delhi" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">इंडस्ट्री / सेक्टर</label>
+                    <input type="text" id="hrIndustryInput" placeholder="जैसे: Retail / IT / BPO / Sales" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">कंपनी / HR बायो (Optional)</label>
+                    <textarea id="hrBioInput" rows="2" placeholder="कंपनी के बारे में संक्षिप्त जानकारी..." class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold"></textarea>
                 </div>
                 <button type="submit" class="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow-xl transition">HR डैशबोर्ड खोलें 🚀</button>
             </form>
@@ -84,6 +103,7 @@
                 <span class="bg-white/20 px-3 py-1 rounded-full text-[11px] font-black uppercase">✓ Verified Employer Account</span>
                 <h1 id="dashCompanyTitle" class="text-2xl md:text-3xl font-black">Company Name</h1>
                 <p id="dashHrSubtitle" class="text-xs text-blue-200 font-semibold">HR: Name • Email</p>
+                <p id="dashHrMeta" class="text-[11px] text-blue-100/80"></p>
             </div>
             <div class="flex gap-3 text-center">
                 <div class="bg-white/15 backdrop-blur px-5 py-3 rounded-2xl border border-white/20">
@@ -147,22 +167,52 @@
                         <input type="text" id="jExp" value="Fresher / 1-2 Years" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                     </div>
                     <div>
+                        <label class="block font-bold mb-1">कार्य शैली (Work Mode)</label>
+                        <select id="jWorkMode" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                            <option value="Work from Office">Work from Office</option>
+                            <option value="Work from Home">Work from Home</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Field Job">Field Job</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block font-bold mb-1">जॉब टाइप</label>
                         <select id="jJobType" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                             <option value="Full-Time">Full-Time</option>
                             <option value="Part-Time">Part-Time</option>
-                            <option value="Work From Home">Work From Home</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">शिफ्ट / टाइमिंग</label>
+                        <input type="text" id="jShift" placeholder="जैसे: Day Shift (9:30 AM - 6:30 PM)" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">जेंडर प्राथमिकता</label>
+                        <select id="jGender" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                            <option value="Any / Both">Any / Both</option>
+                            <option value="Male Only">Male Only</option>
+                            <option value="Female Only">Female Only</option>
                         </select>
                     </div>
                     <div>
                         <label class="block font-bold mb-1">कुल पद (Openings)</label>
                         <input type="number" id="jOpenings" value="5" min="1" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                     </div>
+                    <div>
+                        <label class="block font-bold mb-1">आवेदन की अंतिम तिथि (Optional)</label>
+                        <input type="date" id="jDeadline" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                    </div>
                 </div>
 
                 <div>
                     <label class="block font-bold mb-1">आवश्यक स्किल्स</label>
                     <input type="text" id="jSkills" placeholder="MS Excel, Hindi & English Typing, Good Communication" class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">जॉब पोस्टर इमेज URL (Optional - खाली छोड़ने पर ऑटो बैनर दिखेगा)</label>
+                    <input type="url" id="jPosterUrl" placeholder="https://..." class="w-full p-3.5 border dark:border-gray-600 rounded-2xl bg-gray-50 dark:bg-gray-700 font-bold">
                 </div>
 
                 <div>
@@ -210,6 +260,7 @@
             root.classList.toggle('dark', isDark);
             document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
         }
+
         function toggleDarkMode() {
             const root = document.getElementById('htmlRoot');
             const next = !root.classList.contains('dark');
@@ -217,7 +268,11 @@
             localStorage.setItem('rozgarHubTheme', next ? 'dark' : 'light');
             document.getElementById('themeIcon').innerText = next ? '☀️' : '🌙';
         }
+
         applyTheme();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('rozgarHubTheme')) applyTheme();
+        });
 
         function getHrUniqueId(email) {
             return "hr_" + encodeURIComponent((email || "").trim().toLowerCase());
@@ -229,9 +284,12 @@
             const company = document.getElementById('hrCompanyInput').value.trim();
             const email = document.getElementById('hrEmailInput').value.trim().toLowerCase();
             const phone = document.getElementById('hrPhoneInput').value.trim();
+            const city = document.getElementById('hrCityInput').value.trim() || "India";
+            const industry = document.getElementById('hrIndustryInput').value.trim() || "Corporate";
+            const bio = document.getElementById('hrBioInput').value.trim();
             const hrId = getHrUniqueId(email);
 
-            const hrObj = { hrId, hrName: name, company, email, phone, updatedAt: Date.now() };
+            const hrObj = { hrId, hrName: name, company, email, phone, city, industry, bio, updatedAt: Date.now() };
             localStorage.setItem('rozgarHubHrUser', JSON.stringify(hrObj));
 
             if (window.db) {
@@ -261,6 +319,7 @@
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('dashCompanyTitle').innerText = currentHrUser.company;
                 document.getElementById('dashHrSubtitle').innerText = `HR: ${currentHrUser.hrName} • ${currentHrUser.email}`;
+                document.getElementById('dashHrMeta').innerText = `📍 ${currentHrUser.city || 'India'} • 🏷️ ${currentHrUser.industry || 'Corporate'}`;
                 if (window.db) loadHrData();
             } else {
                 document.getElementById('hrAuthView').classList.remove('hidden');
@@ -285,10 +344,9 @@
             });
         }
 
-        // Strict check: Does this job belong ONLY to the currently logged-in HR?
+        // Strict ownership check: ONLY jobs created by this exact HR (never Super Admin / Govt / other HRs)
         function isOwnedByCurrentHr(job) {
             if (!currentHrUser || !job) return false;
-            // Never allow Govt/Sewayojan or Super Admin jobs inside any HR dashboard
             if (job.isGovtJob === true || job.postedByRole === "super_admin") return false;
 
             const myId = (currentHrUser.hrId || "").trim().toLowerCase();
@@ -317,9 +375,14 @@
                 salary: document.getElementById('jSalary').value.trim(),
                 qual: document.getElementById('jQual').value.trim(),
                 exp: document.getElementById('jExp').value.trim(),
+                workMode: document.getElementById('jWorkMode').value,
                 jobType: document.getElementById('jJobType').value,
+                shift: document.getElementById('jShift').value.trim(),
+                gender: document.getElementById('jGender').value,
                 openings: document.getElementById('jOpenings').value,
+                deadline: document.getElementById('jDeadline').value,
                 skills: document.getElementById('jSkills').value.trim(),
+                posterUrl: document.getElementById('jPosterUrl').value.trim(),
                 desc: document.getElementById('jDesc').value.trim(),
                 company: currentHrUser.company,
                 hrName: currentHrUser.hrName,
@@ -364,10 +427,15 @@
             document.getElementById('jCity').value = job.city || "";
             document.getElementById('jSalary').value = job.salary || "";
             document.getElementById('jQual').value = job.qual || "";
-            document.getElementById('jExp').value = job.exp || "";
+            document.getElementById('jExp').value = job.exp || "Fresher / 1-2 Years";
+            document.getElementById('jWorkMode').value = job.workMode || "Work from Office";
             document.getElementById('jJobType').value = job.jobType || "Full-Time";
+            document.getElementById('jShift').value = job.shift || "";
+            document.getElementById('jGender').value = job.gender || "Any / Both";
             document.getElementById('jOpenings').value = job.openings || 1;
+            document.getElementById('jDeadline').value = job.deadline || "";
             document.getElementById('jSkills').value = job.skills || "";
+            document.getElementById('jPosterUrl').value = job.posterUrl || "";
             document.getElementById('jDesc').value = job.desc || "";
 
             document.getElementById('jobFormHeading').innerText = "✏️ अपनी जॉब पोस्ट एडिट करें";
@@ -439,7 +507,6 @@
                 `).join("");
             }
 
-            // Filter applications ONLY for this HR's own jobs
             let myApps = [];
             appsSnap.forEach(d => {
                 const a = d.data();
